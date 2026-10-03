@@ -1,13 +1,232 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+
+/* ── CSS Custom Properties ── */
+:root {
+  --saffron-deep: #92400e;
+  --saffron-mid:  #b45309;
+  --saffron-light: #d97706;
+  --gold:         #f59e0b;
+  --gold-light:   #fbbf24;
+  --cream:        #fffbf0;
+  --cream-dark:   #fef3c7;
+  --parchment:    #fde68a;
+  --text-dark:    #1c1917;
+  --text-mid:     #44403c;
+  --text-light:   #78716c;
+  --white:        #ffffff;
+  --shadow-warm:  0 4px 24px rgba(146, 64, 14, 0.12);
+  --shadow-card:  0 8px 32px rgba(0,0,0,0.10);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Typography Utilities ── */
+.font-display  { font-family: 'Playfair Display', serif; }
+.font-serif    { font-family: 'Cormorant Garamond', serif; }
+.font-devnagri { font-family: 'Noto Sans Devanagari', sans-serif; }
+
+/* ── Section Dividers (decorative) ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto 1.5rem;
+}
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+  max-width: 120px;
+}
+.section-divider-icon {
+  color: var(--saffron-light);
+  font-size: 1.25rem;
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(245,158,11,0); }
+}
+@keyframes kenburns {
+  0%   { transform: scale(1)    translateX(0)   translateY(0); }
+  50%  { transform: scale(1.06) translateX(-1%) translateY(-1%); }
+  100% { transform: scale(1)    translateX(0)   translateY(0); }
+}
+
+.animate-fadeInUp  { animation: fadeInUp 0.75s ease-out both; }
+.animate-fadeIn    { animation: fadeIn 0.6s ease-out both; }
+.animate-float     { animation: float 4s ease-in-out infinite; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ── Intersection Observer helper ── */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Gold Button ── */
+.btn-gold {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--saffron-light) 0%, var(--gold) 50%, var(--saffron-mid) 100%);
+  background-size: 200% auto;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  padding: 14px 36px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(180, 83, 9, 0.35);
+}
+.btn-gold:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(180, 83, 9, 0.45);
+}
+
+/* ── Outline Button ── */
+.btn-outline-gold {
+  display: inline-block;
+  border: 1.5px solid var(--saffron-light);
+  color: var(--saffron-mid);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  padding: 13px 36px;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: transparent;
+  cursor: pointer;
+}
+.btn-outline-gold:hover {
+  background: var(--saffron-light);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ── Star Rating ── */
+.stars { color: var(--gold); letter-spacing: 2px; font-size: 1rem; }
+
+/* ── Section Label ── */
+.section-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--saffron-light);
+  display: block;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--saffron-light); border-radius: 3px; }
+
+/* ── Focus ring ── */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ── Ornamental Line ── */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.ornament-line { flex: 1; max-width: 80px; height: 1px; background: var(--gold-light); }
+.ornament-diamond {
+  width: 8px; height: 8px;
+  background: var(--saffron-light);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ── Card Hover ── */
+.card-hover {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.13);
+}
+
+/* ── Image Zoom ── */
+.img-zoom { overflow: hidden; }
+.img-zoom img { transition: transform 0.6s ease; }
+.img-zoom:hover img { transform: scale(1.06); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.modal-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.modal-close {
+  position: absolute;
+  top: -40px; right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
 }
