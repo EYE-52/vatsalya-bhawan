@@ -1,56 +1,169 @@
-import React from 'react';
+import React, { useEffect, useRef } from "react";
+import { Check } from "lucide-react";
 
-const roomsData = [
+const rooms = [
   {
-    name: 'Deluxe Room',
-    description: 'A perfect blend of comfort and elegance, ideal for solo travelers or couples.',
-    imageUrl: '/assets/room-image-2.jpeg',
-    features: ['King Size Bed', 'Free Wi-Fi', 'Air Conditioning', 'City View'],
+    name: "Standard Room",
+    tagline: "Simple & Comfortable",
+    description: "Perfect for solo pilgrims and budget-conscious travellers. Clean, cozy, and thoughtfully equipped.",
+    image: "/assets/room-image-2.jpeg",
+    badge: "Best Value",
+    badgeColor: "#059669",
+    features: ["Comfortable Bed", "Private Bathroom", "Free Wi-Fi", "Daily Housekeeping"],
+    type: "Non-AC / AC Available",
   },
   {
-    name: 'Family Suite',
-    description: 'Spacious and well-appointed, our family suites offer ample space for relaxation.',
-    imageUrl: '/assets/room-image-5.jpeg',
-    features: ['Two Queen Beds', 'Living Area', 'Free Wi-Fi', 'Garden View'],
+    name: "Deluxe Room",
+    tagline: "Comfort & Elegance",
+    description: "A spacious, air-conditioned room with a city view — ideal for couples and family pilgrimages.",
+    image: "/assets/room-image-5.jpeg",
+    badge: "Most Popular",
+    badgeColor: "#b45309",
+    features: ["King Size Bed", "Air Conditioning", "City View Balcony", "Free Wi-Fi", "Work Desk"],
+    type: "AC Room",
   },
   {
-    name: 'Presidential Suite',
-    description: 'Experience the pinnacle of luxury with our exclusive Presidential Suite.',
-    imageUrl: '/assets/room-image-8.jpeg',
-    features: ['Master Bedroom', 'Private Balcony', 'Jacuzzi', '24/7 Butler Service'],
+    name: "Family Suite",
+    tagline: "Space for the Whole Family",
+    description: "Our largest accommodation, designed to host families with ample space, two sleeping areas, and a cozy sitting area.",
+    image: "/assets/room-image-8.jpeg",
+    badge: "Family Pick",
+    badgeColor: "#7c3aed",
+    features: ["Two Queen Beds", "Sitting Lounge", "Air Conditioning", "Free Wi-Fi", "Luggage Storage"],
+    type: "AC Suite",
   },
 ];
 
 const Rooms = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll(".reveal").forEach((el, i) => {
+              setTimeout(() => el.classList.add("visible"), i * 120);
+            });
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="rooms" className="py-16 md:py-24 bg-amber-50">
+    <section id="rooms" ref={sectionRef} style={{ background: "var(--cream-dark)", padding: "96px 0" }}>
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-800">Our Comfortable Rooms</h2>
-          <p className="mt-4 text-lg text-gray-600">Designed for your peace and comfort.</p>
+        {/* Heading */}
+        <div className="text-center reveal" style={{ marginBottom: "60px" }}>
+          <div className="ornament">
+            <div className="ornament-line" />
+            <div className="ornament-diamond" />
+            <div className="ornament-line" />
+          </div>
+          <span className="section-label">Accommodations</span>
+          <h2
+            className="font-display"
+            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--saffron-deep)", marginTop: "0.5rem" }}
+          >
+            Our <span style={{ color: "var(--saffron-light)", fontStyle: "italic" }}>Rooms & Suites</span>
+          </h2>
+          <p style={{ color: "var(--text-light)", marginTop: "1rem", maxWidth: "480px", margin: "1rem auto 0", lineHeight: 1.7 }}>
+            Each room is thoughtfully designed to provide a peaceful sanctuary after your spiritual journey
+          </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {roomsData.map((room) => (
-            <div key={room.name} className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition duration-300">
-              <img src={room.imageUrl} alt={room.name} className="w-full h-56 object-cover" />
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">{room.name}</h3>
-                <p className="text-gray-600 mb-4">{room.description}</p>
-                <ul className="text-gray-700 space-y-1 mb-6">
-                  {room.features.map((feature) => (
-                    <li key={feature} className="flex items-center">
-                      <svg className="w-5 h-5 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                      {feature}
+
+        {/* Room cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "28px" }}>
+          {rooms.map((room, i) => (
+            <article
+              key={room.name}
+              className="reveal card-hover"
+              style={{
+                background: "var(--white)",
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "var(--shadow-card)",
+              }}
+            >
+              {/* Image */}
+              <div className="img-zoom" style={{ height: "240px", position: "relative" }}>
+                <img src={room.image} alt={room.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                {/* Badge */}
+                <div
+                  style={{
+                    position: "absolute", top: "16px", left: "16px",
+                    background: room.badgeColor, color: "#fff",
+                    fontSize: "0.65rem", fontWeight: 700,
+                    letterSpacing: "0.1em", textTransform: "uppercase",
+                    padding: "4px 10px", borderRadius: "100px",
+                  }}
+                >
+                  {room.badge}
+                </div>
+                {/* Type tag */}
+                <div
+                  style={{
+                    position: "absolute", bottom: "16px", right: "16px",
+                    background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.9)",
+                    fontSize: "0.65rem", fontWeight: 500,
+                    letterSpacing: "0.08em",
+                    padding: "3px 10px", borderRadius: "100px",
+                    backdropFilter: "blur(4px)",
+                  }}
+                >
+                  {room.type}
+                </div>
+              </div>
+
+              {/* Content */}
+              <div style={{ padding: "28px" }}>
+                <p style={{ color: "var(--saffron-light)", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "4px" }}>
+                  {room.tagline}
+                </p>
+                <h3 className="font-display" style={{ fontSize: "1.4rem", fontWeight: 700, color: "var(--text-dark)", marginBottom: "10px" }}>
+                  {room.name}
+                </h3>
+                <p style={{ color: "var(--text-light)", fontSize: "0.875rem", lineHeight: 1.7, marginBottom: "20px" }}>
+                  {room.description}
+                </p>
+
+                {/* Features */}
+                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "7px", marginBottom: "24px" }}>
+                  {room.features.map((f) => (
+                    <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", color: "var(--text-mid)" }}>
+                      <span style={{ background: "var(--cream-dark)", borderRadius: "50%", padding: "2px", display: "flex" }}>
+                        <Check size={12} color="var(--saffron-mid)" strokeWidth={3} />
+                      </span>
+                      {f}
                     </li>
                   ))}
                 </ul>
-                <a href="#contact" className="w-full text-center bg-amber-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-amber-700 transition">
-                  Book Now
-                </a>
+
+                {/* Divider */}
+                <div style={{ height: "1px", background: "var(--cream-dark)", marginBottom: "20px" }} />
+
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <a href="#contact" className="btn-gold" style={{ flex: 1, textAlign: "center", padding: "12px 16px", fontSize: "0.78rem" }}>
+                    Book Now
+                  </a>
+                  <a href="#contact" className="btn-outline-gold" style={{ padding: "12px 16px", fontSize: "0.78rem" }}>
+                    Enquire
+                  </a>
+                </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
+
+        {/* Note */}
+        <p className="reveal text-center" style={{ color: "var(--text-light)", marginTop: "36px", fontSize: "0.85rem" }}>
+          All rates are inclusive of GST. For group bookings or special requirements, please{" "}
+          <a href="#contact" style={{ color: "var(--saffron-mid)", fontWeight: 500 }}>contact us directly</a>.
+        </p>
       </div>
     </section>
   );
