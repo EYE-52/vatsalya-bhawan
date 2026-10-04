@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import Images from "./utils/images";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -51,7 +52,7 @@ const Header = () => {
         {/* Logo */}
         <a href="#home" className="flex items-center gap-3 group" aria-label="Vatsalya Bhawan Home">
           <img
-            src="/logo-vatsalya.jpg"
+            src={Images.logo}
             alt="Vatsalya Bhawan Logo"
             className="h-14 w-14 object-contain rounded-full shadow-md transition-transform duration-300 group-hover:scale-105"
           />
@@ -99,14 +100,24 @@ const Header = () => {
 
         {/* CTA + Phone */}
         <div className="hidden lg:flex items-center gap-4">
-          <a
-            href="tel:+919451338729"
-            className="flex items-center gap-2 text-sm font-medium transition-colors"
-            style={{ color: scrolled ? "#b45309" : "rgba(255,255,255,0.9)" }}
-          >
-            <Phone size={15} />
-            <span>+91 94513 38729</span>
-          </a>
+          <div className="flex flex-col text-right">
+            <a
+              href="tel:+919451338729"
+              className="flex items-center justify-end gap-1.5 text-xs font-semibold transition-colors"
+              style={{ color: scrolled ? "#b45309" : "rgba(255,255,255,0.95)" }}
+            >
+              <Phone size={13} />
+              <span>+91 94513 38729</span>
+            </a>
+            <a
+              href="tel:+919455172867"
+              className="flex items-center justify-end gap-1.5 text-xs font-semibold transition-colors opacity-90 hover:opacity-100"
+              style={{ color: scrolled ? "#b45309" : "rgba(255,255,255,0.85)" }}
+            >
+              <Phone size={13} />
+              <span>+91 94551 72867</span>
+            </a>
+          </div>
           <a href="#contact" className="btn-gold text-xs px-5 py-3">
             Book Now
           </a>
@@ -138,13 +149,17 @@ const Header = () => {
               {link.name}
             </a>
           ))}
-          <div className="pt-3 flex flex-col gap-3">
-            <a href="tel:+919451338729" className="flex items-center gap-2 text-amber-700 font-medium">
+          <div className="pt-3 flex flex-col gap-2.5">
+            <p className="text-xs uppercase font-bold text-amber-800 tracking-wider">Direct Booking & Inquiries:</p>
+            <a href="tel:+919451338729" className="flex items-center gap-2 text-amber-700 font-semibold text-sm">
               <Phone size={16} /> +91 94513 38729
+            </a>
+            <a href="tel:+919455172867" className="flex items-center gap-2 text-amber-700 font-semibold text-sm">
+              <Phone size={16} /> +91 94551 72867
             </a>
             <a
               href="#contact"
-              className="btn-gold text-center text-sm py-3"
+              className="btn-gold text-center text-sm py-3 mt-2"
               onClick={() => setOpen(false)}
             >
               Book Now

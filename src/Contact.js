@@ -7,21 +7,22 @@ const contactInfo = [
     title: "Address",
     lines: ["Tarun Pura Road, Kaniganj,", "Ayodhya, Uttar Pradesh — 224001"],
     link: "https://maps.google.com/?q=Vatsalya+Bhawan+Ayodhya",
-    linkText: "Get Directions →",
+    linkText: "Get Directions on Google Maps →",
   },
   {
     icon: Phone,
-    title: "Phone",
-    lines: ["+91 94513 38729"],
-    link: "tel:+919451338729",
-    linkText: "Call Now",
+    title: "Phone & WhatsApp",
+    phoneList: [
+      { num: "+91 94513 38729", link: "tel:+919451338729", note: "Primary / WhatsApp" },
+      { num: "+91 94551 72867", link: "tel:+919455172867", note: "Reservations & Support" },
+    ],
   },
   {
     icon: Mail,
     title: "Email",
     lines: ["vatsalya.bhawan.aprill@gmail.com"],
     link: "mailto:vatsalya.bhawan.aprill@gmail.com",
-    linkText: "Send Email",
+    linkText: "Send Email →",
   },
   {
     icon: Clock,
@@ -118,16 +119,33 @@ const Contact = () => {
                     <Icon size={20} color="var(--saffron-mid)" />
                   </div>
                   <div>
-                    <h3 style={{ fontWeight: 600, color: "var(--text-dark)", fontSize: "0.9rem", marginBottom: "4px" }}>{item.title}</h3>
-                    {item.lines.map((l) => (
+                    <h3 style={{ fontWeight: 600, color: "var(--text-dark)", fontSize: "0.9rem", marginBottom: "6px" }}>{item.title}</h3>
+                    {item.lines && item.lines.map((l) => (
                       <p key={l} style={{ color: "var(--text-light)", fontSize: "0.85rem", lineHeight: 1.6 }}>{l}</p>
                     ))}
+                    {item.phoneList && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                        {item.phoneList.map((p) => (
+                          <div key={p.num} style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                            <a
+                              href={p.link}
+                              style={{ color: "var(--saffron-mid)", fontSize: "0.9rem", fontWeight: 700, textDecoration: "none" }}
+                            >
+                              {p.num}
+                            </a>
+                            <span style={{ fontSize: "0.7rem", color: "var(--text-light)", background: "var(--cream-dark)", padding: "2px 8px", borderRadius: "100px", fontWeight: 500 }}>
+                              {p.note}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {item.link && (
                       <a
                         href={item.link}
                         target={item.link.startsWith("http") ? "_blank" : undefined}
                         rel="noopener noreferrer"
-                        style={{ color: "var(--saffron-mid)", fontSize: "0.8rem", fontWeight: 500, marginTop: "4px", display: "inline-block" }}
+                        style={{ color: "var(--saffron-mid)", fontSize: "0.8rem", fontWeight: 500, marginTop: "6px", display: "inline-block" }}
                       >
                         {item.linkText}
                       </a>

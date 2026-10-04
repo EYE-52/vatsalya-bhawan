@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Wifi, Wind, Zap, Shield, Utensils, Car, Clock, MapPin, Droplets, Tv } from "lucide-react";
+import Images from "./utils/images";
 
 const amenities = [
   { icon: Wifi,     label: "Free High-Speed Wi-Fi",     desc: "Stay connected throughout your spiritual journey" },
@@ -132,7 +133,7 @@ const Amenities = () => {
             overflow: "hidden",
           }}
         >
-          {["/assets/amunitites.jpeg", "/assets/room-view-image-1.jpeg", "/assets/washroom-image-1.jpeg"].map((src, i) => (
+          {[Images.amenitiesImg, Images.roomView1, Images.washroom1].map((src, i) => (
             <div key={i} className="img-zoom" style={{ height: "200px" }}>
               <img src={src} alt="Amenity" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>

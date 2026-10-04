@@ -1,5 +1,6 @@
 import React from "react";
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram } from "lucide-react";
+import Images from "./utils/images";
 
 const Footer = () => {
   const navLinks = [
@@ -97,7 +98,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-              <img src="/logo-vatsalya.jpg" alt="Logo" style={{ height: "52px", width: "52px", objectFit: "contain", borderRadius: "50%", border: "2px solid rgba(217,119,6,0.4)" }} />
+              <img src={Images.logo} alt="Logo" style={{ height: "52px", width: "52px", objectFit: "contain", borderRadius: "50%", border: "2px solid rgba(217,119,6,0.4)" }} />
               <div>
                 <p className="font-devnagri" style={{ color: "#fbbf24", fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.2 }}>वात्सल्य भवन</p>
                 <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase" }}>Ayodhya</p>
@@ -108,9 +109,8 @@ const Footer = () => {
             </p>
             <div style={{ display: "flex", gap: "12px" }}>
               {[
-                { Icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-                { Icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-                { Icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+                { Icon: Facebook, href: "https://www.facebook.com/vatsalyabhawan", label: "Facebook" },
+                { Icon: Instagram, href: "https://www.instagram.com/vatsalyabhawan/", label: "Instagram" },
               ].map(({ Icon, href, label }) => (
                 <a
                   key={label}
@@ -178,8 +178,9 @@ const Footer = () => {
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
               {[
-                { Icon: MapPin, text: "Tarun Pura Road, Kaniganj, Ayodhya, UP 224001", href: null },
-                { Icon: Phone, text: "+91 94513 38729", href: "tel:+919451338729" },
+                { Icon: MapPin, text: "Tarun Pura Road, Kaniganj, Ayodhya, UP 224001", href: "https://maps.google.com/?q=Vatsalya+Bhawan+Ayodhya" },
+                { Icon: Phone, text: "+91 94513 38729 (Primary)", href: "tel:+919451338729" },
+                { Icon: Phone, text: "+91 94551 72867 (Reservations)", href: "tel:+919455172867" },
                 { Icon: Mail, text: "vatsalya.bhawan.aprill@gmail.com", href: "mailto:vatsalya.bhawan.aprill@gmail.com" },
               ].map(({ Icon, text, href }) => (
                 <div key={text} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>

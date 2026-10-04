@@ -1,35 +1,36 @@
 import React, { useEffect, useRef } from "react";
 import { Check } from "lucide-react";
+import Images from "./utils/images";
 
 const rooms = [
   {
     name: "Standard Room",
     tagline: "Simple & Comfortable",
-    description: "Perfect for solo pilgrims and budget-conscious travellers. Clean, cozy, and thoughtfully equipped.",
-    image: "/assets/room-image-2.jpeg",
+    description: "Perfect for solo pilgrims and budget-conscious travellers. Clean, cozy, and thoughtfully equipped with comfortable bedding and essential amenities.",
+    image: Images.roomStandard,
     badge: "Best Value",
     badgeColor: "#059669",
-    features: ["Comfortable Bed", "Private Bathroom", "Free Wi-Fi", "Daily Housekeeping"],
+    features: ["Comfortable Bed", "Private Bathroom", "Free Wi-Fi", "Daily Housekeeping", "Geyser Hot Water"],
     type: "Non-AC / AC Available",
   },
   {
     name: "Deluxe Room",
     tagline: "Comfort & Elegance",
-    description: "A spacious, air-conditioned room with a city view — ideal for couples and family pilgrimages.",
-    image: "/assets/room-image-5.jpeg",
+    description: "A spacious, premium air-conditioned room with private balcony overlooking the sacred city and river — ideal for couples and family pilgrimages.",
+    image: Images.roomDeluxe,
     badge: "Most Popular",
     badgeColor: "#b45309",
-    features: ["King Size Bed", "Air Conditioning", "City View Balcony", "Free Wi-Fi", "Work Desk"],
+    features: ["King Size Bed", "Air Conditioning", "City View Balcony", "Free Wi-Fi", "Work Desk", "LED TV"],
     type: "AC Room",
   },
   {
     name: "Family Suite",
     tagline: "Space for the Whole Family",
-    description: "Our largest accommodation, designed to host families with ample space, two sleeping areas, and a cozy sitting area.",
-    image: "/assets/room-image-8.jpeg",
+    description: "Our largest accommodation, designed to host families with ample space, two queen beds, a sitting lounge, and a peaceful prayer corner.",
+    image: Images.roomFamily,
     badge: "Family Pick",
     badgeColor: "#7c3aed",
-    features: ["Two Queen Beds", "Sitting Lounge", "Air Conditioning", "Free Wi-Fi", "Luggage Storage"],
+    features: ["Two Queen Beds", "Sitting Lounge", "Air Conditioning", "Free Wi-Fi", "Luggage Storage", "Puja Corner"],
     type: "AC Suite",
   },
 ];
