@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import Images from "./utils/images";
 
 const menuItems = [
   { category: "Breakfast (7 AM – 10 AM)", items: ["Poori Sabzi", "Aloo Paratha with Curd", "Idli Sambar", "Fresh Fruit Platter", "Chai & Coffee"] },
@@ -34,7 +35,7 @@ const Dining = () => {
           <div className="reveal" style={{ position: "relative" }}>
             <div className="img-zoom" style={{ borderRadius: "8px", overflow: "hidden", boxShadow: "var(--shadow-card)" }}>
               <img
-                src="/assets/god-image.jpeg"
+                src={Images.godImage}
                 alt="Satvik pure vegetarian dining at Vatsalya Bhawan"
                 style={{ width: "100%", height: "400px", objectFit: "cover" }}
               />

@@ -7,6 +7,7 @@ import Dining from "./Dining";
 import Amenities from "./Amenities";
 import Gallery from "./Gallery";
 import Testimonials from "./Testimonials";
+import BookingPlatforms from "./BookingPlatforms";
 import Contact from "./Contact";
 import Footer from "./Footer";
 
@@ -97,6 +98,7 @@ const VatsalyaBhawan = () => {
         <Amenities />
         <Gallery />
         <Testimonials />
+        <BookingPlatforms />
         <Contact />
       </main>
       <Footer />

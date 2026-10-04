@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Images from "./utils/images";
 
 const galleryImages = [
-  { src: "/assets/common-room-1.jpeg",    label: "Common Area" },
-  { src: "/assets/common-room-2.jpeg",    label: "Lounge" },
-  { src: "/assets/room-image-1.jpeg",     label: "Standard Room" },
-  { src: "/assets/room-image-2.jpeg",     label: "Deluxe Room" },
-  { src: "/assets/room-image-3.jpeg",     label: "Room View" },
-  { src: "/assets/room-image-4.jpeg",     label: "Room Interior" },
-  { src: "/assets/room-image-5.jpeg",     label: "Family Suite" },
-  { src: "/assets/room-image-6.jpeg",     label: "Room Decor" },
-  { src: "/assets/room-image-7.jpeg",     label: "Bedroom" },
-  { src: "/assets/room-image-8.jpeg",     label: "Suite" },
-  { src: "/assets/room-image-9.jpeg",     label: "Room" },
-  { src: "/assets/god-image.jpeg",        label: "Spiritual Corner" },
-  { src: "/assets/maingate.jpeg",         label: "Main Entrance" },
-  { src: "/assets/washroom-image-1.jpeg", label: "Bathroom" },
-  { src: "/assets/washroom-image-2.jpeg", label: "Washroom" },
-  { src: "/assets/amunitites.jpeg",       label: "Amenities" },
-  { src: "/assets/room-view-image-1.jpeg",label: "City View" },
+  { src: Images.frontView,      label: "Vatsalya Bhawan Front View" },
+  { src: Images.galary1,        label: "Hotel Premises" },
+  { src: Images.galary2,        label: "Property View" },
+  { src: Images.roomDeluxe,     label: "Deluxe Room (AC)" },
+  { src: Images.roomFamily,     label: "Family Suite" },
+  { src: Images.roomStandard,   label: "Standard Room" },
+  { src: Images.commonRoom1,    label: "Common Lounge" },
+  { src: Images.commonRoom2,    label: "Reception Area" },
+  { src: Images.roomImage1,     label: "Cozy Guest Room" },
+  { src: Images.roomImage2,     label: "Spacious Bed Setup" },
+  { src: Images.roomImage3,     label: "Room View" },
+  { src: Images.roomImage4,     label: "Room Interior" },
+  { src: Images.roomImage5,     label: "Family Accommodation" },
+  { src: Images.roomImage6,     label: "Room Decor" },
+  { src: Images.roomImage7,     label: "Clean Bedroom" },
+  { src: Images.roomImage8,     label: "Suite Living" },
+  { src: Images.roomImage9,     label: "Well-Lit Room" },
+  { src: Images.godImage,        label: "Spiritual Corner" },
+  { src: Images.mainGate,         label: "Main Entrance" },
+  { src: Images.washroom1,      label: "Modern Bathroom" },
+  { src: Images.washroom2,      label: "Clean Washroom" },
+  { src: Images.amenitiesImg,    label: "Hotel Amenities" },
+  { src: Images.roomView1,       label: "Ayodhya City View" },
 ];
 
 const Gallery = () => {

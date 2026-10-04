@@ -1,24 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import Images from "./utils/images";
 
 const slides = [
   {
-    image: "/assets/common-room-1.jpeg",
-    title: "A Sacred Retreat in the",
-    highlight: "Heart of Ayodhya",
-    subtitle: "Where divinity meets comfort — 500 metres from Shri Ram Janmabhoomi",
+    image: Images.frontView,
+    title: "Welcome to",
+    highlight: "Vatsalya Bhawan, Ayodhya",
+    subtitle: "Your sacred home away from home — just 500 metres from Shri Ram Janmabhoomi",
   },
   {
-    image: "/assets/room-image-1.jpeg",
+    image: Images.roomDeluxe,
     title: "Thoughtfully Crafted",
     highlight: "Rooms & Suites",
-    subtitle: "Each space designed for pilgrims and travellers seeking peace",
+    subtitle: "Comfortable, serene spaces designed for pilgrims and travellers seeking peace",
   },
   {
-    image: "/assets/maingate.jpeg",
+    image: Images.commonRoom1,
+    title: "A Sacred Retreat in the",
+    highlight: "Heart of Ayodhya",
+    subtitle: "Experience warm hospitality, divine peace, and pure vegetarian living",
+  },
+  {
+    image: Images.mainGate,
     title: "Gateway to the",
     highlight: "Holy City",
-    subtitle: "Begin your spiritual journey with our warm hospitality",
+    subtitle: "Begin your spiritual journey with our warm and caring service",
   },
 ];
 

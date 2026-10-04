@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import Images from "./utils/images";
 
 const stats = [
   { value: "500m", label: "from Ram Janmabhoomi" },
@@ -37,8 +38,8 @@ const About = () => {
             <div style={{ position: "relative", paddingBottom: "110%" }}>
               {/* Main image */}
               <img
-                src="/assets/image-1.jpeg"
-                alt="Vatsalya Bhawan entrance"
+                src={Images.frontView}
+                alt="Vatsalya Bhawan building and front view"
                 style={{
                   position: "absolute", top: 0, left: 0,
                   width: "75%", height: "75%",
@@ -48,7 +49,7 @@ const About = () => {
               />
               {/* Secondary image */}
               <img
-                src="/assets/common-room-2.jpeg"
+                src={Images.commonRoom2}
                 alt="Cozy room interior"
                 style={{
                   position: "absolute", bottom: 0, right: 0,
