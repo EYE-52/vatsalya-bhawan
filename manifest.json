@@ -1,0 +1,9 @@
+{
+  "short_name": "Vatsalya",
+  "name": "Vatsalya Bhawan",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#28372D",
+  "background_color": "#FAF8F3"
+}

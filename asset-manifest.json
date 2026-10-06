@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "./static/css/main.db23716f.css",
+    "main.js": "./static/js/main.45eb56ff.js",
+    "static/js/453.75b0fd4b.chunk.js": "./static/js/453.75b0fd4b.chunk.js",
+    "static/media/room-refined-family.jpg": "./static/media/room-refined-family.cfc1841356d5b81d433b.jpg",
+    "static/media/room-refined-deluxe.jpg": "./static/media/room-refined-deluxe.0ab1d831da86879b0a9d.jpg",
+    "static/media/room-refined-standard.jpg": "./static/media/room-refined-standard.6ad8b57bdc7bea634f00.jpg",
+    "static/media/god-image.webp": "./static/media/god-image.fbb3a29b72b776700868.webp",
+    "static/media/room-image-6.webp": "./static/media/room-image-6.32c91731f2819f41cc92.webp",
+    "static/media/room-image-8.webp": "./static/media/room-image-8.78b0b114e388dc03c1e0.webp",
+    "static/media/room-image-5.webp": "./static/media/room-image-5.0c08b53f9b4164f6c1d2.webp",
+    "static/media/washroom-image-1.webp": "./static/media/washroom-image-1.0e7f463d56936fac6713.webp",
+    "static/media/common-room-2.webp": "./static/media/common-room-2.4b542824f99e621703d1.webp",
+    "static/media/galary-1.webp": "./static/media/galary-1.1a51d1a5de1c71025cdc.webp",
+    "index.html": "./index.html",
+    "main.db23716f.css.map": "./static/css/main.db23716f.css.map",
+    "main.45eb56ff.js.map": "./static/js/main.45eb56ff.js.map",
+    "453.75b0fd4b.chunk.js.map": "./static/js/453.75b0fd4b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.db23716f.css",
+    "static/js/main.45eb56ff.js"
+  ]
+}
