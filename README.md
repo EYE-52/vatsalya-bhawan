@@ -1,13 +1,11 @@
-# Vatsalaya Bhawan
+# Vatsalya Bhawan
 
-In the project directory, you can run:
+Ayodhya hospitality website with a continuous Veo journey film, optional Diwali lights, room enquiries, a city guide PDF and a real Google Maps embed.
 
-### `npm start`
+Live site: https://eye-52.github.io/vatsalya-bhawan/
 
-### `npm run build`
+Run `npm ci` once, then `npm start` for development. Run `CI=true npm test -- --watchAll=false --runInBand` to verify the enquiry and film/theme behaviour.
 
-Whenever you do changes for showing changes on site
-- run ``npm run build``
-- run ``npm run deploy``
-- add the changes in git and push it in github
+`npm run deploy` builds the site and publishes the output to the `gh-pages` branch of **EYE-52/vatsalya-bhawan**. GitHub Pages serves the root of that branch. The original property's repository is preserved as the `origin` remote; the redesign repository is the `eye52` remote. Push source changes with `git push eye52 HEAD:main`.
 
+The hero film is cinematic artwork, and the exterior/room photos are AI-reframed from property photographs. Original photo comparisons remain available. See `REDESIGN_NOTES.md` for asset provenance, and `scripts/map-guide/` for the downloadable schematic map.

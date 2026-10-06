@@ -1,0 +1,5 @@
+# Local sources and inspection output; website delivery files live in public/assets.
+*.mp4
+assets/
+previews/
+__pycache__/
