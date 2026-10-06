@@ -1,207 +1,308 @@
 import React from "react";
-import { Phone, Mail, MapPin, Facebook, Instagram } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import Images from "./utils/images";
 
+const scrollToSection = (id) => {
+  if (id === "home" || !id) {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  } else {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+};
+
 const Footer = () => {
-  const navLinks = [
-    { name: "Home",      href: "#home" },
-    { name: "About",     href: "#about" },
-    { name: "Rooms",     href: "#rooms" },
-    { name: "Amenities", href: "#amenities" },
-    { name: "Gallery",   href: "#gallery" },
-    { name: "Contact",   href: "#contact" },
+  const quickLinks = [
+    { name: "Home", targetId: "home" },
+    { name: "Room Showcase", targetId: "room-showcase" },
+    { name: "Ratings & Trust", targetId: "trust" },
+    { name: "Amenities", targetId: "amenities" },
+    { name: "Our Rooms & Tariffs", targetId: "rooms" },
+    { name: "Location & Routes", targetId: "location" },
+    { name: "Guest Reviews", targetId: "testimonials" },
+    { name: "Why Stay With Us", targetId: "why-us" },
+    { name: "Plan Your Stay", targetId: "contact" },
   ];
 
-  const nearbyAttractions = [
-    "Shri Ram Janmabhoomi Mandir",
-    "Hanuman Garhi Temple",
-    "Kanak Bhavan",
-    "Saryu River Ghats",
-    "Raja Dashrath Mahal",
-    "Naya Ghat",
+  const exploreAyodhya = [
+    { name: "Shri Ram Janmabhoomi Darshan", targetId: "location" },
+    { name: "Hanuman Garhi Temple Guide", targetId: "location" },
+    { name: "Kanak Bhawan History", targetId: "location" },
+    { name: "Ghats of Saryu & Evening Aarti", targetId: "location" },
+    { name: "Ayodhya Yatra Itinerary", targetId: "location" },
+    { name: "Satvik Dining & Local Food", targetId: "amenities" },
   ];
 
   return (
-    <footer>
-      {/* CTA Band */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #92400e 0%, #b45309 40%, #d97706 100%)",
-          padding: "56px 24px",
-          textAlign: "center",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Decorative circles */}
-        <div style={{ position: "absolute", top: "-40px", left: "-40px", width: "160px", height: "160px", borderRadius: "50%", background: "rgba(255,255,255,0.06)" }} />
-        <div style={{ position: "absolute", bottom: "-60px", right: "-30px", width: "200px", height: "200px", borderRadius: "50%", background: "rgba(255,255,255,0.05)" }} />
-
-        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "12px", fontWeight: 600 }}>
-          ✦ Ready to Visit the Holy City? ✦
-        </p>
-        <h2
-          className="font-display"
-          style={{ color: "#fff", fontSize: "clamp(1.75rem, 4vw, 2.75rem)", fontWeight: 700, marginBottom: "16px", lineHeight: 1.2 }}
-        >
-          Book Your Stay at Vatsalya Bhawan
-        </h2>
-        <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "1rem", marginBottom: "28px" }}>
-          Experience divinity and comfort — 500m from Shri Ram Janmabhoomi
-        </p>
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-          <a
-            href="#contact"
-            style={{
-              background: "#fff",
-              color: "#b45309",
-              fontWeight: 700,
-              padding: "14px 36px",
-              borderRadius: "4px",
-              textDecoration: "none",
-              fontSize: "0.85rem",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              transition: "all 0.2s",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-            }}
-          >
-            Book Now
-          </a>
-          <a
-            href="tel:+919451338729"
-            style={{
-              background: "transparent",
-              color: "#fff",
-              fontWeight: 600,
-              padding: "13px 36px",
-              borderRadius: "4px",
-              border: "1.5px solid rgba(255,255,255,0.6)",
-              textDecoration: "none",
-              fontSize: "0.85rem",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              transition: "all 0.2s",
-            }}
-          >
-            Call Us
-          </a>
-        </div>
-      </div>
-
-      {/* Main footer */}
-      <div style={{ background: "#1c1917", color: "rgba(255,255,255,0.7)", padding: "64px 24px 32px" }}>
+    <footer style={{ background: "#0c0a09", color: "rgba(255,255,255,0.75)", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+      <div className="container-section" style={{ padding: "64px 16px 40px 16px" }}>
         <div
-          className="max-w-7xl mx-auto"
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "40px", marginBottom: "48px" }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "40px",
+            marginBottom: "48px",
+          }}
         >
-          {/* Brand */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-              <img src={Images.logo} alt="Logo" style={{ height: "52px", width: "52px", objectFit: "contain", borderRadius: "50%", border: "2px solid rgba(217,119,6,0.4)" }} />
+            <h4
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "18px",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
+                paddingBottom: "8px",
+              }}
+            >
+              Community & Social
+            </h4>
+            <p style={{ fontSize: "0.82rem", lineHeight: 1.5, color: "rgba(255,255,255,0.65)", marginBottom: "16px" }}>
+              Follow our daily spiritual updates, festival aarti schedules, and pilgrim stories.
+            </p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", marginBottom: "20px", padding: "8px 0" }}>
+              <a
+                href="https://www.instagram.com/vatsalyabhawan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                  transition: "transform 0.2s ease, opacity 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.15)";
+                  e.currentTarget.style.opacity = "0.85";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.opacity = "1";
+                }}
+              >
+                <img
+                  src={Images.instaIcon}
+                  alt="Instagram"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: "44px", height: "44px", objectFit: "contain", display: "block" }}
+                />
+              </a>
+              <a
+                href="https://www.facebook.com/vatsalyabhawan"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                  transition: "transform 0.2s ease, opacity 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.15)";
+                  e.currentTarget.style.opacity = "0.85";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.opacity = "1";
+                }}
+              >
+                <img
+                  src={Images.facebookIcon}
+                  alt="Facebook"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: "44px", height: "44px", objectFit: "contain", display: "block" }}
+                />
+              </a>
+              <a
+                href="https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Google Maps"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                  transition: "transform 0.2s ease, opacity 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.15)";
+                  e.currentTarget.style.opacity = "0.85";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.opacity = "1";
+                }}
+              >
+                <img
+                  src={Images.googleMapIcon}
+                  alt="Google Maps"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: "44px", height: "44px", objectFit: "contain", display: "block" }}
+                />
+              </a>
+            </div>
+
+            <div style={{ fontSize: "0.76rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
+              Check-in: 12:00 PM · Check-out: 11:00 AM<br />
+              100% Pure Vegetarian & Sanctified Environment
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <button
+              onClick={() => scrollToSection("home")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                textAlign: "left",
+              }}
+            >
+              <img
+                src={Images.logo}
+                alt="Vatsalya Bhawan Logo"
+                loading="lazy"
+                decoding="async"
+                style={{ width: "42px", height: "42px", objectFit: "contain", borderRadius: "50%", background: "#fff", padding: "2px" }}
+              />
               <div>
-                <p className="font-devnagri" style={{ color: "#fbbf24", fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.2 }}>वात्सल्य भवन</p>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase" }}>Ayodhya</p>
+                <h3 className="font-display" style={{ fontSize: "1.2rem", fontWeight: 700, color: "#ffffff", margin: 0, lineHeight: 1.2 }}>
+                  VATSALYA BHAWAN
+                </h3>
+                <span style={{ fontSize: "0.78rem", color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>
+                  AYODHYA DHAM
+                </span>
+              </div>
+            </button>
+
+            <p style={{ fontSize: "0.85rem", lineHeight: 1.6, color: "rgba(255,255,255,0.65)", margin: 0 }}>
+              Your peaceful sacred home away from home. Located just 500 metres from Shri Ram Janmabhoomi temple for a blessed pilgrimage.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "8px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.84rem" }}>
+                <MapPin size={16} color="#fbbf24" style={{ flexShrink: 0, marginTop: "2px" }} />
+                <span>Near Shri Ram Janmabhoomi, Kaniganj, Ayodhya, Uttar Pradesh 224123</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.84rem" }}>
+                <Phone size={15} color="#fbbf24" />
+                <a href="tel:+919451338729" style={{ color: "#ffffff", textDecoration: "none", fontWeight: 600 }}>
+                  +91 94513 38729
+                </a>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.84rem" }}>
+                <MessageCircle size={15} color="#25d366" />
+                <a href="https://wa.me/919451338729" target="_blank" rel="noopener noreferrer" style={{ color: "#25d366", textDecoration: "none", fontWeight: 600 }}>
+                  Chat on WhatsApp
+                </a>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.84rem" }}>
+                <Mail size={15} color="#fbbf24" />
+                <a href="mailto:vatsalya.bhawan.april@gmail.com" style={{ color: "rgba(255,255,255,0.85)", textDecoration: "none" }}>
+                  vatsalya.bhawan.april@gmail.com
+                </a>
               </div>
             </div>
-            <p style={{ lineHeight: 1.8, fontSize: "0.85rem", marginBottom: "20px" }}>
-              Your sacred home away from home in the divine city of Ayodhya. Hospitality with love, comfort with devotion.
-            </p>
-            <div style={{ display: "flex", gap: "12px" }}>
-              {[
-                { Icon: Facebook, href: "https://www.facebook.com/vatsalyabhawan", label: "Facebook" },
-                { Icon: Instagram, href: "https://www.instagram.com/vatsalyabhawan/", label: "Instagram" },
-              ].map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: "36px", height: "36px",
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.08)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "rgba(255,255,255,0.6)", transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "var(--saffron-mid)"; e.currentTarget.style.borderColor = "var(--saffron-mid)"; e.currentTarget.style.color = "#fff"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
-            </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 style={{ color: "#fbbf24", fontWeight: 600, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>
+            <h4
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "18px",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
+                paddingBottom: "8px",
+              }}
+            >
               Quick Links
-            </h3>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
-              {navLinks.map((l) => (
-                <li key={l.name}>
-                  <a
-                    href={l.href}
-                    style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.875rem", textDecoration: "none", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = "#fbbf24"}
-                    onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
+            </h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "9px" }}>
+              {quickLinks.map((item) => (
+                <li key={item.name}>
+                  <button
+                    onClick={() => scrollToSection(item.targetId)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      color: "rgba(255,255,255,0.7)",
+                      fontSize: "0.85rem",
+                      textAlign: "left",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => (e.target.style.color = "#fbbf24")}
+                    onMouseLeave={(e) => (e.target.style.color = "rgba(255,255,255,0.7)")}
                   >
-                    {l.name}
-                  </a>
+                    {item.name}
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Nearby Attractions */}
           <div>
-            <h3 style={{ color: "#fbbf24", fontWeight: 600, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>
-              Nearby Attractions
-            </h3>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
-              {nearbyAttractions.map((a) => (
-                <li key={a} style={{ display: "flex", gap: "8px", alignItems: "flex-start", color: "rgba(255,255,255,0.6)", fontSize: "0.875rem" }}>
-                  <span style={{ color: "#d97706", marginTop: "1px", flexShrink: 0 }}>✦</span>
-                  {a}
+            <h4
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "18px",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
+                paddingBottom: "8px",
+              }}
+            >
+              Explore Ayodhya
+            </h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "9px" }}>
+              {exploreAyodhya.map((item) => (
+                <li key={item.name}>
+                  <button
+                    onClick={() => scrollToSection(item.targetId)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      color: "rgba(255,255,255,0.7)",
+                      fontSize: "0.85rem",
+                      textAlign: "left",
+                      transition: "color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => (e.target.style.color = "#fbbf24")}
+                    onMouseLeave={(e) => (e.target.style.color = "rgba(255,255,255,0.7)")}
+                  >
+                    {item.name}
+                  </button>
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 style={{ color: "#fbbf24", fontWeight: 600, fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px" }}>
-              Contact Us
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              {[
-                { Icon: MapPin, text: "Tarun Pura Road, Kaniganj, Ayodhya, UP 224001", href: "https://maps.google.com/?q=Vatsalya+Bhawan+Ayodhya" },
-                { Icon: Phone, text: "+91 94513 38729 (Primary)", href: "tel:+919451338729" },
-                { Icon: Phone, text: "+91 94551 72867 (Reservations)", href: "tel:+919455172867" },
-                { Icon: Mail, text: "vatsalya.bhawan.aprill@gmail.com", href: "mailto:vatsalya.bhawan.aprill@gmail.com" },
-              ].map(({ Icon, text, href }) => (
-                <div key={text} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                  <Icon size={16} color="#d97706" style={{ flexShrink: 0, marginTop: "2px" }} />
-                  {href ? (
-                    <a href={href} style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", lineHeight: 1.5, textDecoration: "none" }}
-                      onMouseEnter={(e) => e.currentTarget.style.color = "#fbbf24"}
-                      onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}
-                    >{text}</a>
-                  ) : (
-                    <span style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.85rem", lineHeight: 1.5 }}>{text}</span>
-                  )}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div
-          className="max-w-7xl mx-auto"
           style={{
             borderTop: "1px solid rgba(255,255,255,0.08)",
             paddingTop: "24px",
@@ -210,14 +311,16 @@ const Footer = () => {
             justifyContent: "space-between",
             alignItems: "center",
             gap: "12px",
+            fontSize: "0.78rem",
+            color: "rgba(255,255,255,0.45)",
           }}
         >
-          <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
+          <div>
             © {new Date().getFullYear()} Vatsalya Bhawan, Ayodhya. All rights reserved.
-          </p>
-          <p style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
-            Designed with <span style={{ color: "#d97706" }}>♥</span> for the holy city of Ayodhya
-          </p>
+          </div>
+          <div>
+            Near Shri Ram Janmabhoomi · Ayodhya Dham, UP
+          </div>
         </div>
       </div>
     </footer>

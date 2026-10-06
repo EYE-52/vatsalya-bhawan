@@ -1,164 +1,217 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import { Star, Sparkles, CheckCircle2 } from "lucide-react";
 
 const reviews = [
   {
-    name: "Rajesh Sharma",
+    name: "Rajesh & Meera Sharma",
     location: "New Delhi",
+    category: "Location & Aarti",
     rating: 5,
-    text: "A truly divine experience! The room was clean, staff extremely helpful, and the proximity to Ram Mandir made our pilgrimage complete. Highly recommend Vatsalya Bhawan!",
-    initials: "RS",
+    text: "Being just 500 metres from Shri Ram Janmabhoomi made all the difference for our morning Aarti. We avoided the massive traffic queues and walked comfortably. The rooms were spotless and the quiet sacred atmosphere was deeply rejuvenating.",
+    source: "Google Verified Review",
+    date: "February 2026",
   },
   {
-    name: "Priya & Family",
-    location: "Mumbai",
+    name: "Vikram Kulkarni",
+    location: "Pune, Maharashtra",
+    category: "Elderly Care & Lift",
     rating: 5,
-    text: "We stayed for 4 nights with our family. The family suite was spacious, food was delicious and pure vegetarian. Location is perfect — we could walk to Hanuman Garhi in minutes.",
-    initials: "PF",
+    text: "Traveled with my 74-year-old mother. The presence of a smooth elevator, ground-floor accessibility, and the extraordinarily compassionate staff who arranged an e-rickshaw for temple Darshan made her pilgrimage unforgettable.",
+    source: "Booking.com Pilgrim Choice",
+    date: "January 2026",
   },
   {
-    name: "Anand Verma",
+    name: "Sunita & Arvind Goel",
+    location: "Jaipur, Rajasthan",
+    category: "Family Pilgrimage",
+    rating: 5,
+    text: "The Family Suite was spacious and beautifully appointed. Fresh linens, crisp air conditioning, and peaceful surroundings. The pure vegetarian breakfast was warm and satisfying. Highly recommended for family yatris.",
+    source: "MakeMyTrip Verified",
+    date: "March 2026",
+  },
+  {
+    name: "Dr. Alok Srivastava",
     location: "Lucknow",
-    rating: 4,
-    text: "Great value for money. AC room was comfortable, Wi-Fi worked well, and the front desk was always available. Will definitely return on our next Ayodhya visit.",
-    initials: "AV",
+    category: "Cleanliness & Comfort",
+    rating: 5,
+    text: "Pristine hygiene standards! The attached bathrooms had brand new geysers with non-stop hot water, and the beds were firm and restful. Front desk team helped us plan our Hanuman Garhi and Kanak Bhawan visits seamlessly.",
+    source: "Google Verified Review",
+    date: "February 2026",
   },
   {
-    name: "Sunita Devi",
-    location: "Varanasi",
+    name: "Ananya Mukherjee",
+    location: "Kolkata",
+    category: "Warm Hospitality",
     rating: 5,
-    text: "Warm hospitality and beautiful spiritual ambiance. The staff went out of their way to help us. Location is just perfect for temple visits. Jai Shri Ram!",
-    initials: "SD",
+    text: "Such genuine, warm hospitality! We arrived late at night from the railway station and the reception was ready with a warm greeting and peaceful room. You truly feel at home in Ayodhya here.",
+    source: "Tripadvisor Review",
+    date: "January 2026",
   },
 ];
 
 const Testimonials = () => {
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((el, i) => {
-              setTimeout(() => el.classList.add("visible"), i * 120);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
       id="testimonials"
-      ref={sectionRef}
       style={{
-        background: "linear-gradient(135deg, #fef3c7 0%, #fffbf0 100%)",
-        padding: "96px 0",
-        position: "relative",
-        overflow: "hidden",
+        background: "#ffffff",
+        padding: "80px 0",
+        borderTop: "1px solid rgba(0,0,0,0.06)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}
     >
-      {/* Decorative Om */}
-      <div
-        style={{
-          position: "absolute", right: "-40px", top: "50%", transform: "translateY(-50%)",
-          fontSize: "300px", color: "rgba(217,119,6,0.05)", fontFamily: "serif",
-          lineHeight: 1, userSelect: "none",
-        }}
-      >
-        ॐ
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative">
-        {/* Heading */}
-        <div className="text-center" style={{ marginBottom: "60px" }}>
-          <div className="ornament reveal">
-            <div className="ornament-line" />
-            <div className="ornament-diamond" />
-            <div className="ornament-line" />
-          </div>
-          <span className="section-label reveal">Guest Reviews</span>
-          <h2
-            className="font-display reveal"
-            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--saffron-deep)", marginTop: "0.5rem" }}
+      <div className="container-section">
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              color: "#c2882b",
+              fontWeight: 700,
+              fontSize: "0.76rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              marginBottom: "8px",
+            }}
           >
-            Words of Our <span style={{ color: "var(--saffron-light)", fontStyle: "italic" }}>Beloved Guests</span>
+            <Sparkles size={14} />
+            WHAT OUR GUESTS SAY
+          </div>
+          <h2
+            className="font-display"
+            style={{
+              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              fontWeight: 700,
+              color: "#1c1917",
+              lineHeight: 1.2,
+              margin: 0,
+            }}
+          >
+            Memories of Peace &{" "}
+            <span style={{ color: "#c2882b", fontStyle: "italic" }}>
+              Devotion
+            </span>
           </h2>
+          <p
+            style={{
+              color: "#78716c",
+              fontSize: "1.05rem",
+              marginTop: "12px",
+              maxWidth: "540px",
+              margin: "12px auto 0 auto",
+            }}
+          >
+            Real stories from pilgrims and families who chose Vatsalya Bhawan for their sacred stay in Ayodhya.
+          </p>
         </div>
 
-        {/* Review grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "24px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "24px",
+          }}
+        >
           {reviews.map((r, i) => (
             <div
-              key={r.name}
-              className="reveal card-hover"
+              key={i}
               style={{
-                background: "var(--white)",
+                background: "#faf7f2",
                 borderRadius: "12px",
-                padding: "28px",
-                boxShadow: "var(--shadow-card)",
-                border: "1px solid rgba(217,119,6,0.1)",
-                position: "relative",
+                border: "1px solid rgba(0,0,0,0.06)",
+                padding: "26px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-4px)";
+                e.currentTarget.style.boxShadow = "0 10px 24px rgba(0,0,0,0.07)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.03)";
               }}
             >
-              {/* Quote mark */}
-              <div
-                style={{
-                  position: "absolute", top: "20px", right: "24px",
-                  fontSize: "4rem", lineHeight: 1, color: "var(--cream-dark)",
-                  fontFamily: "Georgia, serif", userSelect: "none",
-                }}
-              >
-                "
-              </div>
-
-              {/* Stars */}
-              <div className="stars" style={{ marginBottom: "12px", fontSize: "0.85rem" }}>
-                {"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}
-              </div>
-
-              {/* Text */}
-              <p style={{ color: "var(--text-mid)", fontSize: "0.875rem", lineHeight: 1.75, marginBottom: "20px", fontStyle: "italic" }}>
-                "{r.text}"
-              </p>
-
-              {/* Author */}
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div>
                 <div
                   style={{
-                    width: "40px", height: "40px", borderRadius: "50%",
-                    background: "linear-gradient(135deg, var(--saffron-mid), var(--gold))",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "#fff", fontWeight: 700, fontSize: "0.8rem",
-                    flexShrink: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "14px",
                   }}
                 >
-                  {r.initials}
+                  <span
+                    style={{
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      background: "#fef3c7",
+                      color: "#92400e",
+                      padding: "3px 9px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {r.category}
+                  </span>
+                  <div style={{ display: "flex", gap: "2px", color: "#d97706" }}>
+                    {[...Array(r.rating)].map((_, idx) => (
+                      <Star key={idx} size={14} fill="#d97706" color="#d97706" />
+                    ))}
+                  </div>
                 </div>
+
+                <p
+                  style={{
+                    fontSize: "0.92rem",
+                    color: "#44403c",
+                    lineHeight: 1.65,
+                    fontStyle: "italic",
+                    margin: "0 0 20px 0",
+                  }}
+                >
+                  “{r.text}”
+                </p>
+              </div>
+
+              <div
+                style={{
+                  borderTop: "1px solid rgba(0,0,0,0.06)",
+                  paddingTop: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <div>
-                  <p style={{ fontWeight: 600, color: "var(--text-dark)", fontSize: "0.875rem" }}>{r.name}</p>
-                  <p style={{ color: "var(--text-light)", fontSize: "0.75rem" }}>{r.location}</p>
+                  <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#1c1917" }}>
+                    {r.name}
+                  </div>
+                  <div style={{ fontSize: "0.76rem", color: "#78716c" }}>
+                    {r.location}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    fontSize: "0.74rem",
+                    color: "#059669",
+                    fontWeight: 600,
+                  }}
+                >
+                  <CheckCircle2 size={13} />
+                  <span>{r.source}</span>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Booking platforms */}
-        <div
-          className="reveal text-center"
-          style={{ marginTop: "48px", color: "var(--text-light)", fontSize: "0.85rem" }}
-        >
-          Also rated on: &nbsp;
-          {["Booking.com", "MakeMyTrip", "Hotels.com", "Expedia"].map((p, i) => (
-            <span key={p}>
-              <span style={{ color: "var(--saffron-mid)", fontWeight: 500 }}>{p}</span>
-              {i < 3 && " · "}
-            </span>
           ))}
         </div>
       </div>

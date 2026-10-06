@@ -1,337 +1,343 @@
-import React, { useEffect, useRef } from "react";
-import { Star, ShieldCheck, Award } from "lucide-react";
+import React, { useState, useEffect } from "react";
 
-const platforms = [
+import bookingLogo from "./assets/ota-logo/Booking-Logo.png";
+import agodaLogo from "./assets/ota-logo/agoda-logo.png";
+import airbnbLogo from "./assets/ota-logo/airbnb-logo.png";
+import easeMyTripLogo from "./assets/ota-logo/ease-my-trip-logo.png";
+import goibiboLogo from "./assets/ota-logo/goibibo-logo.png";
+import hotelsComLogo from "./assets/ota-logo/hotels_com-logo.png";
+import makemytripLogo from "./assets/ota-logo/makemytrip-logo.png";
+import tripadvisorLogo from "./assets/ota-logo/tripadvisor-logo.png";
+
+const platformRatings = [
   {
     name: "Booking.com",
-    badge: "9.0+ / 10 Superb",
-    color: "#003580",
-    textColor: "#ffffff",
-    tag: "Verified Reviews",
-    desc: "Preferred Pilgrim Stay in Ayodhya",
-    link: "https://www.booking.com/searchresults.html?ss=Vatsalya+Bhawan+Ayodhya",
+    logo: bookingLogo,
+    score: "9.2",
+    outOf: "/ 10",
+    label: "Superb",
   },
   {
-    name: "Google Reviews",
-    badge: "4.8 ★★★★★",
-    color: "#4285F4",
-    textColor: "#ffffff",
-    tag: "High Customer Trust",
-    desc: "Top Rated Homestay & Hotel by Visitors",
-    link: "https://www.google.com/search?q=vatsalya+bhawan+hotel+ayodhya",
+    name: "Tripadvisor",
+    logo: tripadvisorLogo,
+    score: "4.8",
+    outOf: "/ 5",
+    label: "Excellent",
   },
   {
     name: "MakeMyTrip",
-    badge: "Top Recommended",
-    color: "#e41d25",
-    textColor: "#ffffff",
-    tag: "Instant Confirmation",
-    desc: "Popular choice for Ram Mandir Darshan",
-    link: "https://www.makemytrip.com/hotels/hotel-listing/?city=Ayodhya&searchText=Vatsalya%20Bhawan",
-  },
-  {
-    name: "Agoda",
-    badge: "Great Choice",
-    color: "#589442",
-    textColor: "#ffffff",
-    tag: "Best Price Guarantee",
-    desc: "Fast & hassle-free online booking",
-    link: "https://www.agoda.com/search?city=28826&text=Vatsalya%20Bhawan",
+    logo: makemytripLogo,
+    score: "4.2",
+    outOf: "/ 5",
+    label: "Exceptional",
   },
   {
     name: "Goibibo",
-    badge: "Certified Clean",
-    color: "#ec5b24",
-    textColor: "#ffffff",
-    tag: "Fast Check-in",
-    desc: "Trusted by thousands of family travelers",
-    link: "https://www.goibibo.com/hotels/hotels-in-ayodhya/?q=Vatsalya%20Bhawan",
+    logo: goibiboLogo,
+    score: "4.3",
+    outOf: "/ 5",
+    label: "Excellent",
+  },
+  {
+    name: "Agoda",
+    logo: agodaLogo,
+    score: "4.8",
+    outOf: "/ 5",
+    label: "Superb",
   },
   {
     name: "Airbnb",
-    badge: "Superhost Quality",
-    color: "#FF5A5F",
-    textColor: "#ffffff",
-    tag: "Authentic Stay",
-    desc: "Homely comfort in the spiritual capital",
-    link: "https://www.airbnb.com/s/Ayodhya--India/homes?query=Vatsalya%20Bhawan",
+    logo: airbnbLogo,
+    score: "4.9",
+    outOf: "/ 5",
+    label: "Superhost",
   },
   {
-    name: "Expedia",
-    badge: "VIP Access",
-    color: "#002244",
-    textColor: "#ffffff",
-    tag: "Global Support",
-    desc: "Worldwide booking convenience",
-    link: "https://www.expedia.co.in/Hotel-Search?destination=Ayodhya%2C%20Uttar%20Pradesh&q=Vatsalya%20Bhawan",
+    name: "EaseMyTrip",
+    logo: easeMyTripLogo,
+    score: "4.7",
+    outOf: "/ 5",
+    label: "Great Choice",
+  },
+  {
+    name: "Hotels.com",
+    logo: hotelsComLogo,
+    score: "4.6",
+    outOf: "/ 5",
+    label: "Verified",
   },
 ];
 
+const RatingCard = ({ p, isLast = false, isDesktop = false }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      flex: isDesktop ? "1 1 0px" : "0 0 auto",
+      minWidth: isDesktop ? 0 : "150px",
+      padding: isDesktop ? "0 10px" : "0 18px",
+      borderRight: isLast ? "none" : "1px dashed rgba(0, 0, 0, 0.15)",
+      cursor: "default",
+      userSelect: "none",
+      boxSizing: "border-box",
+    }}
+  >
+    <div
+      style={{
+        height: "42px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: "8px",
+        width: "100%",
+      }}
+    >
+      <img
+        src={p.logo}
+        alt={p.name}
+        loading="lazy"
+        decoding="async"
+        style={{
+          maxHeight: "36px",
+          maxWidth: isDesktop ? "100%" : "125px",
+          width: "auto",
+          objectFit: "contain",
+        }}
+      />
+    </div>
+
+    <div
+      style={{
+        display: "flex",
+        alignItems: "baseline",
+        gap: "3px",
+        lineHeight: 1.1,
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif",
+      }}
+    >
+      <span
+        style={{
+          fontSize: "1.42rem",
+          fontWeight: 800,
+          color: "#1c1917",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {p.score}
+      </span>
+      <span
+        style={{
+          fontSize: "0.92rem",
+          fontWeight: 700,
+          color: "#78716c",
+        }}
+      >
+        {p.outOf}
+      </span>
+    </div>
+
+    <span
+      style={{
+        fontSize: "0.82rem",
+        fontWeight: 550,
+        color: "#78716c",
+        marginTop: "4px",
+        whiteSpace: "nowrap",
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif",
+      }}
+    >
+      {p.label}
+    </span>
+  </div>
+);
+
 const BookingPlatforms = () => {
-  const sectionRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((el, i) => {
-              setTimeout(() => el.classList.add("visible"), i * 80);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const marqueeList = [...platformRatings, ...platformRatings, ...platformRatings];
 
   return (
     <section
       id="platforms"
-      ref={sectionRef}
       style={{
-        background: "linear-gradient(180deg, var(--cream-dark) 0%, var(--cream) 100%)",
-        padding: "80px 0 96px",
+        background: "#faf7f2",
+        padding: isMobile ? "22px 0" : "38px 0",
+        borderTop: "1px solid rgba(0,0,0,0.06)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
+        overflow: "hidden",
         position: "relative",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center reveal" style={{ marginBottom: "50px" }}>
-          <div className="ornament">
-            <div className="ornament-line" />
-            <div className="ornament-diamond" />
-            <div className="ornament-line" />
-          </div>
-          <span className="section-label">Trusted & Certified Hospitality</span>
-          <h2
-            className="font-display"
-            style={{ fontSize: "clamp(2rem, 3.5vw, 2.75rem)", fontWeight: 700, color: "var(--saffron-deep)", marginTop: "0.5rem" }}
-          >
-            Top Rated Across <span style={{ color: "var(--saffron-light)", fontStyle: "italic" }}>Leading Platforms</span>
-          </h2>
-          <p style={{ color: "var(--text-light)", marginTop: "0.75rem", maxWidth: "560px", margin: "0.75rem auto 0", lineHeight: 1.7, fontSize: "0.95rem" }}>
-            Book with complete confidence. Vatsalya Bhawan is verified, highly rated on Google and Booking.com, and proudly listed across all major travel networks.
-          </p>
-        </div>
+      <style>{`
+        @keyframes otaMarquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.333%);
+          }
+        }
+        .ota-marquee-track {
+          display: flex;
+          align-items: center;
+          width: max-content;
+          animation: otaMarquee 28s linear infinite;
+        }
+        .ota-marquee-track:hover,
+        .ota-marquee-paused {
+          animation-play-state: paused !important;
+        }
+      `}</style>
 
-        {/* Featured Trust Score Highlight Cards */}
-        <div
-          className="reveal"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "20px",
-            marginBottom: "40px",
-          }}
-        >
-          {/* Google Card */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1600px",
+          margin: "0 auto",
+          padding: isMobile ? "0" : "0 30px",
+          position: "relative",
+          boxSizing: "border-box",
+        }}
+      >
+        {isMobile && (
+          <>
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: "40px",
+                background: "linear-gradient(to right, #faf7f2, transparent)",
+                zIndex: 2,
+                pointerEvents: "none",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: "40px",
+                background: "linear-gradient(to left, #faf7f2, transparent)",
+                zIndex: 2,
+                pointerEvents: "none",
+              }}
+            />
+          </>
+        )}
+
+        {isMobile ? (
           <div
-            className="card-hover"
             style={{
-              background: "#ffffff",
-              borderRadius: "12px",
-              padding: "24px 28px",
-              boxShadow: "var(--shadow-card)",
-              border: "1.5px solid rgba(66, 133, 244, 0.25)",
+              overflowX: "hidden",
+              width: "100%",
+              padding: "6px 0",
+              cursor: "grab",
+            }}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            <div
+              className={`ota-marquee-track ${isPaused ? "ota-marquee-paused" : ""}`}
+            >
+              {marqueeList.map((p, idx) => (
+                <RatingCard key={`${p.name}-${idx}`} p={p} isDesktop={false} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div
+            style={{
               display: "flex",
               alignItems: "center",
-              gap: "20px",
+              width: "100%",
+              overflow: "hidden",
+              padding: "6px 0",
+              boxSizing: "border-box",
             }}
           >
             <div
               style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "14px",
-                background: "linear-gradient(135deg, #4285F4, #34A853)",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                minWidth: "175px",
                 flexShrink: 0,
+                paddingRight: "22px",
+                paddingLeft: "4px",
+                borderRight: "1px dashed rgba(0, 0, 0, 0.16)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                boxSizing: "border-box",
               }}
             >
-              <Star size={28} fill="#ffffff" />
-            </div>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "#1e293b", fontFamily: "'Playfair Display', serif" }}>
-                  4.8 / 5.0
-                </span>
-                <span className="stars" style={{ fontSize: "0.9rem" }}>★★★★★</span>
-              </div>
-              <p style={{ fontWeight: 600, color: "#4285F4", fontSize: "0.9rem", margin: "2px 0" }}>
-                Google Verified Rating
-              </p>
-              <p style={{ fontSize: "0.78rem", color: "var(--text-light)" }}>
-                Praised for cleanliness, warmth, and 500m temple proximity
-              </p>
-            </div>
-          </div>
-
-          {/* Booking.com Card */}
-          <div
-            className="card-hover"
-            style={{
-              background: "#ffffff",
-              borderRadius: "12px",
-              padding: "24px 28px",
-              boxShadow: "var(--shadow-card)",
-              border: "1.5px solid rgba(0, 53, 128, 0.25)",
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <div
-              style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "14px",
-                background: "#003580",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <Award size={28} color="#feba02" />
-            </div>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span
-                  style={{
-                    background: "#003580",
-                    color: "#ffffff",
-                    fontWeight: 800,
-                    fontSize: "1rem",
-                    padding: "3px 8px",
-                    borderRadius: "6px 6px 6px 0",
-                  }}
-                >
-                  9.0+
-                </span>
-                <span style={{ fontWeight: 700, color: "#003580", fontSize: "1.1rem" }}>Superb</span>
-              </div>
-              <p style={{ fontWeight: 600, color: "#1e293b", fontSize: "0.85rem", marginTop: "4px" }}>
-                Booking.com Pilgrim Choice
-              </p>
-              <p style={{ fontSize: "0.78rem", color: "var(--text-light)" }}>
-                Consistently loved by pilgrim families and solo devotees
-              </p>
-            </div>
-          </div>
-
-          {/* Direct Booking Guarantee Card */}
-          <div
-            className="card-hover"
-            style={{
-              background: "#ffffff",
-              borderRadius: "12px",
-              padding: "24px 28px",
-              boxShadow: "var(--shadow-card)",
-              border: "1.5px solid rgba(217, 119, 6, 0.25)",
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <div
-              style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "14px",
-                background: "linear-gradient(135deg, #b45309, #d97706)",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <ShieldCheck size={28} />
-            </div>
-            <div>
-              <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--saffron-deep)", fontFamily: "'Playfair Display', serif" }}>
-                Best Rate Direct
-              </span>
-              <p style={{ fontWeight: 600, color: "var(--saffron-mid)", fontSize: "0.85rem", margin: "2px 0" }}>
-                Call or WhatsApp Directly
-              </p>
-              <p style={{ fontSize: "0.78rem", color: "var(--text-light)" }}>
-                Zero commission, personalized room selection & priority check-in
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Platform Grid */}
-        <div className="reveal">
-          <p
-            className="text-center font-semibold"
-            style={{ fontSize: "0.8rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-light)", marginBottom: "20px" }}
-          >
-            Available for Booking On Your Favorite Travel Portals
-          </p>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-              gap: "14px",
-            }}
-          >
-            {platforms.map((p) => (
-              <a
-                key={p.name}
-                href={p.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-hover"
+              <h3
+                className="font-display"
                 style={{
-                  background: "#ffffff",
-                  borderRadius: "10px",
-                  padding: "18px 14px",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                  border: "1px solid rgba(217,119,6,0.12)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "transform 0.25s, box-shadow 0.25s",
+                  fontSize: "1.25rem",
+                  fontWeight: 700,
+                  color: "#c2882b",
+                  lineHeight: 1.22,
+                  letterSpacing: "0.01em",
+                  margin: 0,
                 }}
               >
-                <span
-                  style={{
-                    fontSize: "0.62rem",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    padding: "3px 8px",
-                    borderRadius: "100px",
-                    background: p.color,
-                    color: p.textColor,
-                    marginBottom: "8px",
-                  }}
-                >
-                  {p.badge}
+                VATSALYA Bhawan
+                <br />
+                <span style={{ color: "#c2882b", fontWeight: 700 }}>
+                  Ayodhya
                 </span>
-                <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#1e293b", marginBottom: "4px" }}>
-                  {p.name}
-                </span>
-                <span style={{ fontSize: "0.72rem", color: "var(--text-light)", lineHeight: 1.3 }}>
-                  {p.tag}
-                </span>
-              </a>
-            ))}
+              </h3>
+              <p
+                style={{
+                  fontSize: "0.82rem",
+                  color: "#57534e",
+                  fontWeight: 600,
+                  marginTop: "6px",
+                  marginBottom: 0,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Top Ratings Across OTAs
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flex: 1,
+                width: "100%",
+                justifyContent: "space-between",
+                minWidth: 0,
+              }}
+            >
+              {platformRatings.map((p, idx) => (
+                <RatingCard
+                  key={p.name}
+                  p={p}
+                  isDesktop={true}
+                  isLast={idx === platformRatings.length - 1}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

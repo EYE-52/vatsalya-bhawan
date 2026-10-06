@@ -1,309 +1,468 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: "Address",
-    lines: ["Tarun Pura Road, Kaniganj,", "Ayodhya, Uttar Pradesh — 224001"],
-    link: "https://maps.google.com/?q=Vatsalya+Bhawan+Ayodhya",
-    linkText: "Get Directions on Google Maps →",
-  },
-  {
-    icon: Phone,
-    title: "Phone & WhatsApp",
-    phoneList: [
-      { num: "+91 94513 38729", link: "tel:+919451338729", note: "Primary / WhatsApp" },
-      { num: "+91 94551 72867", link: "tel:+919455172867", note: "Reservations & Support" },
-    ],
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    lines: ["vatsalya.bhawan.aprill@gmail.com"],
-    link: "mailto:vatsalya.bhawan.aprill@gmail.com",
-    linkText: "Send Email →",
-  },
-  {
-    icon: Clock,
-    title: "Check-in / Check-out",
-    lines: ["Check-in: 12:00 PM", "Check-out: 11:00 AM"],
-  },
-];
+import React, { useState } from "react";
+import { Phone, MessageCircle, Send, CheckCircle, Calendar, Users, BedDouble, Navigation } from "lucide-react";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "1", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    room: "Deluxe King Room",
+    checkIn: "",
+    checkOut: "",
+    guests: "2 Adults",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((el, i) => {
-              setTimeout(() => el.classList.add("visible"), i * 100);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-    setForm({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: "1", message: "" });
   };
 
-  const inputStyle = {
-    width: "100%", padding: "12px 16px",
-    border: "1.5px solid #e7e5e4", borderRadius: "6px",
-    fontSize: "0.875rem", color: "var(--text-dark)",
-    background: "#fafaf9", outline: "none", transition: "border-color 0.2s",
-    fontFamily: "'Inter', sans-serif",
+  const sendWhatsAppDirect = () => {
+    const text = encodeURIComponent(
+      `Hello Vatsalya Bhawan! I want to plan my stay.\n` +
+      `• Name: ${form.name || "Guest"}\n` +
+      `• Phone: ${form.phone || "Not provided"}\n` +
+      `• Room: ${form.room}\n` +
+      `• Dates: ${form.checkIn || "TBD"} to ${form.checkOut || "TBD"}\n` +
+      `• Guests: ${form.guests}\n` +
+      `• Message: ${form.message || "Please share rate and availability."}`
+    );
+    window.open(`https://wa.me/919451338729?text=${text}`, "_blank");
   };
 
   return (
-    <section id="contact" ref={sectionRef} style={{ background: "var(--cream-dark)", padding: "96px 0" }}>
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Heading */}
-        <div className="text-center" style={{ marginBottom: "60px" }}>
-          <div className="ornament reveal">
-            <div className="ornament-line" />
-            <div className="ornament-diamond" />
-            <div className="ornament-line" />
-          </div>
-          <span className="section-label reveal">Get In Touch</span>
-          <h2
-            className="font-display reveal"
-            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "var(--saffron-deep)", marginTop: "0.5rem" }}
+    <section id="contact" style={{ background: "#fdfbf7", padding: "80px 0" }}>
+      <div className="container-section">
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              color: "#c2882b",
+              fontWeight: 700,
+              fontSize: "0.76rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              marginBottom: "8px",
+            }}
           >
-            Book Your <span style={{ color: "var(--saffron-light)", fontStyle: "italic" }}>Sacred Stay</span>
+            RESERVATIONS & ENQUIRIES
+          </div>
+          <h2
+            className="font-display"
+            style={{
+              fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+              fontWeight: 700,
+              color: "#1c1917",
+              lineHeight: 1.2,
+              margin: 0,
+            }}
+          >
+            Plan Your Stay at{" "}
+            <span style={{ color: "#c2882b", fontStyle: "italic" }}>
+              Vatsalya Bhawan
+            </span>
           </h2>
-          <p className="reveal" style={{ color: "var(--text-light)", marginTop: "1rem", maxWidth: "480px", margin: "1rem auto 0", lineHeight: 1.7 }}>
-            Reach out to us for reservations, special requests, or any queries. We'd love to welcome you to Vatsalya Bhawan.
+          <p
+            style={{
+              color: "#78716c",
+              fontSize: "1.05rem",
+              marginTop: "12px",
+              maxWidth: "540px",
+              margin: "12px auto 0 auto",
+            }}
+          >
+            Zero-commission booking. Reach us directly for guaranteed best tariffs, tailored pilgrimage advice, and room priority.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "48px" }}>
-          {/* Contact Info */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            {contactInfo.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.title}
-                  className="reveal"
-                  style={{
-                    display: "flex", gap: "16px",
-                    background: "var(--white)",
-                    borderRadius: "10px", padding: "20px",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                    border: "1px solid rgba(217,119,6,0.1)",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "44px", height: "44px", borderRadius: "10px", flexShrink: 0,
-                      background: "linear-gradient(135deg, var(--cream-dark), var(--parchment))",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}
-                  >
-                    <Icon size={20} color="var(--saffron-mid)" />
-                  </div>
-                  <div>
-                    <h3 style={{ fontWeight: 600, color: "var(--text-dark)", fontSize: "0.9rem", marginBottom: "6px" }}>{item.title}</h3>
-                    {item.lines && item.lines.map((l) => (
-                      <p key={l} style={{ color: "var(--text-light)", fontSize: "0.85rem", lineHeight: 1.6 }}>{l}</p>
-                    ))}
-                    {item.phoneList && (
-                      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                        {item.phoneList.map((p) => (
-                          <div key={p.num} style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <a
-                              href={p.link}
-                              style={{ color: "var(--saffron-mid)", fontSize: "0.9rem", fontWeight: 700, textDecoration: "none" }}
-                            >
-                              {p.num}
-                            </a>
-                            <span style={{ fontSize: "0.7rem", color: "var(--text-light)", background: "var(--cream-dark)", padding: "2px 8px", borderRadius: "100px", fontWeight: 500 }}>
-                              {p.note}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {item.link && (
-                      <a
-                        href={item.link}
-                        target={item.link.startsWith("http") ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        style={{ color: "var(--saffron-mid)", fontSize: "0.8rem", fontWeight: 500, marginTop: "6px", display: "inline-block" }}
-                      >
-                        {item.linkText}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Google Maps embed */}
-            <div className="reveal" style={{ borderRadius: "10px", overflow: "hidden", boxShadow: "var(--shadow-card)", height: "200px" }}>
-              <iframe
-                title="Vatsalya Bhawan Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.9!2d82.1!3d26.79!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399a07b1e3c5b4d5%3A0x0!2sAyodhya%2C+Uttar+Pradesh!5e0!3m2!1sen!2sin!4v1690000000000!5m2!1sen!2sin"
-                width="100%" height="100%"
-                style={{ border: 0 }}
-                allowFullScreen="" loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          </div>
-
-          {/* Booking Form */}
-          <div
-            className="reveal"
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "16px",
+            marginBottom: "48px",
+          }}
+        >
+          <a
+            href="https://wa.me/919451338729?text=Hello%20Vatsalya%20Bhawan%2C%20I%20would%20like%20to%20inquire%20about%20booking%20a%20room."
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              background: "var(--white)",
-              borderRadius: "12px",
-              padding: "36px",
-              boxShadow: "var(--shadow-card)",
-              border: "1px solid rgba(217,119,6,0.1)",
+              background: "linear-gradient(135deg, #25d366, #128c7e)",
+              color: "#ffffff",
+              borderRadius: "10px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              boxShadow: "0 4px 16px rgba(37, 211, 102, 0.25)",
+              transition: "transform 0.2s ease",
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-3px)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
           >
-            {submitted ? (
-              <div style={{ textAlign: "center", padding: "40px 0" }}>
-                <CheckCircle size={56} color="#059669" style={{ margin: "0 auto 16px" }} />
-                <h3 className="font-display" style={{ fontSize: "1.5rem", color: "var(--text-dark)", marginBottom: "8px" }}>
-                  Thank You!
+            <MessageCircle size={24} />
+            <div>
+              <div style={{ fontWeight: 800, fontSize: "0.95rem" }}>WHATSAPP US</div>
+              <div style={{ fontSize: "0.78rem", opacity: 0.9 }}>Instant replies in 5 mins</div>
+            </div>
+          </a>
+
+          <a
+            href="tel:+919451338729"
+            style={{
+              background: "#ffffff",
+              color: "#1c1917",
+              border: "1px solid rgba(0,0,0,0.12)",
+              borderRadius: "10px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-3px)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+          >
+            <Phone size={24} color="#c2882b" />
+            <div>
+              <div style={{ fontWeight: 800, fontSize: "0.95rem" }}>CALL DIRECT</div>
+              <div style={{ fontSize: "0.78rem", color: "#78716c" }}>+91 94513 38729</div>
+            </div>
+          </a>
+
+          <a
+            href="tel:+919455172867"
+            style={{
+              background: "#ffffff",
+              color: "#1c1917",
+              border: "1px solid rgba(0,0,0,0.12)",
+              borderRadius: "10px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-3px)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+          >
+            <Phone size={24} color="#c2882b" />
+            <div>
+              <div style={{ fontWeight: 800, fontSize: "0.95rem" }}>RESERVATIONS</div>
+              <div style={{ fontSize: "0.78rem", color: "#78716c" }}>+91 94551 72867</div>
+            </div>
+          </a>
+
+          <a
+            href="https://maps.google.com/?q=Ram+Janmabhoomi+Ayodhya"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: "#ffffff",
+              color: "#1c1917",
+              border: "1px solid rgba(0,0,0,0.12)",
+              borderRadius: "10px",
+              padding: "18px 20px",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.03)",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-3px)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+          >
+            <Navigation size={24} color="#c2882b" />
+            <div>
+              <div style={{ fontWeight: 800, fontSize: "0.95rem" }}>GET DIRECTIONS</div>
+              <div style={{ fontSize: "0.78rem", color: "#78716c" }}>Google Maps Navigation</div>
+            </div>
+          </a>
+        </div>
+
+        <div
+          style={{
+            maxWidth: "760px",
+            margin: "0 auto",
+            background: "#ffffff",
+            borderRadius: "14px",
+            padding: "36px 32px",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+            border: "1px solid rgba(194,136,43,0.18)",
+          }}
+        >
+          {submitted ? (
+            <div style={{ textAlign: "center", padding: "40px 10px" }}>
+              <CheckCircle size={56} color="#059669" style={{ margin: "0 auto 16px" }} />
+              <h3 className="font-display" style={{ fontSize: "1.6rem", color: "#1c1917", marginBottom: "8px" }}>
+                Enquiry Received!
+              </h3>
+              <p style={{ color: "#78716c", maxWidth: "460px", margin: "0 auto 24px auto", lineHeight: 1.6 }}>
+                Thank you, {form.name || "Guest"}. Our Ayodhya front desk team will contact you shortly to confirm your room details.
+              </p>
+              <button
+                onClick={sendWhatsAppDirect}
+                style={{
+                  background: "linear-gradient(135deg, #25d366, #128c7e)",
+                  color: "#ffffff",
+                  padding: "12px 24px",
+                  borderRadius: "6px",
+                  border: "none",
+                  fontWeight: 700,
+                  fontSize: "0.92rem",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <MessageCircle size={18} />
+                Send Copy to WhatsApp for Faster Confirmation
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div style={{ borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: "12px" }}>
+                <h3 className="font-display" style={{ fontSize: "1.35rem", fontWeight: 700, color: "#1c1917", margin: "0 0 4px 0" }}>
+                  Direct Reservation Enquiry
                 </h3>
-                <p style={{ color: "var(--text-light)", lineHeight: 1.7 }}>
-                  Your enquiry has been received. Our team will get back to you within 24 hours.
-                </p>
+                <span style={{ fontSize: "0.82rem", color: "#78716c" }}>
+                  Fill in your details below and we will confirm room availability
+                </span>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-                <h3 className="font-display" style={{ fontSize: "1.4rem", fontWeight: 700, color: "var(--saffron-deep)", marginBottom: "4px" }}>
-                  Booking Enquiry
-                </h3>
-                <p style={{ color: "var(--text-light)", fontSize: "0.85rem", marginTop: "-8px" }}>
-                  Fill in the form and we'll confirm your reservation
-                </p>
 
-                {/* Name + Phone */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                  <div>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                      Full Name *
-                    </label>
-                    <input
-                      type="text" name="name" required value={form.name}
-                      onChange={handleChange} placeholder="Ramesh Kumar"
-                      style={inputStyle}
-                      onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                      onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                      Phone *
-                    </label>
-                    <input
-                      type="tel" name="phone" required value={form.phone}
-                      onChange={handleChange} placeholder="+91 98765 43210"
-                      style={inputStyle}
-                      onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                      onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
-                  <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                    Email Address
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
+                    <Calendar size={14} color="#c2882b" />
+                    Check-in Date *
                   </label>
                   <input
-                    type="email" name="email" value={form.email}
-                    onChange={handleChange} placeholder="you@example.com"
-                    style={inputStyle}
-                    onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                    onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
+                    type="date"
+                    name="checkIn"
+                    required
+                    value={form.checkIn}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
                   />
                 </div>
-
-                {/* Check-in / Check-out */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                  <div>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                      Check-in Date
-                    </label>
-                    <input
-                      type="date" name="checkIn" value={form.checkIn}
-                      onChange={handleChange}
-                      style={inputStyle}
-                      onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                      onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                      Check-out Date
-                    </label>
-                    <input
-                      type="date" name="checkOut" value={form.checkOut}
-                      onChange={handleChange}
-                      style={inputStyle}
-                      onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                      onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
-                    />
-                  </div>
-                </div>
-
-                {/* Guests */}
                 <div>
-                  <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
+                    <Calendar size={14} color="#c2882b" />
+                    Check-out Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="checkOut"
+                    required
+                    value={form.checkOut}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
+                    <Users size={14} color="#c2882b" />
                     Number of Guests
                   </label>
                   <select
-                    name="guests" value={form.guests} onChange={handleChange}
-                    style={{ ...inputStyle }}
+                    name="guests"
+                    value={form.guests}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      background: "#ffffff",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
                   >
-                    {[1,2,3,4,5,"6+"].map((n) => (
-                      <option key={n} value={n}>{n} Guest{n !== 1 ? "s" : ""}</option>
-                    ))}
+                    <option value="1 Adult">1 Adult</option>
+                    <option value="2 Adults">2 Adults</option>
+                    <option value="3 Adults / Family">3 Adults / Family</option>
+                    <option value="4+ Adults / Group">4+ Adults / Group</option>
                   </select>
                 </div>
 
-                {/* Message */}
                 <div>
-                  <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-mid)", letterSpacing: "0.05em", display: "block", marginBottom: "6px" }}>
-                    Special Requests
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
+                    <BedDouble size={14} color="#c2882b" />
+                    Room Preference
                   </label>
-                  <textarea
-                    name="message" value={form.message} onChange={handleChange}
-                    rows={3} placeholder="Any special requirements, room preferences..."
-                    style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }}
-                    onFocus={(e) => e.target.style.borderColor = "var(--saffron-light)"}
-                    onBlur={(e) => e.target.style.borderColor = "#e7e5e4"}
+                  <select
+                    name="room"
+                    value={form.room}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      background: "#ffffff",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
+                  >
+                    <option value="Deluxe King Room">Deluxe King Room (AC / Balcony)</option>
+                    <option value="Spacious Family Suite">Spacious Family Suite (4 Guests)</option>
+                    <option value="Standard Cozy Room">Standard Cozy Room (Budget Value)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "block", marginBottom: "6px" }}>
+                    Your Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="e.g. Ramesh Sharma"
+                    value={form.name}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
                   />
                 </div>
 
-                <button type="submit" className="btn-gold" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "14px" }}>
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "block", marginBottom: "6px" }}>
+                    WhatsApp / Mobile Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    placeholder="e.g. +91 98765 43210"
+                    value={form.phone}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #d6d3d1",
+                      fontSize: "0.88rem",
+                      boxSizing: "border-box",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: "0.8rem", fontWeight: 700, color: "#44403c", display: "block", marginBottom: "6px" }}>
+                  Special Requests / Pilgrimage Inquiries (Optional)
+                </label>
+                <textarea
+                  name="message"
+                  rows={3}
+                  placeholder="Need wheelchair access, early check-in, or airport pickup assistance..."
+                  value={form.message}
+                  onChange={handleChange}
+                  style={{
+                    width: "100%",
+                    padding: "10px 14px",
+                    borderRadius: "6px",
+                    border: "1px solid #d6d3d1",
+                    fontSize: "0.88rem",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    fontFamily: "inherit",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", gap: "12px", marginTop: "8px", flexWrap: "wrap" }}>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 1,
+                    padding: "14px 24px",
+                    background: "linear-gradient(135deg, #c2882b, #b45309)",
+                    color: "#ffffff",
+                    borderRadius: "6px",
+                    border: "none",
+                    fontSize: "0.95rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    boxShadow: "0 4px 16px rgba(180,83,9,0.3)",
+                  }}
+                >
                   <Send size={16} />
-                  Send Enquiry
+                  Submit Enquiry
                 </button>
-              </form>
-            )}
-          </div>
+
+                <button
+                  type="button"
+                  onClick={sendWhatsAppDirect}
+                  style={{
+                    padding: "14px 20px",
+                    background: "#f0fdf4",
+                    color: "#166534",
+                    border: "1px solid #86efac",
+                    borderRadius: "6px",
+                    fontSize: "0.92rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <MessageCircle size={18} color="#25d366" />
+                  Quick WhatsApp
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </section>

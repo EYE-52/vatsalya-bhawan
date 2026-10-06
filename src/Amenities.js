@@ -1,143 +1,216 @@
-import React, { useEffect, useRef } from "react";
-import { Wifi, Wind, Zap, Shield, Utensils, Car, Clock, MapPin, Droplets, Tv } from "lucide-react";
-import Images from "./utils/images";
-
-const amenities = [
-  { icon: Wifi,     label: "Free High-Speed Wi-Fi",     desc: "Stay connected throughout your spiritual journey" },
-  { icon: Wind,     label: "Air Conditioning",           desc: "Comfortable climate control in all AC rooms" },
-  { icon: Zap,      label: "24/7 Power Backup",          desc: "Uninterrupted power supply at all times" },
-  { icon: Shield,   label: "24/7 Front Desk",            desc: "Our team is always ready to assist you" },
-  { icon: Utensils, label: "Pure Vegetarian Meals",      desc: "Satvik food options for the devout traveller" },
-  { icon: Car,      label: "Parking Available",          desc: "Convenient on-site and nearby parking" },
-  { icon: Clock,    label: "Daily Housekeeping",         desc: "Fresh linens and meticulous room service" },
-  { icon: MapPin,   label: "Prime Location",             desc: "500m from Shri Ram Janmabhoomi Temple" },
-  { icon: Droplets, label: "Hot & Cold Water",           desc: "Geysers and modern bathroom amenities" },
-  { icon: Tv,       label: "In-Room Television",         desc: "Entertainment for your leisure time" },
-];
+import React, { useState, useEffect, useRef } from "react";
+import { useScroll, useSpring } from "framer-motion";
+import { amenityList } from "./amenities/amenitiesData";
+import PolaroidCard from "./amenities/PolaroidCard";
 
 const Amenities = () => {
-  const sectionRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll(".reveal").forEach((el, i) => {
-              setTimeout(() => el.classList.add("visible"), i * 80);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 1024);
+      }, 120);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
   }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 85,
+    damping: 26,
+    restDelta: 0.001,
+  });
+
+  useEffect(() => {
+    return smoothProgress.on("change", (latest) => {
+      const normalized = Math.min(1, Math.max(0, latest / 0.96));
+      const idx = Math.min(
+        amenityList.length - 1,
+        Math.floor(normalized * amenityList.length)
+      );
+      setActiveIdx(idx);
+    });
+  }, [smoothProgress]);
+
+  const currentAmenity = amenityList[activeIdx] || amenityList[0];
 
   return (
     <section
       id="amenities"
-      ref={sectionRef}
+      ref={containerRef}
       style={{
-        padding: "96px 0",
-        background: "linear-gradient(135deg, #1c1917 0%, #292524 50%, #1c1917 100%)",
         position: "relative",
-        overflow: "hidden",
+        height: "280vh",
+        background: "#f7f4ee",
+        zIndex: 10,
       }}
     >
-      {/* Background pattern */}
       <div
         style={{
-          position: "absolute", inset: 0, opacity: 0.04,
-          backgroundImage: "radial-gradient(circle at 2px 2px, #d97706 1px, transparent 0)",
-          backgroundSize: "40px 40px",
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "hidden",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+          padding: isMobile ? "24px 14px 16px 14px" : "36px 32px 24px 32px",
+          boxSizing: "border-box",
+          zIndex: 10,
         }}
-      />
-
-      <div className="max-w-7xl mx-auto px-6 relative">
-        {/* Heading */}
-        <div className="text-center" style={{ marginBottom: "60px" }}>
-          <div className="ornament reveal">
-            <div className="ornament-line" style={{ background: "rgba(251,191,36,0.4)" }} />
-            <div className="ornament-diamond" style={{ background: "#d97706" }} />
-            <div className="ornament-line" style={{ background: "rgba(251,191,36,0.4)" }} />
-          </div>
-          <span className="section-label reveal" style={{ color: "#d97706" }}>What We Offer</span>
-          <h2
-            className="font-display reveal"
-            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700, color: "#fff", marginTop: "0.5rem" }}
+      >
+        <div className="container-section w-full">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1.1fr 1fr",
+              gap: isMobile ? "16px" : "64px",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            Hotel <span style={{ color: "#fbbf24" }}>Amenities</span>
-          </h2>
-          <p className="reveal" style={{ color: "rgba(255,255,255,0.6)", marginTop: "0.75rem", maxWidth: "480px", margin: "0.75rem auto 0", lineHeight: 1.7 }}>
-            Everything you need for a comfortable and peaceful stay in the holy city of Ayodhya
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "16px",
-          }}
-        >
-          {amenities.map((a, i) => {
-            const Icon = a.icon;
-            return (
-              <div
-                key={a.label}
-                className="reveal card-hover"
+            <div
+              style={{
+                textAlign: isMobile ? "center" : "left",
+                maxWidth: isMobile ? "100%" : "520px",
+              }}
+            >
+              <h2
+                className="font-display"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(217,119,6,0.2)",
-                  borderRadius: "8px",
-                  padding: "28px 24px",
-                  cursor: "default",
-                  animationDelay: `${i * 60}ms`,
+                  fontSize: isMobile
+                    ? "clamp(1.5rem, 5.5vw, 2.0rem)"
+                    : "clamp(2.0rem, 3.4vw, 2.8rem)",
+                  fontWeight: 700,
+                  color: "#1c1917",
+                  lineHeight: 1.18,
+                  margin: "0 0 16px 0",
                 }}
               >
+                Thoughtful Comforts for Your{" "}
+                <span style={{ color: "#c2882b", fontStyle: "italic" }}>
+                  Sacred Journey
+                </span>
+              </h2>
+
+              <p
+                style={{
+                  color: "#57534e",
+                  fontSize: isMobile ? "0.88rem" : "1.02rem",
+                  lineHeight: 1.6,
+                  margin: isMobile ? "0 0 16px 0" : "0 0 24px 0",
+                  fontWeight: 400,
+                }}
+              >
+                Every amenity at Vatsalya Bhawan is designed to make your pilgrimage restorative, convenient, and deeply peaceful.
+              </p>
+
+              {!isMobile && (
                 <div
                   style={{
-                    width: "48px", height: "48px",
+                    padding: "16px 20px",
                     borderRadius: "12px",
-                    background: "linear-gradient(135deg, rgba(180,83,9,0.3), rgba(217,119,6,0.2))",
-                    border: "1px solid rgba(217,119,6,0.3)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    marginBottom: "16px",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.06)",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <Icon size={22} color="#fbbf24" />
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        fontSize: "0.95rem",
+                        color: "#1c1917",
+                      }}
+                    >
+                      {currentAmenity.title}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        background: "#fef3c7",
+                        color: "#92400e",
+                      }}
+                    >
+                      {currentAmenity.tag}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      fontSize: "0.84rem",
+                      color: "#78716c",
+                      lineHeight: 1.45,
+                      margin: 0,
+                    }}
+                  >
+                    {currentAmenity.details}
+                  </p>
                 </div>
-                <h3 style={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem", marginBottom: "6px" }}>
-                  {a.label}
-                </h3>
-                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem", lineHeight: 1.6 }}>
-                  {a.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom image strip */}
-        <div
-          className="reveal"
-          style={{
-            marginTop: "64px",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "12px",
-            borderRadius: "8px",
-            overflow: "hidden",
-          }}
-        >
-          {[Images.amenitiesImg, Images.roomView1, Images.washroom1].map((src, i) => (
-            <div key={i} className="img-zoom" style={{ height: "200px" }}>
-              <img src={src} alt="Amenity" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              )}
             </div>
-          ))}
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  maxWidth: isMobile ? "460px" : "550px",
+                  height: isMobile ? "500px" : "590px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {amenityList.map((item, idx) => (
+                  <PolaroidCard
+                    key={item.num}
+                    item={item}
+                    index={idx}
+                    total={amenityList.length}
+                    smoothProgress={smoothProgress}
+                    isTop={idx === activeIdx}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

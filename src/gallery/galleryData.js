@@ -1,0 +1,27 @@
+import Images from "../utils/images";
+
+export const galleryImages = [
+  { src: Images.frontView,      label: "Vatsalya Bhawan Front View" },
+  { src: Images.galary1,        label: "Hotel Premises & Corridors" },
+  { src: Images.galary2,        label: "Property View" },
+  { src: Images.roomDeluxe,     label: "Deluxe AC Room" },
+  { src: Images.roomFamily,     label: "Family Suite" },
+  { src: Images.roomStandard,   label: "Standard Guest Room" },
+  { src: Images.commonRoom1,    label: "Common Lounge Area" },
+  { src: Images.commonRoom2,    label: "Reception Desk" },
+  { src: Images.roomImage1,     label: "Cozy Bedroom Layout" },
+  { src: Images.roomImage2,     label: "Spacious Bed Setup" },
+  { src: Images.roomImage3,     label: "Room View" },
+  { src: Images.roomImage4,     label: "Room Interior & Lighting" },
+  { src: Images.roomImage5,     label: "Family Accommodation" },
+  { src: Images.roomImage6,     label: "Room Decor Details" },
+  { src: Images.roomImage7,     label: "Clean Bedroom Environment" },
+  { src: Images.roomImage8,     label: "Suite Living Space" },
+  { src: Images.roomImage9,     label: "Well-Lit Deluxe Room" },
+  { src: Images.godImage,        label: "Spiritual Corner" },
+  { src: Images.mainGate,         label: "Main Entrance Gate" },
+  { src: Images.washroom1,      label: "Modern Bathroom Setup" },
+  { src: Images.washroom2,      label: "Clean Washroom Facilities" },
+  { src: Images.amenitiesImg,    label: "Hotel Amenities & Services" },
+  { src: Images.roomView1,       label: "Ayodhya City View" },
+];
