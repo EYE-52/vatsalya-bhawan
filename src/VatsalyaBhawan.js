@@ -62,6 +62,12 @@ photos.push({ src: `${process.env.PUBLIC_URL}/vatsalya-bhawan-front-view.webp`, 
 // The city-arrival point in the selected film, in media seconds.
 export const ARRIVAL_TIME = 3.6;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
+const places = [
+  { name: 'Ram Mandir', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
+  { name: 'Hanuman Garhi', kind: 'Temple', text: 'A temple dedicated to Hanuman, with the young Hanuman seated in Maa Anjani’s lap in the main shrine.', info: 'https://ayodhya.nic.in/tourist-place/hanuman-garhi/', query: 'Hanuman Garhi Ayodhya' },
+  { name: 'Kanak Bhawan', kind: 'Temple', text: 'A temple dedicated to Ram and Sita in Ramkot, northeast of Ram Janmabhoomi.', info: 'https://ayodhya.nic.in/tourist-place/kanak-bhawan/', query: 'Kanak Bhawan Ayodhya' },
+  { name: 'Ram ki Paidi', kind: 'Riverfront', text: 'Explore the ghats along the Saryu and the illuminated riverfront after dusk.', info: 'https://ayodhya.nic.in/tourist-place/ram-ki-paidi/', query: 'Ram ki Paidi Ayodhya' },
+];
 function Diya({ className = '' }) {
   return <svg className={`diya-icon ${className}`} viewBox="0 0 48 48" fill="none" aria-hidden="true">
     <path className="diya-flame" d="M24 5c-1 7-7 9-7 15a7 7 0 0 0 14 0c0-5-4-8-7-15Z" fill="currentColor" />
@@ -342,14 +348,10 @@ export default function VatsalyaBhawan() {
           <div className="exterior-disclosure"><span>AI-reframed cutout of the actual building.</span><button className="text-link" onClick={() => { setPhoto(photos.length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
         </div>
         <div className="welcome-copy">
-          <p className="eyebrow">Welcome to Vatsalya Bhawan</p>
-          <h2>
-            Come for the journey.
-            <br />
-            Stay for the warmth.
-          </h2>
-          <p>A welcoming home for your Ayodhya visit. Come with family, take time for darshan, and settle into your own quiet space.</p>
-          <p>Private rooms in Kaniganj, near Ayodhya Dham railway station. We’ll help you feel at home.</p>
+          <p className="eyebrow">Vatsalya Bhawan · Kaniganj</p>
+          <h2>Your stay in Ayodhya.</h2>
+          <p>Private rooms for couples and families, with Wi-Fi and private bathrooms. Air-conditioned options are available.</p>
+          <p>Find us on Tarun Pura Road. Use the city guide below to plan your temple visits and time by the Saryu.</p>
           <a className="text-link" href="#rooms">
             Find your room
             <ArrowRight size={18} />
@@ -358,13 +360,29 @@ export default function VatsalyaBhawan() {
       </section>
       <section className="ayodhya-guide container section" id="ayodhya-guide" aria-labelledby="ayodhya-guide-title">
         <div className="ayodhya-guide-heading">
-          <h2 className="visually-hidden" id="ayodhya-guide-title">Ayodhya, at a glance.</h2>
+          <h2 id="ayodhya-guide-title">Places to visit in Ayodhya.</h2>
           <a className="text-link" href={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.pdf`} download="Ayodhya-guide-by-Vatsalya-Bhawan.pdf"><Download size={18} />Download the map</a>
         </div>
         <div className="ayodhya-guide-map" tabIndex={0} role="region" aria-label="Ayodhya sightseeing map. Scroll sideways on smaller screens to explore.">
           <img src={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.svg`} alt="Illustrated Ayodhya guide showing Ram Mandir, Hanuman Garhi, Kanak Bhawan, Ram ki Paidi, Ayodhya Dham railway station and Vatsalya Bhawan in Kaniganj, with the bhawan’s contact details alongside." loading="lazy" />
         </div>
         <p className="map-disclaimer">Schematic guide · not to scale.<span className="map-pan-hint"> Swipe to explore.</span></p>
+        <div className="place-guides">
+          {places.map(place => <details key={place.name}>
+            <summary>
+              <span className="place-kind">{place.kind}</span>
+              <h3>{place.name}</h3>
+              <span className="place-expand" aria-hidden="true">+</span>
+            </summary>
+            <div className="place-guide-content">
+              <p>{place.text}</p>
+              <div className="place-guide-links">
+                <a className="text-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}`} target="_blank" rel="noreferrer">Open in Maps <ArrowUpRight size={16} /></a>
+                <a className="text-link" href={place.info} target="_blank" rel="noreferrer">{place.name === 'Ram Mandir' ? 'Temple trust' : 'District guide'} <ArrowUpRight size={16} /></a>
+              </div>
+            </div>
+          </details>)}
+        </div>
       </section>
       <section className="rooms-section section" id="rooms">
         <div className="container">
@@ -586,6 +604,7 @@ export default function VatsalyaBhawan() {
           <h3>Explore</h3>
           <a href="#stay">The stay</a>
           <a href="#rooms">Our rooms</a>
+          <a href="#ayodhya-guide">Ayodhya guide</a>
           <a href="#gallery">Gallery</a>
           <a href="#location">Find us</a>
         </div>
