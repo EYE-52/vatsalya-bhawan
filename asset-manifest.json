@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.1a462322.css",
-    "main.js": "./static/js/main.eb2abed5.js",
+    "main.css": "./static/css/main.a4c0fa56.css",
+    "main.js": "./static/js/main.65473558.js",
     "static/js/228.f789d862.chunk.js": "./static/js/228.f789d862.chunk.js",
     "static/js/453.75b0fd4b.chunk.js": "./static/js/453.75b0fd4b.chunk.js",
     "static/media/room-refined-family.jpg": "./static/media/room-refined-family.cfc1841356d5b81d433b.jpg",
@@ -14,14 +14,18 @@
     "static/media/washroom-image-1.webp": "./static/media/washroom-image-1.0e7f463d56936fac6713.webp",
     "static/media/common-room-2.webp": "./static/media/common-room-2.4b542824f99e621703d1.webp",
     "static/media/galary-1.webp": "./static/media/galary-1.1a51d1a5de1c71025cdc.webp",
+    "static/media/agoda-logo.png": "./static/media/agoda-logo.8c4bf37042f2e0120ac9.png",
+    "static/media/google-wordmark.png": "./static/media/google-wordmark.85707a335f8d3583332c.png",
+    "static/media/tripadvisor-logo.png": "./static/media/tripadvisor-logo.73c77275451297dbf96a.png",
     "index.html": "./index.html",
-    "main.1a462322.css.map": "./static/css/main.1a462322.css.map",
-    "main.eb2abed5.js.map": "./static/js/main.eb2abed5.js.map",
+    "static/media/diwali-rangoli.svg": "./static/media/diwali-rangoli.0f27c3496ec4e8b49f2e.svg",
+    "main.a4c0fa56.css.map": "./static/css/main.a4c0fa56.css.map",
+    "main.65473558.js.map": "./static/js/main.65473558.js.map",
     "228.f789d862.chunk.js.map": "./static/js/228.f789d862.chunk.js.map",
     "453.75b0fd4b.chunk.js.map": "./static/js/453.75b0fd4b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1a462322.css",
-    "static/js/main.eb2abed5.js"
+    "static/css/main.a4c0fa56.css",
+    "static/js/main.65473558.js"
   ]
 }
