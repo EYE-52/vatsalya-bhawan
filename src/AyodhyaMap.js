@@ -156,17 +156,17 @@ export default function AyodhyaMap({ onEnquire }) {
 
   return <div className="street-map-layout">
     <div className="street-map-main">
-      <div className={`street-map-frame${moving ? ' map-moving' : ''}`}>
-        <div ref={container} className="ayodhya-street-map" role="region" aria-label="Ayodhya street map" aria-describedby="street-map-instructions" />
-        {status !== 'ready' && <div className="street-map-fallback">
-          <img src={`${assets}/ayodhya-guide.svg`} alt="Real Ayodhya streets and landmarks, with Vatsalya Bhawan marked" loading="lazy" />
-          <p role="status">{status === 'error' ? 'Interactive map unavailable. Use the PDF or Google Maps.' : 'Loading street map…'}</p>
-        </div>}
         {status === 'ready' && <div className="street-map-tools" aria-label="Map controls">
           <button type="button" onClick={() => mapRef.current.zoomIn()} aria-label="Zoom in">+</button>
           <button type="button" onClick={() => mapRef.current.zoomOut()} aria-label="Zoom out">−</button>
           <button type="button" onClick={() => { mapRef.current.fitBounds(bounds, { padding: [22, 30], animate: false }); setMoving(false); }}>Show all</button>
           <button type="button" aria-pressed={moving} onClick={() => setMoving(value => !value)}>{moving ? 'Done moving' : 'Move map'}</button>
+        </div>}
+      <div className={`street-map-frame${moving ? ' map-moving' : ''}`}>
+        <div ref={container} className="ayodhya-street-map" role="region" aria-label="Ayodhya street map" aria-describedby="street-map-instructions" />
+        {status !== 'ready' && <div className="street-map-fallback">
+          <img src={`${assets}/ayodhya-guide.svg`} alt="Real Ayodhya streets and landmarks, with Vatsalya Bhawan marked" loading="lazy" />
+          <p role="status">{status === 'error' ? 'Interactive map unavailable. Use the PDF or Google Maps.' : 'Loading street map…'}</p>
         </div>}
         <span className="map-north" aria-label="North is up">↑ N</span>
       </div>
