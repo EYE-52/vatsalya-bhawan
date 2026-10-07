@@ -1718,7 +1718,7 @@ body {
   object-position: center;
 }
 .cinema-hero .hero-shade {
-  background: linear-gradient(0deg, rgba(18, 60, 81, .82), rgba(18, 60, 81, .28) 36%, transparent 70%), linear-gradient(180deg, rgba(18, 60, 81, .58), rgba(18, 60, 81, .44) 100px, transparent 220px);
+  background: linear-gradient(90deg, rgba(10, 30, 39, .72), rgba(10, 30, 39, .5) 40%, rgba(10, 30, 39, .08) 78%), linear-gradient(0deg, rgba(18, 60, 81, .82), rgba(18, 60, 81, .28) 36%, transparent 70%), linear-gradient(180deg, rgba(18, 60, 81, .58), rgba(18, 60, 81, .44) 100px, transparent 220px);
 }
 .cinema-hero .hero-content {
   position: absolute;
