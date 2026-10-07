@@ -76,11 +76,11 @@ const featureIcons = { 'Air conditioning': Snowflake, 'Private bathroom': Bath, 
 // Media seconds shared by the desktop film and its portrait crop.
 export const JOURNEY_STAGES = [
   { start: 0, hindi: 'जम्बूद्वीपे', english: 'Jambudvīpe' },
-  { start: 3, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
-  { start: 5.5, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
-  { start: 8, hindi: 'अयोध्या', english: 'Ayodhyā' },
+  { start: 2.4, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
+  { start: 4.4, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
+  { start: 6.4, hindi: 'अयोध्या', english: 'Ayodhyā' },
 ];
-export const ARRIVAL_TIME = 12.5;
+export const ARRIVAL_TIME = 20;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
   { name: 'Ram Mandir', illustration: 'landmark-ram-mandir.svg', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
@@ -302,19 +302,19 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Ayodhya and the Saryu river from above'} fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'AI aerial interpretation of Ram Mandir in Ayodhya'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous-globe${mobileFilm ? '-mobile' : ''}.jpg`}
-          aria-label="One continuous satellite journey from Earth through India to Ayodhya"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          aria-label="Journey from Earth through India to an AI aerial view of Ram Mandir in Ayodhya"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
@@ -665,6 +665,7 @@ export default function VatsalyaBhawan() {
           <summary>Image credits</summary>
           <div>
             <p>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</p>
+            <p>The city and temple arrival are AI-generated interpretations guided by satellite imagery, <a href="https://www.google.com/maps/search/?api=1&query=Shri+Ram+Janmabhoomi+Mandir+Ayodhya" target="_blank" rel="noreferrer">Google Maps references</a> and real temple photographs from the <a href="https://commons.wikimedia.org/wiki/File:Shri_Ram_Janambhoomi_Mandir_side_view.jpg" target="_blank" rel="noreferrer">Prime Minister’s Office via PIB</a>, licensed under <a href="https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf" target="_blank" rel="noreferrer">GODL-India</a>.</p>
             <p>The Shri Ram artwork is an original AI-generated illustration. Landmark and riverfront artwork was created for this website. Room and facade images were digitally reframed from property photographs; originals remain available.</p>
           </div>
         </details>

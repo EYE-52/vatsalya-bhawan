@@ -1,0 +1,20 @@
+Ram Mandir architectural AI reference photographs
+Retrieved 7 October 2026. Original Commons files, unmodified; no watermark or branding removal.
+Both photographs were taken 25 November 2025 at the Dhwajarohan Utsav.
+Credit: Prime Minister’s Office, Government of India, via Press Information Bureau.
+License: Government Open Data License – India (GODL-India); Commons licensing pages confirm reuse/adaptation with attribution and no implied endorsement.
+License URL: https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf
+Reference-only use; these are ground-level architecture views, not aerial geography evidence.
+Visually verified: finished ribbed tall Nagara shikhara, gold finial/kalash and saffron flag; lower stacked pyramidal mandapa roof profiles, pale pink carved stone and multi-level arcaded facades. Festival garlands are event decoration rather than permanent architecture.
+
+ram-mandir-side-view-2025.jpg
+Commons source: https://commons.wikimedia.org/wiki/File:Shri_Ram_Janambhoomi_Mandir_side_view.jpg
+Original image URL: https://upload.wikimedia.org/wikipedia/commons/8/8b/Shri_Ram_Janambhoomi_Mandir_side_view.jpg
+PIB primary source image: https://static.pib.gov.in/WriteReadData/Gallery/PhotoGallery/2025/Nov/H20251125197378.JPG
+SHA-256: 9da4f7abd97c661ffb0e96e756b67eb478e0e887fd63bb93cfbcf1bd88ad2eb9
+
+ram-mandir-mandapa-shikhara-2025.jpg
+Commons source: https://commons.wikimedia.org/wiki/File:Shri_Ram_Janambhoomi_Mandir_Mandapa_and_Sikhara.jpg
+Original image URL: https://upload.wikimedia.org/wikipedia/commons/b/bf/Shri_Ram_Janambhoomi_Mandir_Mandapa_and_Sikhara.jpg
+PIB primary source image: https://static.pib.gov.in/WriteReadData/Gallery/PhotoGallery/2025/Nov/H20251125197337.JPG
+SHA-256: f205fe5047dab6cd7cd3f9f7f61a63d73c6175f1d40db2fbc7ecea59f3e0eca5

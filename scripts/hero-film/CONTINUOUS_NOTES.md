@@ -1,6 +1,6 @@
 # Continuous zoom into real Ayodhya
 
-The user's final preference is **“Continuous zoom into real Ayodhya.”** This supersedes the previous artistic sunset endpoint. The current film remains over actual registered satellite geography from Earth to the final overhead Ayodhya view. It contains no artistic skyline, generated passage, dissolve, cut, portal, FPV flight, roll, orbit, map markers, or embedded labels. No further generation credits were used.
+This documents the satellite-only version, retained as the geographic opening of the newer temple journey. The user subsequently requested an AI aerial continuation and a temple-focused ending; see `TEMPLE_NOTES.md`. This archived film remains over actual registered satellite geography from Earth to the final overhead Ayodhya view. It contains no artistic skyline, generated passage, dissolve, cut, portal, FPV flight, roll, orbit, map markers, or embedded labels. No further generation credits were used.
 
 ## Camera and timing
 
