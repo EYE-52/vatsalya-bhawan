@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AyodhyaMap, { HOTEL_COORDINATES, walkingDirections } from './AyodhyaMap';
-import { ArrowUpRight, ArrowRight, MapPin, Phone, Mail, Menu, X, Wifi, Users, Bath, Snowflake, MessageCircle, Pause, Play, Download, ChevronLeft, ChevronRight, Instagram, Facebook, Star } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, MapPin, Phone, Mail, Menu, X, Wifi, Users, Bath, Snowflake, MessageCircle, Pause, Play, Download, ChevronLeft, ChevronRight, Instagram, Facebook } from 'lucide-react';
 import { localDate, nextDay, validateStay, buildWhatsAppMessage, buildWhatsAppUrl, MAPS_URL } from './booking';
 import originalDeluxe from './assets/room-image-6.webp';
 import deluxe from './assets/room-refined-deluxe.jpg';
@@ -527,26 +527,35 @@ export default function VatsalyaBhawan() {
           </div>
         </div>
       </section>
-      <section className="reviews container">
-        <div>
+      <section id="reviews" className="reviews container" aria-labelledby="guest-reviews-heading">
+        <div className="reviews-heading">
           <p className="eyebrow">From our guests</p>
-          <h2>A welcome worth sharing.</h2>
-          <p>Read travellers’ experiences and explore our listing on Google.</p>
+          <h2 id="guest-reviews-heading">Guest reviews.</h2>
         </div>
-        <a href={googleListing} target="_blank" rel="noreferrer" className="rating-link">
-          <div>
-            <strong>4.7</strong>
-            <div className="rating-stars" aria-hidden="true">
-              {Array.from({
-                length: 5
-              }, (_, i) => <Star key={i} size={22} fill="currentColor" />)}
-            </div>
-          </div>
-          <span>
-            on Google
-            <ArrowUpRight size={18} />
-          </span>
-        </a>
+        <div className="review-platforms">
+          {[
+            { name: 'Google', score: '4.7', scale: '5', count: 538, url: googleListing },
+            { name: 'Booking.com', score: '8.4', scale: '10', count: 49, url: 'https://www.booking.com/hotel/in/vatsalya-bhawan.en-gb.html' },
+            { name: 'Agoda', score: '7.4', scale: '10', count: 67, url: 'https://www.agoda.com/vatsalya-bhawan/hotel/ayodhya-in.html' },
+            { name: 'Tripadvisor', score: '4.2', scale: '5', count: 5, url: 'https://www.tripadvisor.com/Hotel_Review-g1985445-d32707628-Reviews-Vatsalya_Bhawan_Ayodhya-Ayodhya_Ayodhya_District_Uttar_Pradesh.html' }
+          ].map(platform => <a className="review-platform" key={platform.name} href={platform.url} target="_blank" rel="noreferrer" aria-label={`Read ${platform.count} reviews on ${platform.name}; rated ${platform.score} out of ${platform.scale}`}>
+            <span className="review-platform-name">{platform.name}</span>
+            <span className="review-score"><strong>{platform.score}</strong><span> / {platform.scale}</span></span>
+            <span className="review-count">{platform.count} reviews</span>
+            <span className="review-platform-action">Read reviews <ArrowUpRight size={17} /></span>
+          </a>)}
+        </div>
+        <p className="reviews-checked">Ratings checked 7 Oct 2026</p>
+        <div className="guest-comments" aria-label="Selected guest comments">
+          <figure>
+            <blockquote>“Happy with the stay facility and staff, will visit again”</blockquote>
+            <figcaption>Rohit · <a href="https://www.booking.com/reviews/in/hotel/vatsalya-bhawan.html" target="_blank" rel="noreferrer">Booking.com</a> · 12 Jun 2026</figcaption>
+          </figure>
+          <figure>
+            <blockquote>“The bedding was spotless, soft, and provided a restful night’s sleep.”</blockquote>
+            <figcaption>paresh · <a href="https://www.agoda.com/vatsalya-bhawan/hotel/ayodhya-in.html" target="_blank" rel="noreferrer">Agoda</a> · 25 Jun 2026</figcaption>
+          </figure>
+        </div>
       </section>
       <section className="faq container section">
         <div className="faq-introduction">

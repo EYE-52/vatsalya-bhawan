@@ -28,6 +28,12 @@ The Google/Booking listings identify the property as Q6P3+883, Kaniganj, Ayodhya
 - Booking listing: https://www.booking.com/hotel/in/vatsalya-bhawan.html
 - Primary contact: +91 94513 38729 / vatsalya.bhawan.april@gmail.com
 
+## Guest reviews
+
+The homepage links to four platforms in a compact responsive grid, keeping each platform’s native rating scale and review count. Ratings are a dated snapshot checked on 7 October 2026, not a live feed: Google 4.7/5 (538 reviews), Booking.com 8.4/10 (49), Agoda 7.4/10 (67), and Tripadvisor 4.2/5 (5). Google, Booking.com and Agoda were checked in their live listing UI; Tripadvisor’s primary listing was verified through its recent search-index result because its direct UI presented a device check. Booking.com’s indexed score was stale; the live 8.4 score takes precedence. Agoda’s combined-provider headline was excluded in favour of its dedicated “Rating via Agoda” score.
+
+Sources: [Google](https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9), [Booking.com](https://www.booking.com/hotel/in/vatsalya-bhawan.en-gb.html), [Agoda](https://www.agoda.com/vatsalya-bhawan/hotel/ayodhya-in.html), and [Tripadvisor](https://www.tripadvisor.com/Hotel_Review-g1985445-d32707628-Reviews-Vatsalya_Bhawan_Ayodhya-Ayodhya_Ayodhya_District_Uttar_Pradesh.html). Two selected guest excerpts retain their source and review date: Rohit on Booking.com, 12 June 2026 (“Happy with the stay facility and staff, will visit again”), and paresh on Agoda, 25 June 2026 (“The bedding was spotless, soft, and provided a restful night’s sleep.”). The Agoda sentence is an excerpt of a longer review. No testimonials were generated and no decorative stars imply a perfect rating.
+
 ## Enquiries
 
 The form prepares an encoded WhatsApp message. It neither sends a message nor claims a booking has been received. The guest reviews the text, opens WhatsApp, and sends it themselves; the hotel confirms availability and pricing. No payment or live inventory integration is implied.
