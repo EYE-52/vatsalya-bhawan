@@ -1931,6 +1931,7 @@ body {
 .intro-suppressed {
   opacity: 0;
   pointer-events: none;
+  transition: none;
 }
 .intro-title {
   position: absolute;
@@ -2408,10 +2409,12 @@ body {
     min-width: 760px;
   }
   .map-pan-hint {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 12px;
     color: var(--muted);
-    margin-top: 12px;
+    margin: -8px 0 18px;
   }
   .place-guides summary {
     gap: 14px;

@@ -363,10 +363,11 @@ export default function VatsalyaBhawan() {
           <h2 id="ayodhya-guide-title">Places to visit in Ayodhya.</h2>
           <a className="text-link" href={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.pdf`} download="Ayodhya-guide-by-Vatsalya-Bhawan.pdf"><Download size={18} />Download the map</a>
         </div>
-        <div className="ayodhya-guide-map" tabIndex={0} role="region" aria-label="Ayodhya sightseeing map. Scroll sideways on smaller screens to explore.">
+        <p className="map-pan-hint" id="map-pan-hint">Swipe across the map <ArrowRight size={15} aria-hidden="true" /></p>
+        <div className="ayodhya-guide-map" tabIndex={0} role="region" aria-label="Ayodhya sightseeing map. Scroll sideways on smaller screens to explore." aria-describedby="map-pan-hint">
           <img src={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.svg`} alt="Illustrated Ayodhya guide showing Ram Mandir, Hanuman Garhi, Kanak Bhawan, Ram ki Paidi, Ayodhya Dham railway station and Vatsalya Bhawan in Kaniganj, with the bhawan’s contact details alongside." loading="lazy" />
         </div>
-        <p className="map-disclaimer">Schematic guide · not to scale.<span className="map-pan-hint"> Swipe to explore.</span></p>
+        <p className="map-disclaimer">Schematic guide · not to scale.</p>
         <div className="place-guides">
           {places.map(place => <details key={place.name}>
             <summary>
