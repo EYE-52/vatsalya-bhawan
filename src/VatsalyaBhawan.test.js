@@ -84,6 +84,7 @@ test('all four bilingual captions follow media time while header and hero action
     [5.5, 'आर्यावर्ते', 'Āryāvarte'],
     [8, 'अयोध्या', 'Ayodhyā'],
   ];
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-geographic-globe.jpg'));
   stages.forEach(([start, hindi, english], index) => {
     if (index > 0) {
       video.currentTime = start - 0.01;
@@ -111,6 +112,7 @@ test('all four bilingual captions follow media time while header and hero action
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
   video.currentTime = ARRIVAL_TIME;
   fireEvent.timeUpdate(video);
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-geographic-arrival.jpg'));
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
@@ -120,6 +122,7 @@ test('all four bilingual captions follow media time while header and hero action
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-geographic-globe.jpg'));
   expect(screen.queryByText('Ayodhyā')).toBeNull();
 });
 

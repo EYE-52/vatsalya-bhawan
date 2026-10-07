@@ -298,7 +298,7 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-arrival${mobileFilm ? '-mobile' : ''}.jpg`} alt="Satellite view of Ayodhya and the Saryu River" fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Satellite view of Ayodhya and the Saryu River'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
