@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "./static/css/main.a2dc8501.css",
+    "main.css": "./static/css/main.b404b90b.css",
     "main.js": "./static/js/main.9cf684cd.js",
     "static/js/228.f789d862.chunk.js": "./static/js/228.f789d862.chunk.js",
     "static/js/453.75b0fd4b.chunk.js": "./static/js/453.75b0fd4b.chunk.js",
@@ -19,13 +19,13 @@
     "static/media/tripadvisor-logo.png": "./static/media/tripadvisor-logo.73c77275451297dbf96a.png",
     "index.html": "./index.html",
     "static/media/diwali-rangoli.svg": "./static/media/diwali-rangoli.0f27c3496ec4e8b49f2e.svg",
-    "main.a2dc8501.css.map": "./static/css/main.a2dc8501.css.map",
+    "main.b404b90b.css.map": "./static/css/main.b404b90b.css.map",
     "main.9cf684cd.js.map": "./static/js/main.9cf684cd.js.map",
     "228.f789d862.chunk.js.map": "./static/js/228.f789d862.chunk.js.map",
     "453.75b0fd4b.chunk.js.map": "./static/js/453.75b0fd4b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a2dc8501.css",
+    "static/css/main.b404b90b.css",
     "static/js/main.9cf684cd.js"
   ]
 }
