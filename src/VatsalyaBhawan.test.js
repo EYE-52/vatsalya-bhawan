@@ -42,7 +42,7 @@ function hero() {
 function expectPosterAndBooking() {
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
-  expect(within(hero()).getByAltText('AI aerial interpretation of Ram Mandir in Ayodhya')).toHaveAttribute('src', expect.stringContaining(`ayodhya-temple-journey-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
+  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining(`ayodhya-shikhar-journey-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
   fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
   expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Prepare enquiry/ })).toBeEnabled();
@@ -67,8 +67,8 @@ test('failed media falls back to the poster and keeps the booking flow available
 test('pause and resume call native playback, and replay restarts an ended film without looping', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
-  expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-temple-journey.mp4'));
-  expect(video).toHaveAttribute('aria-label', 'Journey from Earth through India to an AI aerial view of Ram Mandir in Ayodhya');
+  expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey.mp4'));
+  expect(video).toHaveAttribute('aria-label', 'Journey from Earth through India to an AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya');
   expect(video.loop).toBe(false);
   expect(play).toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Pause journey film' }));
@@ -77,10 +77,10 @@ test('pause and resume call native playback, and replay restarts an ended film w
   const callsBeforeResume = play.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Resume journey film' }));
   expect(play.mock.calls.length).toBeGreaterThan(callsBeforeResume);
-  video.currentTime = 21.5;
+  video.currentTime = 175 / 24;
   fireEvent.ended(video);
   expect(video).toHaveStyle({ visibility: 'hidden' });
-  expect(within(hero()).getByAltText('AI aerial interpretation of Ram Mandir in Ayodhya')).toHaveAttribute('src', expect.stringContaining('ayodhya-temple-journey-arrival.jpg'));
+  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-arrival.jpg'));
   const callsBeforeReplay = play.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(video.currentTime).toBe(0);
@@ -89,16 +89,17 @@ test('pause and resume call native playback, and replay restarts an ended film w
 });
 
 
-test('all four bilingual captions follow media time while header and hero actions wait for arrival', () => {
+test('all four bilingual captions follow media time while navigation and booking remain available throughout playback', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
+  expect(ARRIVAL_TIME).toBe(139 / 24);
   const stages = [
     [0, 'जम्बूद्वीपे', 'Jambudvīpe'],
-    [2.4, 'भारतखण्डे', 'Bhāratakhaṇḍe'],
-    [4.4, 'आर्यावर्ते', 'Āryāvarte'],
-    [6.4, 'अयोध्या', 'Ayodhyā'],
+    [.65, 'भारतखण्डे', 'Bhāratakhaṇḍe'],
+    [1.15, 'आर्यावर्ते', 'Āryāvarte'],
+    [1.7, 'अयोध्या नगरी', 'Ayodhya Nagari'],
   ];
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-temple-journey-globe.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-globe.jpg'));
   stages.forEach(([start, hindi, english], index) => {
     if (index > 0) {
       video.currentTime = start - 0.01;
@@ -110,23 +111,24 @@ test('all four bilingual captions follow media time while header and hero action
     expect(screen.getByText(hindi)).toHaveAttribute('lang', 'hi');
     expect(screen.getByText(english)).toHaveAttribute('lang', 'en');
     if (index > 0) expect(screen.queryByText(stages[index - 1][2])).toBeNull();
-    expect(document.querySelector('header')).toHaveAttribute('aria-hidden', 'true');
-    expect(document.querySelector('header')).toHaveAttribute('inert');
-    expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
-    expect(within(hero()).queryByRole('button', { name: /Plan your stay/ })).toBeNull();
-    expect(hero().querySelector('.hero-location')).toHaveAttribute('inert');
+    expect(screen.getByRole('banner')).not.toHaveAttribute('aria-hidden');
+    expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
+    expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
+    expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
+    expect(hero().querySelector('.hero-location')).not.toHaveAttribute('inert');
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument();
   });
   fireEvent.click(screen.getByRole('button', { name: 'Pause journey film' }));
-  expect(screen.getByText('Ayodhyā')).toBeInTheDocument();
-  expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
+  expect(screen.getByText('Ayodhya Nagari')).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Resume journey film' }));
-  video.currentTime = 19.99;
+  video.currentTime = ARRIVAL_TIME - .01;
   fireEvent.timeUpdate(video);
-  expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
-  expect(screen.getByText('Ayodhyā')).toBeInTheDocument();
-  video.currentTime = 20;
+  expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
+  expect(screen.getByText('Ayodhya Nagari')).toBeInTheDocument();
+  video.currentTime = ARRIVAL_TIME;
   fireEvent.timeUpdate(video);
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-temple-journey-arrival.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-arrival.jpg'));
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
@@ -134,22 +136,25 @@ test('all four bilingual captions follow media time while header and hero action
   fireEvent.click(footer.getByText('Image credits', { selector: 'summary' }));
   expect(footer.getByRole('link', { name: 'NASA Blue Marble' })).toHaveAttribute('href', 'https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/');
   expect(footer.getByRole('link', { name: 'Copernicus Sentinel data 2026' })).toBeInTheDocument();
-  expect(footer.getByText(/city and temple arrival are AI-generated interpretations/)).toBeInTheDocument();
+  expect(footer.getByText(/shikhar and flag arrival is an AI-generated interpretation/)).toBeInTheDocument();
   expect(footer.getByRole('link', { name: 'GODL-India' })).toHaveAttribute('href', 'https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf');
   expect(footer.getByText(/Shri Ram artwork is an original AI-generated illustration/)).toBeInTheDocument();
   fireEvent.ended(video);
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
-  expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
+  expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-temple-journey-globe.jpg'));
-  expect(screen.queryByText('Ayodhyā')).toBeNull();
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-globe.jpg'));
+  expect(screen.queryByText('Ayodhya Nagari')).toBeNull();
+  fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
+  expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();
+  expect(video.currentTime).toBe(0);
 });
 
 test('blocked autoplay reveals the normal page immediately', async () => {
   play.mockRejectedValue(new DOMException('Autoplay blocked', 'NotAllowedError'));
   render(<VatsalyaBhawan />);
-  await waitFor(() => expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument());
-  expect(hero().querySelector('video')).toBeNull();
+  expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
+  await waitFor(() => expect(hero().querySelector('video')).toBeNull());
   expectPosterAndBooking();
 });
 
@@ -158,10 +163,11 @@ test('Diwali mode persists without interrupting the film and can return to every
   const video = hero().querySelector('video');
   video.currentTime = ARRIVAL_TIME;
   fireEvent.timeUpdate(video);
-  const lights = screen.getByRole('button', { name: 'Diwali lights' });
+  const lights = screen.getByRole('button', { name: 'Diwali mode' });
   fireEvent.click(lights);
   expect(lights).toHaveAttribute('aria-pressed', 'true');
   expect(document.querySelector('.bhawan-site')).toHaveClass('festival-mode');
+  expect(document.querySelector('.booking-river-art')).toHaveAttribute('src', expect.stringContaining('ayodhya-deepotsav-art.svg'));
   expect(video.currentTime).toBe(ARRIVAL_TIME);
   expect(window.localStorage.getItem('vatsalya-festival-mode')).toBe('diwali');
   unmount();
@@ -170,8 +176,9 @@ test('Diwali mode persists without interrupting the film and can return to every
   const restartedVideo = hero().querySelector('video');
   restartedVideo.currentTime = ARRIVAL_TIME;
   fireEvent.timeUpdate(restartedVideo);
-  fireEvent.click(screen.getByRole('button', { name: 'Diwali lights' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Diwali mode' }));
   expect(document.querySelector('.bhawan-site')).not.toHaveClass('festival-mode');
+  expect(document.querySelector('.booking-river-art')).toHaveAttribute('src', expect.stringContaining('ayodhya-river-art.svg'));
 });
 
 test('Watch the journey recovers blocked autoplay and restarts the bilingual opening', async () => {
@@ -183,7 +190,7 @@ test('Watch the journey recovers blocked autoplay and restarts the bilingual ope
   expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'instant' });
   await waitFor(() => expect(hero().querySelector('video')).not.toBeNull());
   expect(hero().querySelector('video').currentTime).toBe(0);
-  expect(document.querySelector('header')).toHaveAttribute('inert');
+  expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
   fireEvent.ended(hero().querySelector('video'));
   expect(hero().querySelector('video')).toHaveStyle({ visibility: 'hidden' });

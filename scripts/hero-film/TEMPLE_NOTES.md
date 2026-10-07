@@ -1,52 +1,50 @@
-# Earth to Ram Mandir — 7 October 2026
+# Earth to the shikhara — 7 October 2026
 
-The user requested a continuous-feeling journey from space, through real Ayodhya geography, into an AI aerial and a temple-focused final view. The existing real satellite sequence is retained as the opening; the lower views are AI interpretations guided by real location and architectural references. This is not documentary drone footage or a survey-accurate camera path. Generated roof details and temple geometry can differ from reality.
+The current hero is a 7.292-second journey from Earth through real Ayodhya satellite geography into an AI interpretation of Ram Mandir's upper shikhara and saffron flag. The user requested a faster geographic section, a straight approach and a close architectural finish. The previous long, sideways temple approach is superseded.
 
-## Frames and sample selection
+## Selected frames and timing
 
-1. The geographic opening uses frames 0–300 of `ayodhya-continuous[-mobile].mp4`, retimed to 240 frames / 10 seconds. NASA Blue Marble and modified Copernicus Sentinel imagery provenance remains in `CONTINUOUS_NOTES.md` and `GEOGRAPHIC_NOTES.md`.
-2. An ImageGen oblique city frame was created from the final overhead satellite view. Native Flow Video → Frames controls bind the real satellite arrival to Start and the generated wide aerial to End. The 8-second Veo 3.1 Fast result is `ayodhya-native-descent-source.mp4` (asset `d8244a54-b0d0-4064-a57c-f409034d2ddf`). All 192 frames are retimed to 120 output frames / 5 seconds. The roof detail is visibly AI reconstructed during the descent.
-3. The exact decoded frame 191 of that clip becomes the next Start. An ImageGen temple-focused reference becomes End. That reference used a Google Maps footprint screenshot and two completed-temple photographs from 25 November 2025, credited to the Prime Minister's Office under GODL-India. Exact image prompts are in `TEMPLE_IMAGE_PROMPTS.md`; URLs, licenses and source hashes are in `TEMPLE_REFERENCE_SOURCES.txt`. The map screenshot itself is not published in the hero.
-4. The second native Veo result is `ayodhya-native-temple-source.mp4` (asset `57a6adf2-56f2-4e11-ad84-b4b1d50ef125`). Only source frames **0–96 inclusive** are used. Source frame 108 shows a duplicated river band, so that later footage is rejected. Frame 96 is a clear temple-focused composition. Its clean prefix is retimed to 120 frames / 5 seconds with source progress `2u − u²`, decelerating to the selected endpoint. It is followed by 36 held frames / 1.5 seconds.
+1. `render_temple_geographic.py` retains the registered NASA/Copernicus camera trajectory and targets the actual temple at 26.7957774°N, 82.1942075°E. Source attribution remains in `CONTINUOUS_NOTES.md` and `GEOGRAPHIC_NOTES.md`. The native render is 15 seconds; frames 0–300 (ending at 12.5 seconds) are retimed to 55 output frames, or 2.292 seconds. Its last desktop footprint is 2.53 × 1.42 km. The final overhead reference is `temple-centered-geographic/temple-centered-end.jpg`.
+2. The close endpoint was generated from the completed-temple shikhara photograph credited to the Prime Minister's Office via PIB, GODL-India. It focuses on the ribbed sandstone summit, gold crown and saffron flag, with the lower temple outside the frame. Exact prompt and saved file are in `TEMPLE_IMAGE_PROMPTS.md`; reference details are in `TEMPLE_REFERENCE_SOURCES.txt`.
+3. Flow's native Video → Frames interface explicitly assigned the geographic endpoint to Start and `ayodhya-shikhar-flag-final.png` to End. Veo 3.1 Fast generated one 8-second, 192-frame clip: `ayodhya-shikhar-final-native-source.mp4`. All source frames are retimed into 84 output frames (3.5 seconds). Both exact source endpoints are retained.
+4. Another 36 frames (1.5 seconds) hold the actual decoded final frame. Arrival begins at frame 139 / 5.792 seconds. No additional optical zoom, crossfade, portal or overlay is applied.
 
-The resulting film is **21.5 seconds, 516 frames, 24 fps**, with interface arrival at 20 seconds. There are no editorial crossfades or portal masks. The model's start-frame reconstruction is close but not pixel-identical; validation records the actual join errors. Do not describe the film as geographically exact or free from AI morphing. The native source watermark is preserved in the desktop view; portrait uses a normal subject-following crop.
+Total: 175 frames, 24 fps, 7.292 seconds. Both desktop 1280×720 and portrait 720×1280 use the same timing. The portrait opening preserves its independent Earth composition, then narrows its field of view to match a central crop of the native video. It does not pan sideways to follow the temple. Posters are extracted from each encoded film. Media begins below the header and uses top alignment so the flag remains visible on phones and wide screens.
 
-Portrait opening retains the independently rendered Earth view and gradually narrows its field of view to match the AI clip. The aerial crop moves from centre .50 to .30, then follows the temple to .49. Both dimensions preserve natural proportions: desktop 1280×720, portrait 720×1280. Encoded opening and arrival posters are extracted from their own film rather than the generated target image.
+## Scope of realism and review
 
-## Generation cost and rejected material
+This is an AI artistic transition, not real drone footage or surveyed 3D geometry. Early satellite detail resolves into reconstructed buildings; roof, temple and surrounding city details may differ from reality. The final flag moves while the generated camera settles. Full-frame and dense early/middle/late review found a centred approach with a gradual tilt toward the horizon, without the previous sideways entrance, roll, portal, duplicate landscape band or abrupt scene replacement. Native reference errors were 3.40/255 at the start and 2.90/255 at the end. These do not establish geographic accuracy.
 
-Three 20-credit Flow generations used 60 existing subscription credits. The first Agent-mode attempt reversed the requested direction and is rejected in full (`ayodhya-aligned-descent-source.mp4`). The native Frames interface corrected that assignment. The two accepted native samples cost 40 of those credits. No credit purchase or plan change was made. The latter half of the second native sample is also rejected as described above. No further generation was needed to finish this edit.
+The source watermark remains in the desktop frame. Portrait framing uses a normal central crop. Footer credits identify the AI interpretation, NASA/Copernicus geography, Google Maps references and completed-temple architectural reference.
+
+## Interface
+
+Navigation, headline, enquiry buttons and other content remain visible and interactive during playback. The short background film is silent and plays once, with pause/replay and a direct restart. Media-time captions are: 0 seconds “जम्बूद्वीपे / Jambudvīpe”; 0.65 “भारतखण्डे / Bhāratakhaṇḍe”; 1.15 “आर्यावर्ते / Āryāvarte”; 1.7 “अयोध्या नगरी / Ayodhya Nagari”. Captions finish at 139/24 seconds. Reduced motion, blocked autoplay, media failure and scrolling retain immediate access to the page. The end poster matches the final encoded frame.
 
 ## Assembly and verification
 
-`assemble_temple_journey.py` uses FFmpeg for frame trimming, retiming, cropping, silent H.264 encoding and a stationary end hold. NumPy/Pillow inspect decoded frames and make review sheets. It does not invent new scene content. Final encoding is CRF 21 / preset slow, with 6 Mbit/s desktop and 3.8 Mbit/s phone ceilings, yuv420p and fast-start metadata. Sources are hash checked before/after.
-
-Run with Python containing NumPy/Pillow and FFmpeg on PATH:
+`assemble_temple_journey.py` uses FFmpeg to retime, crop and encode silent H.264 with a stationary end hold. NumPy/Pillow inspect decoded frames and produce contact sheets. It does not generate new scene content. Encoding uses CRF 21 / preset slow, 6 Mbit/s desktop and 3.8 Mbit/s phone ceilings, yuv420p and fast-start metadata. Sources are hash checked before and after.
 
 ```sh
 python3 scripts/hero-film/assemble_temple_journey.py \
-  --wide-clip /path/to/ayodhya-native-descent-source.mp4 \
-  --temple-clip /path/to/ayodhya-native-temple-source.mp4 \
-  --output /path/outside/repository/composed-clean
+  --descent-clip /path/to/ayodhya-shikhar-final-native-source.mp4 \
+  --opening-dir /path/to/temple-centered-geographic \
+  --output /path/outside/repository/shikhar-composed
 ```
 
-Local review sources and outputs are preserved at `/Users/divyansh/Projects/Rishabhs/hero-film/aerial-arrival/`. Only the selected six final media files are copied into `public/assets/` under `ayodhya-temple-journey*`. The older public films and rendering scripts remain unchanged.
+Local sources are preserved under `/Users/divyansh/Projects/Rishabhs/hero-film/`. Six selected delivery assets are copied into `public/assets/` under `ayodhya-shikhar-journey*`. Older media and renderers remain available as historical assets but are not referenced by the homepage.
 
-Validation covers complete decode, dimensions, 24 fps, 516 frames, duration, silent single stream, codec, fast-start atom order, source hashes, boundary frame pixel differences and stationary hold. A synthetic frame counter verifies endpoint retention under retiming. Human review checks dense source prefix frames, both join sheets and responsive live page playback. Four captions use times 0 / 2.4 / 4.4 / 6.4; the page controls appear at 20 seconds. Reduced motion, failed media, blocked autoplay and scrolling retain immediate access to the page.
+Verification covers complete decode, dimensions, frame rate/count, duration, silent single stream, codec, fast-start atom order, source hashes, encoded-poster match, boundary differences and stationary hold. Synthetic frame counters verify that both exact source endpoints survive fast retiming. Source motion and desktop/portrait seam sheets receive visual review; local and deployed pages are checked at desktop and phone sizes.
 
-## Exact submitted native video prompts
+## Exact submitted native video prompt
 
-### Satellite → wide aerial
+One continuous straight forward push toward the existing central temple. Start exactly on the first overhead satellite view of its white campus. Keep the principal temple axis centered from the first resolvable view. Steadily descend the camera and gently tilt toward the horizon, approaching the upper ribbed shikhara, golden crown and full saffron flag until the close view exactly matches the final frame. The temple gains detail in place and remains the same solid structure. Fixed heading, level horizon, no lateral movement or entry, no yaw, roll or orbit. Preserve the ribbed shikhara, golden kalash and saffron flag. Arrive by seven seconds, then settle almost still. No ghost image, wipe, cut, crossfade or superimposed building.
 
-One continuous physical camera descent over Ayodhya. Start exactly on first satellite frame. Immediately move downward towards the same city while gently pitching from nadir to the elevated oblique view of the final frame. Camera keeps northward heading, perfectly level horizon, zero roll, no banking, no orbit. The Saryu's river bends and right-side bridge stay continuously tracked in the same landscape; buildings resolve in place as camera approaches. Maintain steady smooth forward/down motion to finish at second frame; natural warm late-afternoon light. Single solid scene, not a map graphic. No cut, dissolve, crossfade, overlay, portal, wipe, marker, text or cloud concealment.
+## Cost and rejected attempts
 
-### Wide aerial → temple
+This revision used 40 existing subscription credits: 20 for the rejected `ayodhya-centered-v2-native-source.mp4`, which rolled and swapped scenes, and 20 for the selected shikhara clip. No credit purchase or plan change was made. The earlier three trials used 60 credits in the preceding revision. Their long two-clip assembly and sideways temple entry are superseded; source material is preserved. The larger whole-facade endpoint was also rejected in favour of the shikhara and flag.
 
-One continuous calm physical camera approach over Ayodhya. Start exactly on the first wide aerial frame and immediately move forward and downward, gently tracking laterally toward the temple campus visible in the lower-left city, until the campus becomes prominent in the second frame. Keep the northward heading, level horizon, zero roll, no banking, no spin and no orbit. Saryu remains behind the city in the same upper band; the right-side bridge changes scale gradually. Buildings stay rooted in the landscape; approach the existing temple, do not grow or materialize it out of the ground. Preserve the final frame's architecture with one principal shikhara and surrounding mandapas. Finish with the temple at right-center, arrive at the supplied final view by seven seconds, then ease into a near-still final second. Natural warm late-afternoon light. Single solid scene. No cut, dissolve, crossfade, overlay, portal, wipe, marker, text or cloud concealment.
+## Encoded results
 
-## Encoded output checks
-
-- Desktop: 13,808,972 bytes; SHA-256 `345cb5cef53bfe34324c431b3a002a982de9fefa5c9f989607fd7967def8f047`. Seam mean RGB errors: 4.046 and 8.443/255. Held-frame difference: 0.147/255.
-- Phone: 9,039,190 bytes; SHA-256 `d2726e58c215841c017714c279da74d63304f22ffac2017dda61d9a59d4a3118`. Seam mean RGB errors: 17.450 and 9.000/255. Held-frame difference: 0.125/255.
-
-Both passed full decode, fast-start, dimensions, frame-count and stationary-hold checks. Mobile first-join pixel error is higher because the portrait opening and desktop-derived aerial are independently resampled; the geographic framing was visually reviewed.
+- Desktop: 4,292,329 bytes; SHA-256 `294460ead84970ebe30235328dfa99450ceda864aadb4a86da2adb38ef5846d6`. Geographic-to-AI seam mean RGB difference 1.030/255; stationary hold difference 0.067/255.
+- Phone: 3,091,025 bytes; SHA-256 `a1d422956292bb4869635859a7a522f8251c95576a67201e02147821ea959040`. Geographic-to-AI seam mean RGB difference 5.429/255; stationary hold difference 0.240/255.

@@ -12,6 +12,10 @@ import corridor from './assets/galary-1.webp';
 import bathroom from './assets/washroom-image-1.webp';
 import altar from './assets/god-image.webp';
 import reception from './assets/common-room-2.webp';
+import googleLogo from './assets/ota-logo/google-wordmark.png';
+import bookingLogo from './assets/ota-logo/Booking-Logo.png';
+import agodaLogo from './assets/ota-logo/agoda-logo.png';
+import tripadvisorLogo from './assets/ota-logo/tripadvisor-logo.png';
 const rooms = [{
   name: 'Deluxe room',
   image: deluxe,
@@ -76,11 +80,11 @@ const featureIcons = { 'Air conditioning': Snowflake, 'Private bathroom': Bath, 
 // Media seconds shared by the desktop film and its portrait crop.
 export const JOURNEY_STAGES = [
   { start: 0, hindi: 'जम्बूद्वीपे', english: 'Jambudvīpe' },
-  { start: 2.4, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
-  { start: 4.4, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
-  { start: 6.4, hindi: 'अयोध्या', english: 'Ayodhyā' },
+  { start: .65, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
+  { start: 1.15, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
+  { start: 1.7, hindi: 'अयोध्या नगरी', english: 'Ayodhya Nagari' },
 ];
-export const ARRIVAL_TIME = 20;
+export const ARRIVAL_TIME = 139 / 24;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
   { name: 'Ram Mandir', illustration: 'landmark-ram-mandir.svg', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
@@ -168,7 +172,7 @@ export default function VatsalyaBhawan() {
   const [mobileFilm, setMobileFilm] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches);
   const [filmTime, setFilmTime] = useState(0);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
-  const introActive = filmTime < ARRIVAL_TIME && !motionEnded && !reducedMotion && !videoFailed && !autoplayBlocked && !scrolled;
+  const captionActive = filmTime < ARRIVAL_TIME && !motionEnded && !reducedMotion && !videoFailed && !autoplayBlocked && !scrolled;
   const journeyStage = JOURNEY_STAGES.reduce((stage, next) => filmTime >= next.start ? next : stage, JOURNEY_STAGES[0]);
   const [stay, setStay] = useState({
     checkIn: localDate(),
@@ -280,7 +284,7 @@ export default function VatsalyaBhawan() {
   const preview = buildWhatsAppMessage(stay);
   return <div className={`bhawan-site ${festival ? 'festival-mode' : ''}`}>
     <a className="skip-link" href="#main">Skip to content</a>
-    <header className={`site-header ${scrolled || menu ? 'solid' : ''} ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>
+    <header className={`site-header ${scrolled || menu ? 'solid' : ''}`}>
       <a href="#home" aria-label="Vatsalya Bhawan home">
         <Logo />
       </a>
@@ -288,8 +292,8 @@ export default function VatsalyaBhawan() {
         {[['The stay', 'stay'], ['Rooms', 'rooms'], ['Gallery', 'gallery'], ['Ayodhya', 'ayodhya-guide'], ['Location', 'location']].map(([name, id]) => <a href={`#${id}`} key={id} onClick={() => setMenu(false)}>
           {name}
         </a>)}
-        <button className="festival-toggle" aria-pressed={festival} aria-label="Diwali lights" onClick={() => setFestival(value => !value)}>
-          <Diya /><span>{festival ? 'Everyday Ayodhya' : 'Diwali lights'}</span>
+        <button className="festival-toggle" aria-pressed={festival} aria-label="Diwali mode" onClick={() => setFestival(value => !value)}>
+          <Diya /><span>{festival ? 'Everyday Ayodhya' : 'Diwali mode'}</span>
         </button>
         <button className="button header-cta" onClick={() => enquire()}>
           Plan your stay
@@ -301,20 +305,20 @@ export default function VatsalyaBhawan() {
       </button>
     </header>
     <main id="main">
-      <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'AI aerial interpretation of Ram Mandir in Ayodhya'} fetchPriority="high" />
+      <section className="hero cinema-hero" id="home">
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-${captionActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={captionActive ? 'Earth with Asia and India visible' : 'AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-temple-journey-globe${mobileFilm ? '-mobile' : ''}.jpg`}
-          aria-label="Journey from Earth through India to an AI aerial view of Ram Mandir in Ayodhya"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          aria-label="Journey from Earth through India to an AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
@@ -323,13 +327,13 @@ export default function VatsalyaBhawan() {
         <div className="festival-lights" aria-hidden="true">
           {Array.from({ length: 12 }, (_, i) => <span className="festival-light" key={i} style={{ '--light-index': i }} />)}
         </div>
-        <div className={`intro-title ${introActive ? 'present' : ''}`} aria-hidden={!introActive}>
+        <div className={`intro-title ${captionActive ? 'present' : ''}`} aria-hidden={!captionActive}>
           <div className="intro-caption" key={journeyStage.start}>
             <p lang="hi">{journeyStage.hindi}</p>
             <p lang="en">{journeyStage.english}</p>
           </div>
         </div>
-        <div className={`hero-content hero-chrome ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>
+        <div className="hero-content">
           <p className="hero-intro">{festival ? 'Ayodhya, in the warmth of Diwali.' : 'In the city of Ram. A place of your own.'}</p>
           <h1>Arrive in Ayodhya.<br />Feel at home.</h1>
           <p className="hero-description">A welcoming place to pause, come together, and begin your Ayodhya stay.</p>
@@ -338,7 +342,7 @@ export default function VatsalyaBhawan() {
             {!reducedMotion && !videoFailed && <button className="journey-watch" onClick={watchJourney} aria-label="Watch the journey film"><Play size={15} fill="currentColor" />Watch the journey</button>}
           </div>
         </div>
-        <a className={`hero-location hero-chrome ${introActive ? 'intro-suppressed' : ''}`} href="#location" aria-hidden={introActive} inert={introActive}><MapPin size={20} /><span>Vatsalya Bhawan<span>Kaniganj, Ayodhya</span></span><ArrowUpRight size={18} /></a>
+        <a className="hero-location" href="#location"><MapPin size={20} /><span>Vatsalya Bhawan<span>Kaniganj, Ayodhya</span></span><ArrowUpRight size={18} /></a>
         <div className="hero-bottom">
           {!reducedMotion && !videoFailed && !autoplayBlocked && <button className="film-control" onClick={toggleFilm} aria-label={motionEnded ? 'Replay journey film' : paused ? 'Resume journey film' : 'Pause journey film'}>{motionEnded || paused ? <Play size={13} /> : <Pause size={13} />}<span>{motionEnded ? 'Replay film' : paused ? 'Resume film' : 'Pause film'}</span></button>}
         </div>
@@ -534,15 +538,16 @@ export default function VatsalyaBhawan() {
         </div>
         <div className="review-platforms">
           {[
-            { name: 'Google', score: '4.7', scale: '5', count: 538, url: googleListing },
-            { name: 'Booking.com', score: '8.4', scale: '10', count: 49, url: 'https://www.booking.com/hotel/in/vatsalya-bhawan.en-gb.html' },
-            { name: 'Agoda', score: '7.4', scale: '10', count: 67, url: 'https://www.agoda.com/vatsalya-bhawan/hotel/ayodhya-in.html' },
-            { name: 'Tripadvisor', score: '4.2', scale: '5', count: 5, url: 'https://www.tripadvisor.com/Hotel_Review-g1985445-d32707628-Reviews-Vatsalya_Bhawan_Ayodhya-Ayodhya_Ayodhya_District_Uttar_Pradesh.html' }
+            { name: 'Google', logo: googleLogo, score: '4.7', scale: '5', count: 538, url: googleListing },
+            { name: 'Booking.com', logo: bookingLogo, score: '8.4', scale: '10', count: 49, url: 'https://www.booking.com/hotel/in/vatsalya-bhawan.en-gb.html' },
+            { name: 'Agoda', logo: agodaLogo, score: '7.4', scale: '10', count: 67, url: 'https://www.agoda.com/vatsalya-bhawan/hotel/ayodhya-in.html' },
+            { name: 'Tripadvisor', logo: tripadvisorLogo, score: '4.2', scale: '5', count: 5, url: 'https://www.tripadvisor.com/Hotel_Review-g1985445-d32707628-Reviews-Vatsalya_Bhawan_Ayodhya-Ayodhya_Ayodhya_District_Uttar_Pradesh.html' }
           ].map(platform => <a className="review-platform" key={platform.name} href={platform.url} target="_blank" rel="noreferrer" aria-label={`Read ${platform.count} reviews on ${platform.name}; rated ${platform.score} out of ${platform.scale}`}>
-            <span className="review-platform-name">{platform.name}</span>
-            <span className="review-score"><strong>{platform.score}</strong><span> / {platform.scale}</span></span>
-            <span className="review-count">{platform.count} reviews</span>
-            <span className="review-platform-action">Read reviews <ArrowUpRight size={17} /></span>
+            <img className="review-platform-logo" src={platform.logo} alt={platform.name} loading="lazy" />
+            <span className="review-platform-details">
+              <span className="review-score"><strong>{platform.score}</strong><span> / {platform.scale}</span></span>
+              <span className="review-count">{platform.count} reviews <ArrowUpRight size={15} aria-hidden="true" /></span>
+            </span>
           </a>)}
         </div>
         <p className="reviews-checked">Ratings checked 7 Oct 2026</p>
@@ -593,7 +598,7 @@ export default function VatsalyaBhawan() {
           </div>
           <div className="booking-river-scene">
             <img className="saffron-drape" src={`${process.env.PUBLIC_URL}/assets/saffron-drape.svg`} alt="" aria-hidden="true" loading="lazy" />
-            <img className="booking-river-art" src={`${process.env.PUBLIC_URL}/assets/ayodhya-river-art.svg`} alt="" aria-hidden="true" loading="lazy" />
+            <img className="booking-river-art" src={`${process.env.PUBLIC_URL}/assets/${festival ? 'ayodhya-deepotsav-art.svg' : 'ayodhya-river-art.svg'}`} alt="" aria-hidden="true" loading="lazy" />
           </div>
         </div>
       </section>
@@ -665,7 +670,7 @@ export default function VatsalyaBhawan() {
           <summary>Image credits</summary>
           <div>
             <p>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</p>
-            <p>The city and temple arrival are AI-generated interpretations guided by satellite imagery, <a href="https://www.google.com/maps/search/?api=1&query=Shri+Ram+Janmabhoomi+Mandir+Ayodhya" target="_blank" rel="noreferrer">Google Maps references</a> and real temple photographs from the <a href="https://commons.wikimedia.org/wiki/File:Shri_Ram_Janambhoomi_Mandir_side_view.jpg" target="_blank" rel="noreferrer">Prime Minister’s Office via PIB</a>, licensed under <a href="https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf" target="_blank" rel="noreferrer">GODL-India</a>.</p>
+            <p>The shikhar and flag arrival is an AI-generated interpretation guided by satellite imagery, <a href="https://www.google.com/maps/search/?api=1&query=Shri+Ram+Janmabhoomi+Mandir+Ayodhya" target="_blank" rel="noreferrer">Google Maps references</a> and real temple photographs from the <a href="https://commons.wikimedia.org/wiki/File:Shri_Ram_Janambhoomi_Mandir_Mandapa_and_Sikhara.jpg" target="_blank" rel="noreferrer">Prime Minister’s Office via PIB</a>, licensed under <a href="https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf" target="_blank" rel="noreferrer">GODL-India</a>.</p>
             <p>The Shri Ram artwork is an original AI-generated illustration. Landmark and riverfront artwork was created for this website. Room and facade images were digitally reframed from property photographs; originals remain available.</p>
           </div>
         </details>

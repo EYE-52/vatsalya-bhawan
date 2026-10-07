@@ -686,25 +686,25 @@ address {
 .review-platforms {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 32px;
+  gap: 32px;
+  margin-top: 36px;
 }
 .review-platform {
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: 28px 28px 8px 8px;
-  background: var(--cool-surface);
-  transition: border-color .2s, background .2s;
+  align-items: flex-start;
+  gap: 20px;
+  min-height: 44px;
+  padding-block: 8px;
 }
-.review-platform:hover { border-color: var(--ink); background: var(--surface); }
-.review-platform-name { font-size: 15px; font-weight: 600; }
-.review-score { margin-top: 18px; white-space: nowrap; }
-.review-score strong { font-family: 'Lora', Georgia, serif; font-size: 46px; font-weight: 500; line-height: 1; }
+.review-platform:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+.review-platform-logo { width: 144px; max-width: 100%; height: 44px; object-fit: contain; object-position: left center; }
+.review-platform-details { display: flex; flex-direction: column; gap: 7px; }
+.review-score { white-space: nowrap; }
+.review-score strong { font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 600; line-height: 1.2; }
 .review-score > span, .review-count { font-size: 13px; color: var(--muted); }
-.review-count { margin-top: 8px; }
-.review-platform-action { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 24px; font-size: 13px; }
+.review-count { display: flex; align-items: center; gap: 8px; }
+.review-platform:hover .review-count { color: var(--ink); }
 .reviews .reviews-checked { margin-top: 16px; font-size: 12px; color: var(--muted); }
 .guest-comments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; margin-top: 34px; }
 .guest-comments figure { margin: 0; padding-left: 18px; border-left: 2px solid var(--highlight); }
@@ -1463,9 +1463,10 @@ footer :focus-visible { outline-color: var(--highlight); }
   .reviews h2 {
     font-size: 38px
   }
-  .review-platforms { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
-  .review-platform { padding: 20px 16px; }
-  .review-score strong { font-size: 40px; }
+  .review-platforms { grid-template-columns: 1fr; gap: 22px; margin-top: 28px; }
+  .review-platform { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; }
+  .review-platform-logo { width: 130px; }
+  .review-platform-details { align-items: flex-end; }
   .guest-comments { grid-template-columns: 1fr; gap: 24px; }
   .guest-comments blockquote { font-size: 18px; }
   .faq-diya { width: 94px; height: 70px; margin-bottom: 18px; }
@@ -1654,7 +1655,7 @@ body {
 }
 .hero-description, .welcome-copy > p:not(.eyebrow), .section-heading > p,
 .room-card-content > p, .location-layout > div > p:not(.eyebrow),
-.reviews p:not(.eyebrow), .faq > div > p:not(.eyebrow), .faq-list details p,
+.reviews p:not(.eyebrow):not(.reviews-checked), .faq > div > p:not(.eyebrow), .faq-list details p,
 .booking-cta p:not(.eyebrow), .room-modal-copy > p:not(.eyebrow),
 .booking-modal > p:not(.eyebrow) {
   font-size: 16px;
@@ -1681,11 +1682,11 @@ body {
 }
 .cinema-poster, .journey-film {
   position: absolute;
-  inset: 0;
+  inset: 100px 0 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 100px);
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
 }
 .cinema-hero .hero-shade {
   background: linear-gradient(90deg, rgba(10, 30, 39, .72), rgba(10, 30, 39, .5) 40%, rgba(10, 30, 39, .08) 78%), linear-gradient(0deg, rgba(18, 60, 81, .82), rgba(18, 60, 81, .28) 36%, transparent 70%), linear-gradient(180deg, rgba(18, 60, 81, .58), rgba(18, 60, 81, .44) 100px, transparent 220px);
@@ -1804,11 +1805,9 @@ body {
     max-height: none;
     height: 100svh;
   }
-  .cinema-poster {
-    object-position: center;
-  }
-  .journey-film {
-    object-position: center;
+  .cinema-poster, .journey-film {
+    top: 72px;
+    height: calc(100% - 72px);
   }
   .cinema-hero .hero-content {
     left: 20px;
@@ -1865,86 +1864,31 @@ body {
   }
 }
 
-/* The opening film is unobstructed until its media timeline reaches Ayodhya. */
-.site-header, .hero-chrome {
-  transition: opacity .9s ease, background .2s ease, color .2s ease;
-}
-.intro-suppressed {
-  opacity: 0;
-  pointer-events: none;
-  transition: none;
-}
+/* The journey plays behind usable page content; captions remain quiet. */
 .intro-title {
   position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 90px;
-  text-align: center;
+  top: 132px;
+  right: max(48px, calc((100% - 1240px) / 2));
+  text-align: right;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .9s ease;
+  transition: opacity .3s ease;
   color: var(--surface);
-  text-shadow: 0 2px 20px #00000050;
+  text-shadow: 0 2px 12px #00000070;
 }
-.intro-title.present {
-  opacity: 1;
-}
-.intro-title.present .intro-caption {
-  animation: intro-caption-in .7s ease both;
-}
-@keyframes intro-caption-in {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .intro-title.present .intro-caption {
-    animation: none;
-  }
-}
-.intro-title p {
-  max-width: none;
-}
+.intro-title.present { opacity: 1; }
+.intro-title p { max-width: none; }
 .intro-title p[lang="hi"] {
   font-family: 'Noto Serif Devanagari', serif;
-  font-size: 45px;
+  font-size: 32px;
   line-height: 1.55;
   font-weight: 400;
 }
-.intro-title p + p {
-  font-family: 'Lora', Georgia, serif;
-  font-size: 13px;
-  letter-spacing: .12em;
-  margin-top: 3px;
-}
-.cinema-hero .hero-shade {
-  opacity: 1;
-  transition: opacity .9s ease;
-}
-.cinema-hero.intro-active .hero-shade {
-  opacity: .15;
-}
-.intro-active .film-control {
-  opacity: 0;
-  transition: opacity .2s ease;
-  background: #123C5150;
-  border-color: #ffffff30;
-}
-.intro-active:hover .film-control, .intro-active .film-control:focus-visible {
-  opacity: 1;
-}
-.intro-active .film-control span {
-  display: none;
-}
+.intro-title p + p { font-size: 12px; letter-spacing: .08em; margin-top: 3px; }
 @media (max-width: 640px) {
-  .intro-title {
-    bottom: 110px;
-  }
-  .intro-title p[lang="hi"] {
-    font-size: 34px;
-  }
-  .intro-title p + p {
-    font-size: 11px;
-  }
+  .intro-title { top: 120px; left: 24px; right: 24px; text-align: center; }
+  .intro-title p[lang="hi"] { font-size: 28px; }
+  .intro-title p + p { font-size: 11px; }
 }
 
 /* An aqua arch and marigold sun frame the actual facade. */
@@ -2082,16 +2026,12 @@ body {
   margin-top: 15px;
 }
 
-/* Diwali adds light while preserving the everyday palette. */
+/* Static lamp accents accompany the full evening theme. */
 .festival-mode .welcome-image .exterior-frame img {
   filter: drop-shadow(0 15px 30px #d595352a);
 }
 .festival-mode .festival-lights {
   display: flex;
-}
-.cinema-hero.intro-active .festival-lights,
-.cinema-hero.intro-active .festival-note {
-  display: none;
 }
 .festival-mode .diya-icon .diya-flame {
   fill: var(--highlight);
@@ -2675,3 +2615,66 @@ body {
 }
 
 .street-map-tools button:focus-visible, .ayodhya-pin:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* Deepotsav: evening blue, warm ivory and gold, with light booking surfaces. */
+.festival-mode {
+  --surface: #FFF5DC;
+  --ink: #14263E;
+  --warm-surface: #F5E3BC;
+  --cool-surface: #F1E5C8;
+  --highlight: #F5BE50;
+  --muted: #5F625E;
+  --line: #D8C7A1;
+  --on-dark: #E8DDC5;
+  --line-on-dark: #4A5060;
+  --surface-glass: #FFF5DCF2;
+}
+.festival-mode .site-header,
+.festival-mode .site-header.solid,
+.festival-mode .navigation.open {
+  background: #14263EF2;
+  color: #FFF5DC;
+  border-color: #F5BE5033;
+}
+.festival-mode .navigation.open > a { border-color: #F5BE5033; }
+.festival-mode .cinema-hero .hero-shade {
+  background: linear-gradient(90deg, #14263ECC, #14263E70 48%, #14263E15 82%), linear-gradient(0deg, #14263EE6, #14263E50 42%, transparent 75%), linear-gradient(180deg, #14263E80, transparent 230px);
+}
+.festival-mode .button:not(.outline) {
+  color: #14263E;
+  background: #F5BE50;
+  border-color: #F5BE50;
+}
+.festival-mode .button:not(.outline):hover { background: #FFD17A; border-color: #FFD17A; }
+.festival-mode .button .diya-icon .diya-flame { fill: #BB3D21; stroke: #BB3D21; filter: none; }
+.festival-mode .exterior-frame::before { background: #EED3A0; border: 1px solid #C1823055; }
+.festival-mode .exterior-frame::after { background: #BB3D21; box-shadow: 0 0 0 10px #F5BE5022; }
+.festival-mode .welcome-copy { position: relative; isolation: isolate; }
+.festival-mode .welcome-copy::before {
+  content: '';
+  position: absolute;
+  width: 165px;
+  height: 165px;
+  right: -20px;
+  top: -45px;
+  z-index: -1;
+  opacity: .18;
+  background: url('./assets/diwali-rangoli.svg') center / contain no-repeat;
+  pointer-events: none;
+}
+.festival-mode .booking-cta {
+  --muted: #E8DDC5;
+  background: #14263E;
+  color: #FFF5DC;
+  border-color: #F5BE5040;
+}
+.festival-mode .booking-river-scene { padding-top: 0; }
+.festival-mode .saffron-drape { display: none; }
+.festival-mode .booking-river-art { max-height: 340px; }
+.festival-mode footer { background: #101E31; border-top: 1px solid #F5BE5033; }
+.festival-mode .footer-grid h3, .festival-mode .footer-contact svg { color: #F5BE50; }
+.festival-mode .mobile-actions { background: #14263E; color: #FFF5DC; border-color: #F5BE5040; }
+.festival-mode .mobile-actions button { background: #F5BE50; color: #14263E; }
+@media (max-width: 640px) {
+  .festival-mode .welcome-copy::before { width: 120px; height: 120px; right: 0; top: -25px; }
+}
