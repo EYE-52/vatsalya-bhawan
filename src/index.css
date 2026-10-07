@@ -2574,7 +2574,7 @@ body {
 .map-stay-content { min-width: 0; }
 .map-stay-content h3 { font-size: 25px; margin-bottom: 12px; }
 .map-stay-content p { font-size: 12px; color: var(--muted); }
-.map-stay-content .button { min-height: 46px; padding: 12px 16px; margin: 18px 0 6px; font-size: 12px; }
+.map-stay-content .button { display: flex; width: fit-content; min-height: 46px; padding: 12px 16px; margin: 18px 0 6px; font-size: 12px; }
 .map-stay-content .text-link { min-height: 44px; font-size: 12px; }
 .map-stay-phone { display: block; font-size: 12px; padding-top: 8px; }
 @media (max-width: 1000px) {
