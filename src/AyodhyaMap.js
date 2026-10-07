@@ -190,7 +190,7 @@ export default function AyodhyaMap({ onEnquire }) {
       </div>
     </div>
     <aside className="map-stay-card" aria-label="Stay at Vatsalya Bhawan">
-      <figure><img src={`${assets}/exterior-cutout.png`} alt="AI-reframed photograph of the full Vatsalya Bhawan facade" loading="lazy" /><figcaption>AI-reframed original photograph</figcaption></figure>
+      <figure><img src={`${assets}/exterior-cutout.png`} alt="Vatsalya Bhawan facade" loading="lazy" /></figure>
       <div className="map-stay-content">
         <MapPin size={20} aria-hidden="true" />
         <h3>Your stay in Ayodhya.</h3>

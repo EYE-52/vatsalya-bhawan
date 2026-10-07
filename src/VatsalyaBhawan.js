@@ -80,7 +80,7 @@ export const JOURNEY_STAGES = [
   { start: 5.5, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
   { start: 8, hindi: 'अयोध्या', english: 'Ayodhyā' },
 ];
-export const ARRIVAL_TIME = 10.5;
+export const ARRIVAL_TIME = 12.5;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
   { name: 'Ram Mandir', illustration: 'landmark-ram-mandir.svg', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
@@ -302,19 +302,19 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Satellite view of Ayodhya and the Saryu River'} fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Ayodhya skyline at sunset'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-globe${mobileFilm ? '-mobile' : ''}.jpg`}
-          aria-label="A geographical journey from Earth through India and the northern plains to a satellite view of Ayodhya"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          aria-label="A journey from Earth through India to Ayodhya, ending on its skyline at sunset"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
@@ -340,7 +340,6 @@ export default function VatsalyaBhawan() {
         </div>
         <a className={`hero-location hero-chrome ${introActive ? 'intro-suppressed' : ''}`} href="#location" aria-hidden={introActive} inert={introActive}><MapPin size={20} /><span>Vatsalya Bhawan<span>Kaniganj, Ayodhya</span></span><ArrowUpRight size={18} /></a>
         <div className="hero-bottom">
-          <span className={`film-credits hero-chrome ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</span>
           {!reducedMotion && !videoFailed && !autoplayBlocked && <button className="film-control" onClick={toggleFilm} aria-label={motionEnded ? 'Replay journey film' : paused ? 'Resume journey film' : 'Pause journey film'}>{motionEnded || paused ? <Play size={13} /> : <Pause size={13} />}<span>{motionEnded ? 'Replay film' : paused ? 'Resume film' : 'Pause film'}</span></button>}
         </div>
       </section>
@@ -386,9 +385,9 @@ export default function VatsalyaBhawan() {
       <section className="welcome container section" id="stay">
         <div className="welcome-image">
           <div className="exterior-frame">
-            <img src={`${process.env.PUBLIC_URL}/assets/exterior-cutout.png`} alt="AI-reframed cutout of Vatsalya Bhawan’s full facade and ground-floor entrance, based on a photograph of the actual building" loading="lazy" />
+            <img src={`${process.env.PUBLIC_URL}/assets/exterior-cutout.png`} alt="Vatsalya Bhawan facade and ground-floor entrance" loading="lazy" />
           </div>
-          <div className="exterior-disclosure"><span>AI-reframed cutout of the actual building.</span><button className="text-link" onClick={() => { setPhotoCategory('Around the bhawan'); setPhoto(photos.filter(p => p.category === 'Around the bhawan').length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
+          <div className="exterior-disclosure"><button className="text-link" onClick={() => { setPhotoCategory('Around the bhawan'); setPhoto(photos.filter(p => p.category === 'Around the bhawan').length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
         </div>
         <div className="welcome-copy">
           <figure className="welcome-ram"><img src={`${process.env.PUBLIC_URL}/assets/shri-ram-angavastra.webp`} alt="Illustration of Shri Ram with a flowing saffron angavastra" width="1536" height="1024" loading="lazy" /></figure>
@@ -446,7 +445,6 @@ export default function VatsalyaBhawan() {
               </div>
             </article>)}
           </div>
-          <p className="photo-note">Room photos digitally reframed with AI; originals are in Photos & details. Confirm facilities and room arrangements with our team.</p>
         </div>
       </section>
       <section className="gallery-section container section" id="gallery" aria-labelledby="gallery-title">
@@ -654,7 +652,13 @@ export default function VatsalyaBhawan() {
         <span>
           {`© ${new Date().getFullYear()} Vatsalya Bhawan`}
         </span>
-        <span>With warmth, from Ayodhya.</span>
+        <details className="image-credits">
+          <summary>Image credits</summary>
+          <div>
+            <p>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</p>
+            <p>The sunset skyline and Shri Ram are original AI-generated illustrations. Landmark and riverfront artwork was created for this website. Room and facade images were digitally reframed from property photographs; originals remain available.</p>
+          </div>
+        </details>
       </div>
     </footer>
     <div className={`mobile-actions ${scrolled ? 'visible' : 'at-top'}`}>
@@ -668,7 +672,7 @@ export default function VatsalyaBhawan() {
       </button>
     </div>
     {modal === 'room' && room && <Modal label={room.name} onClose={() => setModal(null)} className="room-modal">
-      <img src={showOriginal ? room.original : room.image} alt={`${room.name} — ${showOriginal ? 'original photograph' : 'AI-reframed view'}`} />
+      <img src={showOriginal ? room.original : room.image} alt={`${room.name} — ${showOriginal ? 'original photograph' : 'room view'}`} />
       <div className="room-modal-copy">
         <button className="text-link original-toggle" aria-pressed={showOriginal} onClick={() => setShowOriginal(!showOriginal)}>
           {showOriginal ? 'View reframed photo' : 'View original photo'}

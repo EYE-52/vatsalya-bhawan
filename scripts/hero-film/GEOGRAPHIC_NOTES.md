@@ -1,4 +1,6 @@
-# Real geographic Ayodhya journey
+# Real geographic Ayodhya journey — base film
+
+This documents the preserved geographic source film. The website now uses a 15-second derivative that reveals the earlier sunset skyline illustration after reaching the city; see `REVEAL_NOTES.md` and `finish_reveal.py` for the current ending. The source geography and attribution below are unchanged.
 
 The replacement uses one continuous perspective camera over a textured sphere. It shows real Earth, India, northern India, and Ayodhya at **26.799°N, 82.204°E**. There are no invented borders, embedded place names, AI ground imagery, cloud wipes, cuts, or artist-impression dissolves. The small gold locator is mathematically projected from the same city coordinates.
 
