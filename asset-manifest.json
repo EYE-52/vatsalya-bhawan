@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.b404b90b.css",
-    "main.js": "./static/js/main.9cf684cd.js",
+    "main.js": "./static/js/main.5c68f2ca.js",
     "static/js/228.f789d862.chunk.js": "./static/js/228.f789d862.chunk.js",
     "static/js/453.75b0fd4b.chunk.js": "./static/js/453.75b0fd4b.chunk.js",
     "static/media/room-refined-family.jpg": "./static/media/room-refined-family.cfc1841356d5b81d433b.jpg",
@@ -20,12 +20,12 @@
     "index.html": "./index.html",
     "static/media/diwali-rangoli.svg": "./static/media/diwali-rangoli.0f27c3496ec4e8b49f2e.svg",
     "main.b404b90b.css.map": "./static/css/main.b404b90b.css.map",
-    "main.9cf684cd.js.map": "./static/js/main.9cf684cd.js.map",
+    "main.5c68f2ca.js.map": "./static/js/main.5c68f2ca.js.map",
     "228.f789d862.chunk.js.map": "./static/js/228.f789d862.chunk.js.map",
     "453.75b0fd4b.chunk.js.map": "./static/js/453.75b0fd4b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b404b90b.css",
-    "static/js/main.9cf684cd.js"
+    "static/js/main.5c68f2ca.js"
   ]
 }
