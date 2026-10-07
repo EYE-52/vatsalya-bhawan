@@ -493,13 +493,13 @@ export default function VatsalyaBhawan() {
           </button>)}
         </div>
       </section>
-      <section className="ayodhya-guide container section" id="ayodhya-guide" aria-labelledby="ayodhya-guide-title">
-        <div className="ayodhya-guide-heading">
+      <section className="ayodhya-guide section" id="ayodhya-guide" aria-labelledby="ayodhya-guide-title">
+        <div className="ayodhya-guide-heading container">
           <h2 id="ayodhya-guide-title">Places to visit in Ayodhya.</h2>
           <a className="text-link" href={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.pdf`} download="Ayodhya-guide-by-Vatsalya-Bhawan.pdf"><Download size={18} />Download the map</a>
         </div>
         <AyodhyaMap onEnquire={() => enquire()} />
-        <div className="place-guides">
+        <div className="place-guides container">
           {places.map(place => <details key={place.name}>
             <summary>
               <img className="place-illustration" src={`${process.env.PUBLIC_URL}/assets/${place.illustration}`} alt="" aria-hidden="true" loading="lazy" />
@@ -695,6 +695,13 @@ export default function VatsalyaBhawan() {
         </details>
       </div>
     </footer>
+    <a className={`whatsapp-fab ${scrolled ? 'above-actions' : ''}`} href={`https://wa.me/919451338729?text=${encodeURIComponent('Hello, I would like to enquire about a stay at Vatsalya Bhawan.')}`} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+        <path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.4-4.7a8.5 8.5 0 1 1 16.1-4.2Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+        <path d="m8.5 7.4 1.1 2.5-.8 1c.8 1.5 1.9 2.6 3.6 3.3l1-1.1 2.5 1.2c.1 1.2-.7 2.1-1.8 2.1-3.4-.1-7.6-4.1-7.6-7.1 0-1.1.8-2 2-1.9Z" fill="currentColor" />
+      </svg>
+      <span>WhatsApp</span>
+    </a>
     <div className={`mobile-actions ${scrolled ? 'visible' : 'at-top'}`}>
       <a href="tel:+919451338729">
         <Phone size={17} />

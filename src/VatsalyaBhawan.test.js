@@ -413,3 +413,21 @@ test('arrival starts flag motion before the journey fallback hold without replay
   expect(journey.currentTime).toBe(8.5);
   expect(screen.getByRole('button', { name: 'Pause flag motion' })).toBeInTheDocument();
 });
+
+test('WhatsApp enquiry stays available through playback, arrival, replay and page scrolling', () => {
+  render(<VatsalyaBhawan />);
+  const whatsapp = screen.getByRole('link', { name: 'Chat on WhatsApp' });
+  const url = new URL(whatsapp.href);
+  expect(url.origin + url.pathname).toBe('https://wa.me/919451338729');
+  expect(url.searchParams.get('text')).toMatch(/enquire about a stay at Vatsalya Bhawan/);
+  expect(whatsapp).toHaveAttribute('target', '_blank');
+  fireEvent.ended(hero().querySelector('video'));
+  expect(screen.getByRole('link', { name: 'Chat on WhatsApp' })).toBe(whatsapp);
+  fireEvent.click(screen.getByRole('button', { name: 'Watch the journey film' }));
+  expect(screen.getByRole('link', { name: 'Chat on WhatsApp' })).toBe(whatsapp);
+  Object.defineProperty(window, 'scrollY', { configurable: true, value: 100 });
+  fireEvent.scroll(window);
+  expect(whatsapp).toHaveClass('above-actions');
+  expect(whatsapp.closest('[inert]')).toBeNull();
+  Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+});

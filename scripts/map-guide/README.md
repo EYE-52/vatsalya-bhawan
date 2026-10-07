@@ -59,3 +59,17 @@ pdftoppm -scale-to 1800 -png public/assets/ayodhya-guide.pdf /tmp/ayodhya-guide
 Inspect **both** rasterised pages after an edit. Fonts are embedded in the PDF; the SVG uses standard Arial/Georgia fallbacks. The QR and street network are vector content. All clickable PDF rectangles use physical page coordinates despite the drawing's vertically flipped coordinates.
 
 The PDF skill's artifact-operation marker succeeded once before authoring: edit / one output / pdf. The canonical copy is kept in `output/pdf/ayodhya-guide.pdf`, identical to the public copy; both current page render proofs are in `output/pdf/ayodhya-guide-preview-1.png` and `output/pdf/ayodhya-guide-preview-2.png`. Latest verification checks include PDF page count/dimensions, hyperlinks using walking mode, extractable labels, standalone SVG XML validity and visual inspection of both Poppler renders.
+
+## Extended web-map coverage
+
+`public/assets/ayodhya-streets-wide.geojson` is a **separate web-only** context layer for the full-width interactive map. Its bounds are `[82.148, 26.771, 82.255, 26.824]`: roughly 10.6 km east-west by 5.9 km north-south. It shows the actual surrounding road/lane/footway network, railway and river/pond shapes, so a wide viewport can show geographic context without stretching the city or leaving the sides empty. The interactive view should control detail by zoom; all existing access tags and unnamed narrow lanes are retained. The original `ayodhya-streets.geojson`, places JSON, SVG and printable PDF are unchanged by this workflow.
+
+Source snapshot, retrieved **7 October 2026**: `data/osm-wide-map.osm`, from https://www.openstreetmap.org/api/0.6/map?bbox=82.148,26.771,82.255,26.824 . It contains 22,420 nodes and 2,440 ways. The existing full `osm-river.osm` relation supplies complete river/island rings. The new snapshot is preserved with its SHA-256 in `data/osm-wide-map.sha256`. The extended data retains the same feature/property contract as the original web data, with source URLs, retrieval date and ODbL licence/attribution in metadata.
+
+Rebuild offline using the pinned snapshots:
+
+```sh
+/Users/divyansh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/map-guide/prepare_wide_data.py
+```
+
+Refresh only the extended snapshot and then export with `prepare_wide_data.py --refresh`. It validates the XML before replacing the snapshot and requires no additional package. Neither command regenerates or changes the print guide or original map data. Extended map data is **© OpenStreetMap contributors**, under **ODbL 1.0**; preserve visible https://www.openstreetmap.org/copyright attribution on the map.

@@ -18,7 +18,8 @@ jest.mock('leaflet', () => {
     control: { scale: () => layer() }, geoJSON: layer, layerGroup: layer,
     divIcon: options => options, marker: position => {
       const element = global.document.createElement('div');
-      return { addTo: jest.fn().mockReturnThis(), bindTooltip: jest.fn().mockReturnThis(), on: jest.fn(), getElement: () => element, getLatLng: () => position, getTooltip: () => ({ getElement: () => element }) };
+      const tooltip = { options: {}, update: jest.fn(), getElement: () => element };
+      return { addTo: jest.fn().mockReturnThis(), bindTooltip: jest.fn().mockReturnThis(), on: jest.fn(), getElement: () => element, getLatLng: () => position, getTooltip: () => tooltip };
     },
   };
 });
@@ -69,7 +70,7 @@ test('selection focuses real lanes and updates routes; overview and movement con
   expect(map.touchZoom.enable).toHaveBeenCalled();
   expect(screen.getByRole('button', { name: 'Done moving' })).toHaveAttribute('aria-pressed', 'true');
   fireEvent.click(screen.getByRole('button', { name: 'Show all' }));
-  expect(map.fitBounds).toHaveBeenLastCalledWith([[26.782, 82.184], [26.813, 82.218]], { padding: [22, 30], animate: false });
+  expect(map.fitBounds).toHaveBeenLastCalledWith([[26.7837, 82.189], [26.811, 82.212]], { padding: [30, 48], animate: false });
   expect(screen.getByRole('button', { name: 'Move map' })).toHaveAttribute('aria-pressed', 'false');
   expect(map.dragging.disable).toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Enquire about a stay' }));

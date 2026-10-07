@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, MapPin } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 export const HOTEL_COORDINATES = '26.7857896,82.2032408';
-const bounds = [[26.782, 82.184], [26.813, 82.218]];
+const bounds = [[26.7837, 82.189], [26.811, 82.212]];
+const coverage = [[26.771, 82.148], [26.824, 82.255]];
+const overviewOptions = { padding: [30, 48], animate: false };
+const labelDirections = { 'ram-mandir': 'left', 'hanuman-garhi': 'right', 'kanak-bhawan': 'top', 'dashrath-mahal': 'left', 'ayodhya-dham': 'left', hotel: 'bottom' };
+const labelOffsets = { left: [-16, 0], right: [16, 0], top: [0, -18], bottom: [0, 18] };
 const assets = `${process.env.PUBLIC_URL}/assets`;
 
 export function walkingDirections(destination, origin) {
@@ -36,7 +40,7 @@ export default function AyodhyaMap({ onEnquire }) {
     const load = async () => {
       try {
         const [module, roadsResponse, placesResponse] = await Promise.all([
-          import('leaflet'), fetch(`${assets}/ayodhya-streets.geojson`), fetch(`${assets}/ayodhya-places.json`),
+          import('leaflet'), fetch(`${assets}/ayodhya-streets-wide.geojson`), fetch(`${assets}/ayodhya-places.json`),
         ]);
         if (!roadsResponse.ok || !placesResponse.ok) throw new Error('Map data unavailable');
         const [roads, allPlaces] = await Promise.all([roadsResponse.json(), placesResponse.json()]);
@@ -49,8 +53,8 @@ export default function AyodhyaMap({ onEnquire }) {
           dragging: false, touchZoom: false, doubleClickZoom: false,
           minZoom: 14, maxZoom: 19, zoomSnap: 0.25,
           zoomAnimation: !reducedMotion, fadeAnimation: !reducedMotion,
-          maxBounds: L.latLngBounds(bounds).pad(0.12), maxBoundsViscosity: 1,
-        }).fitBounds(bounds, { padding: [22, 30] });
+          maxBounds: L.latLngBounds(coverage), maxBoundsViscosity: 1,
+        }).fitBounds(bounds, overviewOptions);
         mapRef.current = map;
         L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
         const restricted = p => ['private', 'no'].includes(p.access) || ['private', 'no'].includes(p.foot);
@@ -84,18 +88,32 @@ export default function AyodhyaMap({ onEnquire }) {
         });
         const refreshLabels = () => {
           labels.clearLayers();
-          const occupied = [];
+          const mapBox = container.current.getBoundingClientRect();
+          const occupied = [...markers.current.entries()].map(([id, marker]) => {
+            const pixel = map.latLngToContainerPoint(marker.getLatLng());
+            return { id, x: mapBox.left + pixel.x, y: mapBox.top + pixel.y, width: id === 'hotel' ? 34 : 22, height: id === 'hotel' ? 34 : 22 };
+          });
+          const overlaps = (box, other, gap = 6) => Math.abs(other.x - box.x) < (other.width + box.width) / 2 + gap && Math.abs(other.y - box.y) < (other.height + box.height) / 2 + gap;
           const landmarkMarkers = [...markers.current.entries()].sort(([a], [b]) => (b === selection.current ? 2 : b === 'hotel' ? 1 : 0) - (a === selection.current ? 2 : a === 'hotel' ? 1 : 0));
           landmarkMarkers.forEach(([id, marker]) => {
-            const label = marker.getTooltip()?.getElement();
+            const tooltip = marker.getTooltip();
+            const label = tooltip?.getElement();
             if (!label) return;
-            const pixel = map.latLngToContainerPoint(marker.getLatLng());
-            const width = label.offsetWidth || 140;
-            const height = label.offsetHeight || 24;
-            const box = { x: pixel.x + (id === 'hotel' ? 0 : width / 2 + 20), y: pixel.y + (id === 'hotel' ? height / 2 + 23 : 0), width, height };
-            const overlaps = occupied.some(other => Math.abs(other.x - box.x) < (other.width + box.width) / 2 + 8 && Math.abs(other.y - box.y) < (other.height + height) / 2 + 8);
-            label.style.opacity = overlaps ? '0' : '1';
-            if (!overlaps) occupied.push(box);
+            let placed = false;
+            for (const direction of new Set([labelDirections[id] || 'right', 'right', 'left', 'top', 'bottom'])) {
+              tooltip.options.direction = direction;
+              tooltip.options.offset = labelOffsets[direction];
+              tooltip.update();
+              const rect = label.getBoundingClientRect();
+              const box = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, width: rect.width, height: rect.height };
+              const inside = rect.left >= mapBox.left + 6 && rect.right <= mapBox.right - 6 && rect.top >= mapBox.top + 6 && rect.bottom <= mapBox.bottom - 6;
+              if (inside && !occupied.some(other => other.id !== id && overlaps(box, other))) {
+                occupied.push(box);
+                placed = true;
+                break;
+              }
+            }
+            label.style.opacity = placed ? '1' : '0';
           });
           namedRoads.forEach(({ feature }) => {
             if (map.getZoom() < (main(feature.properties) ? 14 : 16.7)) return;
@@ -105,8 +123,10 @@ export default function AyodhyaMap({ onEnquire }) {
             if (!map.getBounds().contains(position)) return;
             const pixel = map.latLngToContainerPoint(position);
             const width = Math.min(170, (feature.properties.display_name || feature.properties.name).length * 6.2);
-            if (occupied.some(box => Math.abs(box.x - pixel.x) < (box.width + width) / 2 + 15 && Math.abs(box.y - pixel.y) < (box.height + 18) / 2 + 10)) return;
-            occupied.push({ x: pixel.x, y: pixel.y, width, height: 18 });
+            const box = { x: mapBox.left + pixel.x, y: mapBox.top + pixel.y, width, height: 18 };
+            if (box.x - width / 2 < mapBox.left + 6 || box.x + width / 2 > mapBox.right - 6 || box.y - 9 < mapBox.top + 6 || box.y + 9 > mapBox.bottom - 6) return;
+            if (occupied.some(other => overlaps(box, other, 14))) return;
+            occupied.push(box);
             L.marker(position, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'street-name', html: textLabel(feature.properties.display_name || feature.properties.name), iconSize: [width, 18], iconAnchor: [width / 2, 9] }) }).addTo(labels);
           });
         };
@@ -115,8 +135,8 @@ export default function AyodhyaMap({ onEnquire }) {
         const addMarker = (place, hotel = false) => {
           const marker = L.marker([place.lat, place.lon], {
             title: place.name, alt: place.name, riseOnHover: true,
-            icon: L.divIcon({ className: `ayodhya-pin${hotel ? ' hotel-pin' : ''}`, html: hotel ? '<span aria-hidden="true" lang="hi">व</span>' : '<span aria-hidden="true"></span>', iconSize: hotel ? [34, 34] : [24, 24], iconAnchor: hotel ? [17, 17] : [12, 12] }),
-          }).addTo(map).bindTooltip(textLabel(place.name), { permanent: true, direction: hotel ? 'bottom' : 'right', offset: hotel ? [0, 17] : [10, 0], className: `landmark-label${hotel ? ' hotel-label' : ''}` });
+            icon: L.divIcon({ className: `ayodhya-pin${hotel ? ' hotel-pin' : ''}`, html: hotel ? '<span aria-hidden="true" lang="hi">व</span>' : '<span aria-hidden="true"></span>', iconSize: [44, 44], iconAnchor: [22, 22] }),
+          }).addTo(map).bindTooltip(textLabel(place.id === 'ram-mandir' ? 'Ram Mandir' : place.name), { permanent: true, direction: labelDirections[hotel ? 'hotel' : place.id] || 'right', offset: [0, 0], className: `landmark-label${hotel ? ' hotel-label' : ''}` });
           marker.on('click', () => {
             if (hotel) map.setView([place.lat, place.lon], 17, { animate: false });
             else { setSelectedId(place.id); map.setView([place.lat, place.lon], 17, { animate: false }); }
@@ -127,7 +147,11 @@ export default function AyodhyaMap({ onEnquire }) {
         addMarker({ name: 'Vatsalya Bhawan', lat: 26.7857896, lon: 82.2032408 }, true);
         refreshLabels();
         if (typeof ResizeObserver !== 'undefined') {
-          resizeObserver = new ResizeObserver(() => map.invalidateSize());
+          resizeObserver = new ResizeObserver(() => {
+            map.invalidateSize();
+            if (map.getZoom() < 16) map.fitBounds(bounds, overviewOptions);
+            refreshLabels();
+          });
           resizeObserver.observe(container.current);
         }
         setPlaces(destinations);
@@ -156,13 +180,13 @@ export default function AyodhyaMap({ onEnquire }) {
 
   return <div className="street-map-layout">
     <div className="street-map-main">
+      <div className={`street-map-frame${moving ? ' map-moving' : ''}`}>
         {status === 'ready' && <div className="street-map-tools" aria-label="Map controls">
           <button type="button" onClick={() => mapRef.current.zoomIn()} aria-label="Zoom in">+</button>
           <button type="button" onClick={() => mapRef.current.zoomOut()} aria-label="Zoom out">−</button>
-          <button type="button" onClick={() => { mapRef.current.fitBounds(bounds, { padding: [22, 30], animate: false }); setMoving(false); }}>Show all</button>
+          <button type="button" onClick={() => { mapRef.current.fitBounds(bounds, overviewOptions); setMoving(false); }}>Show all</button>
           <button type="button" aria-pressed={moving} onClick={() => setMoving(value => !value)}>{moving ? 'Done moving' : 'Move map'}</button>
         </div>}
-      <div className={`street-map-frame${moving ? ' map-moving' : ''}`}>
         <div ref={container} className="ayodhya-street-map" role="region" aria-label="Ayodhya street map" aria-describedby="street-map-instructions" />
         {status !== 'ready' && <div className="street-map-fallback">
           <img src={`${assets}/ayodhya-guide.svg`} alt="Real Ayodhya streets and landmarks, with Vatsalya Bhawan marked" loading="lazy" />
@@ -170,11 +194,15 @@ export default function AyodhyaMap({ onEnquire }) {
         </div>}
         <span className="map-north" aria-label="North is up">↑ N</span>
       </div>
-      <div className="street-map-caption">
-        <p id="street-map-instructions">{moving ? 'Drag to move. Choose Done moving to scroll the page.' : 'Zoom for lanes. Choose Move map to pan.'}</p>
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a>
+      <div className="street-map-meta container">
+        <div className="street-map-caption">
+          <p id="street-map-instructions">{moving ? 'Drag to move. Choose Done moving to scroll the page.' : 'Zoom for lanes. Choose Move map to pan.'}</p>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a>
+        </div>
+        <div className="street-map-legend" aria-label="Map legend"><span>Streets</span><span className="path-key">Footpaths</span><span className="access-key">Limited access</span><span className="water-key">Water</span></div>
       </div>
-      <div className="street-map-legend" aria-label="Map legend"><span>Streets</span><span className="path-key">Footpaths</span><span className="access-key">Limited access</span><span className="water-key">Water</span></div>
+    </div>
+    <div className="street-map-footer container">
       <div className="map-destination">
         {places.length > 0 && <>
           <label htmlFor="ayodhya-destination">Choose a place</label>
@@ -188,18 +216,16 @@ export default function AyodhyaMap({ onEnquire }) {
         </>}
         <p className="map-routing-note">Walking directions open in Google Maps. Check local signs and temple entry arrangements.</p>
       </div>
+      <aside className="map-stay-card" aria-label="Stay at Vatsalya Bhawan">
+        <figure><img src={`${assets}/exterior-cutout.png`} alt="Vatsalya Bhawan facade" loading="lazy" /></figure>
+        <div className="map-stay-content">
+          <h3>Vatsalya Bhawan</h3>
+          <p>Tarun Pura Road, Kaniganj<br />Ayodhya, Uttar Pradesh</p>
+          <button className="button button-primary" type="button" onClick={onEnquire}>Enquire about a stay</button>
+          <a className="text-link" href={walkingDirections(HOTEL_COORDINATES)} target="_blank" rel="noreferrer">Find the bhawan <ArrowUpRight size={16} /></a>
+          <a className="map-stay-phone" href="tel:+919451338729">+91 94513 38729</a>
+        </div>
+      </aside>
     </div>
-    <aside className="map-stay-card" aria-label="Stay at Vatsalya Bhawan">
-      <figure><img src={`${assets}/exterior-cutout.png`} alt="Vatsalya Bhawan facade" loading="lazy" /></figure>
-      <div className="map-stay-content">
-        <MapPin size={20} aria-hidden="true" />
-        <h3>Your stay in Ayodhya.</h3>
-        <p className="map-stay-name">Vatsalya Bhawan</p>
-        <p>Tarun Pura Road, Kaniganj<br />Ayodhya, Uttar Pradesh</p>
-        <button className="button button-primary" type="button" onClick={onEnquire}>Enquire about a stay</button>
-        <a className="text-link" href={walkingDirections(HOTEL_COORDINATES)} target="_blank" rel="noreferrer">Find the bhawan <ArrowUpRight size={16} /></a>
-        <a className="map-stay-phone" href="tel:+919451338729">+91 94513 38729</a>
-      </div>
-    </aside>
   </div>;
 }
