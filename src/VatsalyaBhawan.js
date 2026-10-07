@@ -302,19 +302,19 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Ayodhya skyline at sunset'} fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous-${introActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={introActive ? 'Earth with Asia and India visible' : 'Ayodhya and the Saryu river from above'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-reveal-globe${mobileFilm ? '-mobile' : ''}.jpg`}
-          aria-label="A journey from Earth through India to Ayodhya, ending on its skyline at sunset"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-continuous-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          aria-label="One continuous satellite journey from Earth through India to Ayodhya"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
@@ -656,7 +656,7 @@ export default function VatsalyaBhawan() {
           <summary>Image credits</summary>
           <div>
             <p>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</p>
-            <p>The sunset skyline and Shri Ram are original AI-generated illustrations. Landmark and riverfront artwork was created for this website. Room and facade images were digitally reframed from property photographs; originals remain available.</p>
+            <p>The Shri Ram artwork is an original AI-generated illustration. Landmark and riverfront artwork was created for this website. Room and facade images were digitally reframed from property photographs; originals remain available.</p>
           </div>
         </details>
       </div>

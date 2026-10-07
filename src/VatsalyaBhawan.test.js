@@ -42,13 +42,13 @@ function hero() {
 function expectPosterAndBooking() {
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
-  expect(within(hero()).getByAltText('Ayodhya skyline at sunset')).toHaveAttribute('src', expect.stringContaining(`ayodhya-reveal-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
+  expect(within(hero()).getByAltText('Ayodhya and the Saryu river from above')).toHaveAttribute('src', expect.stringContaining(`ayodhya-continuous-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
   fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
   expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Prepare enquiry/ })).toBeEnabled();
 }
 
-test.each([['desktop', false], ['phone', true]])('reduced motion shows the %s sunset poster with a usable booking flow, without mounting video', (viewport, mobile) => {
+test.each([['desktop', false], ['phone', true]])('reduced motion shows the %s satellite poster with a usable booking flow, without mounting video', (viewport, mobile) => {
   reducedMotion = true;
   mobileFilm = mobile;
   render(<VatsalyaBhawan />);
@@ -67,6 +67,7 @@ test('failed media falls back to the poster and keeps the booking flow available
 test('pause and resume call native playback, and replay restarts an ended film without looping', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
+  expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-continuous.mp4'));
   expect(video.loop).toBe(false);
   expect(play).toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Pause journey film' }));
@@ -78,7 +79,7 @@ test('pause and resume call native playback, and replay restarts an ended film w
   video.currentTime = 15;
   fireEvent.ended(video);
   expect(video).toHaveStyle({ visibility: 'hidden' });
-  expect(within(hero()).getByAltText('Ayodhya skyline at sunset')).toHaveAttribute('src', expect.stringContaining('ayodhya-reveal-arrival.jpg'));
+  expect(within(hero()).getByAltText('Ayodhya and the Saryu river from above')).toHaveAttribute('src', expect.stringContaining('ayodhya-continuous-arrival.jpg'));
   const callsBeforeReplay = play.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(video.currentTime).toBe(0);
@@ -96,7 +97,7 @@ test('all four bilingual captions follow media time while header and hero action
     [5.5, 'आर्यावर्ते', 'Āryāvarte'],
     [8, 'अयोध्या', 'Ayodhyā'],
   ];
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-reveal-globe.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-continuous-globe.jpg'));
   stages.forEach(([start, hindi, english], index) => {
     if (index > 0) {
       video.currentTime = start - 0.01;
@@ -124,7 +125,7 @@ test('all four bilingual captions follow media time while header and hero action
   expect(screen.getByText('Ayodhyā')).toBeInTheDocument();
   video.currentTime = 12.5;
   fireEvent.timeUpdate(video);
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-reveal-arrival.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-continuous-arrival.jpg'));
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
@@ -132,12 +133,12 @@ test('all four bilingual captions follow media time while header and hero action
   fireEvent.click(footer.getByText('Image credits', { selector: 'summary' }));
   expect(footer.getByRole('link', { name: 'NASA Blue Marble' })).toHaveAttribute('href', 'https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/');
   expect(footer.getByRole('link', { name: 'Copernicus Sentinel data 2026' })).toBeInTheDocument();
-  expect(footer.getByText(/sunset skyline and Shri Ram are original AI-generated illustrations/)).toBeInTheDocument();
+  expect(footer.getByText(/Shri Ram artwork is an original AI-generated illustration/)).toBeInTheDocument();
   fireEvent.ended(video);
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-reveal-globe.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-continuous-globe.jpg'));
   expect(screen.queryByText('Ayodhyā')).toBeNull();
 });
 
