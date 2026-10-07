@@ -59,11 +59,11 @@ export default function AyodhyaMap({ onEnquire }) {
         const roadStyle = (feature, casing = false) => {
           const p = feature.properties;
           const factor = Math.max(0.8, (map.getZoom() - 13) / 2.4);
-          if (p.kind === 'water') return { color: '#aecdd1', weight: 0.7, fillColor: '#cee2e3', fillOpacity: 1 };
-          if (p.kind === 'rail') return { color: '#a3aaa0', weight: 1.1, dashArray: '4 5' };
-          if (restricted(p)) return { color: '#b99189', weight: 1.5 * factor, dashArray: '2 5', opacity: casing ? 0 : 0.8 };
-          if (path(p)) return { color: '#ad8866', weight: 1.3 * factor, dashArray: p.class === 'steps' ? '1 3' : '3 3', opacity: casing ? 0 : 0.9 };
-          return { color: casing ? '#cdc9bd' : '#ffffff', weight: (main(p) ? 5.5 : 2.8) * factor + (casing ? 1.8 : 0), opacity: 1 };
+          if (p.kind === 'water') return { color: 'var(--map-water-edge)', weight: 0.7, fillColor: 'var(--map-water)', fillOpacity: 1 };
+          if (p.kind === 'rail') return { color: 'var(--map-rail)', weight: 1.1, dashArray: '4 5' };
+          if (restricted(p)) return { color: 'var(--map-restricted)', weight: 1.5 * factor, dashArray: '2 5', opacity: casing ? 0 : 0.8 };
+          if (path(p)) return { color: 'var(--map-path)', weight: 1.3 * factor, dashArray: p.class === 'steps' ? '1 3' : '3 3', opacity: casing ? 0 : 0.9 };
+          return { color: casing ? 'var(--map-road-edge)' : '#ffffff', weight: (main(p) ? 5.5 : 2.8) * factor + (casing ? 1.8 : 0), opacity: 1 };
         };
         L.geoJSON(roads, { filter: feature => feature.properties.kind === 'water', style: feature => roadStyle(feature), interactive: false }).addTo(map);
         const streets = { type: 'FeatureCollection', features: roads.features.filter(feature => feature.properties.kind !== 'water') };

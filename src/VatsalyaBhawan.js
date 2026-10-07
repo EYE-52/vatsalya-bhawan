@@ -83,10 +83,10 @@ export const JOURNEY_STAGES = [
 export const ARRIVAL_TIME = 10.5;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
-  { name: 'Ram Mandir', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
-  { name: 'Hanuman Garhi', kind: 'Temple', text: 'A temple dedicated to Hanuman, with the young Hanuman seated in Maa Anjani’s lap in the main shrine.', info: 'https://ayodhya.nic.in/tourist-place/hanuman-garhi/', query: 'Hanuman Garhi Ayodhya' },
-  { name: 'Kanak Bhawan', kind: 'Temple', text: 'A temple dedicated to Ram and Sita in Ramkot, northeast of Ram Janmabhoomi.', info: 'https://ayodhya.nic.in/tourist-place/kanak-bhawan/', query: 'Kanak Bhawan Ayodhya' },
-  { name: 'Ram ki Paidi', kind: 'Riverfront', text: 'Explore the ghats along the Saryu and the illuminated riverfront after dusk.', info: 'https://ayodhya.nic.in/tourist-place/ram-ki-paidi/', query: 'Ram ki Paidi Ayodhya' },
+  { name: 'Ram Mandir', illustration: 'landmark-ram-mandir.svg', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
+  { name: 'Hanuman Garhi', illustration: 'landmark-hanuman-garhi.svg', kind: 'Temple', text: 'A temple dedicated to Hanuman, with the young Hanuman seated in Maa Anjani’s lap in the main shrine.', info: 'https://ayodhya.nic.in/tourist-place/hanuman-garhi/', query: 'Hanuman Garhi Ayodhya' },
+  { name: 'Kanak Bhawan', illustration: 'landmark-kanak-bhawan.svg', kind: 'Temple', text: 'A temple dedicated to Ram and Sita in Ramkot, northeast of Ram Janmabhoomi.', info: 'https://ayodhya.nic.in/tourist-place/kanak-bhawan/', query: 'Kanak Bhawan Ayodhya' },
+  { name: 'Ram ki Paidi', illustration: 'landmark-ram-ki-paidi.svg', kind: 'Riverfront', text: 'Explore the ghats along the Saryu and the illuminated riverfront after dusk.', info: 'https://ayodhya.nic.in/tourist-place/ram-ki-paidi/', query: 'Ram ki Paidi Ayodhya' },
 ];
 function Diya({ className = '' }) {
   return <svg className={`diya-icon ${className}`} viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -98,8 +98,8 @@ function Diya({ className = '' }) {
 function Logo() {
   return <span className="brand">
     <svg className="brand-emblem" viewBox="0 0 64 64" aria-hidden="true">
-      <rect width="64" height="64" fill="#28372D" />
-      <path d="M584.2194213867188 538.9404907226562H484.45928955078125V0H387V193.68017578125L419.21978759765625 173.90032958984375Q388.85980224609375 141.80029296875 344.5898132324219 124.62030029296875Q300.31982421875 107.4403076171875 244.599853515625 107.4403076171875Q186.3599853515625 107.4403076171875 140.83004760742188 128.12030029296875Q95.30010986328125 148.80029296875 69.03012084960938 188.34027099609375Q42.7601318359375 227.8802490234375 42.7601318359375 283.960205078125Q42.7601318359375 372.240234375 100.7601318359375 415.960205078125Q158.7601318359375 459.68017578125 252.46002197265625 459.68017578125Q281.3599853515625 459.68017578125 306.3099670410156 456.68017578125Q331.25994873046875 453.68017578125 352.61993408203125 448.68017578125L345.82000732421875 365.70062255859375Q326.0799560546875 370.34063720703125 305.5699157714844 372.66064453125Q285.05987548828125 374.98065185546875 260.49981689453125 374.98065185546875Q207.73968505859375 374.98065185546875 174.38955688476562 351.0905456542969Q141.0394287109375 327.200439453125 141.0394287109375 281.42022705078125Q141.0394287109375 240.56005859375 168.239501953125 216.02993774414062Q195.4395751953125 191.49981689453125 246.93975830078125 191.49981689453125Q293.9598388671875 191.49981689453125 333.7398681640625 213.72982788085938Q373.5198974609375 235.9598388671875 397.17999267578125 272.41986083984375L387 213.70025634765625V538.9404907226562H0V622H584.2194213867188Z" transform="translate(14.154 51.000) scale(0.061093 -0.061093)" fill="#FAF8F3" />
+      <rect width="64" height="64" fill="#123C51" />
+      <path d="M584.2194213867188 538.9404907226562H484.45928955078125V0H387V193.68017578125L419.21978759765625 173.90032958984375Q388.85980224609375 141.80029296875 344.5898132324219 124.62030029296875Q300.31982421875 107.4403076171875 244.599853515625 107.4403076171875Q186.3599853515625 107.4403076171875 140.83004760742188 128.12030029296875Q95.30010986328125 148.80029296875 69.03012084960938 188.34027099609375Q42.7601318359375 227.8802490234375 42.7601318359375 283.960205078125Q42.7601318359375 372.240234375 100.7601318359375 415.960205078125Q158.7601318359375 459.68017578125 252.46002197265625 459.68017578125Q281.3599853515625 459.68017578125 306.3099670410156 456.68017578125Q331.25994873046875 453.68017578125 352.61993408203125 448.68017578125L345.82000732421875 365.70062255859375Q326.0799560546875 370.34063720703125 305.5699157714844 372.66064453125Q285.05987548828125 374.98065185546875 260.49981689453125 374.98065185546875Q207.73968505859375 374.98065185546875 174.38955688476562 351.0905456542969Q141.0394287109375 327.200439453125 141.0394287109375 281.42022705078125Q141.0394287109375 240.56005859375 168.239501953125 216.02993774414062Q195.4395751953125 191.49981689453125 246.93975830078125 191.49981689453125Q293.9598388671875 191.49981689453125 333.7398681640625 213.72982788085938Q373.5198974609375 235.9598388671875 397.17999267578125 272.41986083984375L387 213.70025634765625V538.9404907226562H0V622H584.2194213867188Z" transform="translate(14.154 51.000) scale(0.061093 -0.061093)" fill="#FFFCF5" />
     </svg>
     <span>
       <span className="brand-name">Vatsalya Bhawan</span>
@@ -480,8 +480,8 @@ export default function VatsalyaBhawan() {
         <div className="place-guides">
           {places.map(place => <details key={place.name}>
             <summary>
-              <span className="place-kind">{place.kind}</span>
-              <h3>{place.name}</h3>
+              <img className="place-illustration" src={`${process.env.PUBLIC_URL}/assets/${place.illustration}`} alt="" aria-hidden="true" loading="lazy" />
+              <span className="place-title"><span className="place-kind">{place.kind}</span><h3>{place.name}</h3></span>
               <span className="place-expand" aria-hidden="true">+</span>
             </summary>
             <div className="place-guide-content">
@@ -540,7 +540,7 @@ export default function VatsalyaBhawan() {
             <div className="rating-stars" aria-hidden="true">
               {Array.from({
                 length: 5
-              }, (_, i) => <Star key={i} size={16} fill="currentColor" />)}
+              }, (_, i) => <Star key={i} size={22} fill="currentColor" />)}
             </div>
           </div>
           <span>
@@ -550,7 +550,8 @@ export default function VatsalyaBhawan() {
         </a>
       </section>
       <section className="faq container section">
-        <div>
+        <div className="faq-introduction">
+          <img className="faq-diya" src={`${process.env.PUBLIC_URL}/assets/ayodhya-diya-art.svg`} alt="" aria-hidden="true" loading="lazy" />
           <p className="eyebrow">Before you arrive</p>
           <h2>A few helpful answers.</h2>
           <p>
@@ -575,20 +576,14 @@ export default function VatsalyaBhawan() {
         </div>
       </section>
       <section className="booking-cta">
-        <div className="container">
-          <div className="diya-row" aria-hidden="true">{Array.from({ length: 7 }, (_, i) => <Diya key={i} />)}</div>
-          <p className="eyebrow">We’ll be happy to welcome you</p>
-          <h2>
-            Your Ayodhya journey
-            <br />
-            starts with a place to stay.
-          </h2>
-          <p>Tell us when you’re coming. We’ll help with the rest.</p>
-          <button className="button" onClick={() => enquire()}>
-            Plan your stay
-            <Diya />
-          </button>
-          <a className="cta-phone" href="tel:+919451338729">Or call +91 94513 38729</a>
+        <div className="container booking-cta-layout">
+          <div className="booking-cta-copy">
+            <h2>Stay in Ayodhya.</h2>
+            <p>Share your dates. We’ll help you find a room.</p>
+            <button className="button" onClick={() => enquire()}>Plan your stay <Diya /></button>
+            <a className="cta-phone" href="tel:+919451338729">Or call +91 94513 38729</a>
+          </div>
+          <img className="booking-river-art" src={`${process.env.PUBLIC_URL}/assets/ayodhya-river-art.svg`} alt="" aria-hidden="true" loading="lazy" />
         </div>
       </section>
     </main>
