@@ -2,6 +2,13 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import VatsalyaBhawan, { ARRIVAL_TIME } from './VatsalyaBhawan';
 
+// Street-map interactions have their own tests; page tests do not request map assets.
+jest.mock('./AyodhyaMap', () => ({
+  ...jest.requireActual('./AyodhyaMap'),
+  __esModule: true,
+  default: () => null,
+}));
+
 let reducedMotion = false;
 let play;
 let pause;

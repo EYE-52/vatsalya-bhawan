@@ -1,179 +1,157 @@
-"""Draw one shared vector composition to SVG and an A4-landscape PDF."""
+"""Shared true-geographic vector drawing: A3 landscape PDF and overview SVG."""
 from pathlib import Path
-import base64, io, html, shutil, re
-import xml.etree.ElementTree as ET
-from PIL import Image
+import html,json,math,shutil,xml.etree.ElementTree as ET
+from urllib.parse import urlencode
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.pagesizes import A3,landscape
+from reportlab.lib.colors import HexColor
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib.colors import HexColor
-from reportlab.lib.utils import ImageReader
 from reportlab.graphics.barcode.qr import QrCodeWidget
-
-ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'public/assets'; CANON=ROOT/'output/pdf'; CANON.mkdir(parents=True,exist_ok=True)
-W,H=1200,848
-FONTS=Path('/Users/divyansh/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/libreoffice-headless/libreoffice/LibreOfficeDev.app/Contents/Resources/fonts/truetype')
-fonts={'Serif':'LiberationSerif-Regular.ttf','Sans':'LiberationSans-Regular.ttf','Bold':'LiberationSans-Bold.ttf'}
-css=[]
-for name,file in fonts.items():
- p=FONTS/file;pdfmetrics.registerFont(TTFont(name,str(p)))
- css.append(f"@font-face{{font-family:{name};src:url(data:font/ttf;base64,{base64.b64encode(p.read_bytes()).decode()})}}")
-PAGE=landscape(A4);c=canvas.Canvas(str(CANON/'ayodhya-guide.pdf'),pagesize=PAGE)
-c.setTitle('Ayodhya, at a glance. | Vatsalya Bhawan');c.setAuthor('Vatsalya Bhawan')
-c.scale(PAGE[0]/W,PAGE[1]/H);c.translate(0,H);c.scale(1,-1)
-svg=[f'<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="848" viewBox="0 0 1200 848" role="img" aria-labelledby="title desc"><title id="title">Ayodhya, at a glance.</title><desc id="desc">A schematic, not-to-scale guide to six Ayodhya landmarks, with Vatsalya Bhawan contact details and a QR code for directions.</desc><style>{"".join(css)}</style>']
-INK='#28372D';CLAY='#A94D26';GOLD='#D99935';PAPER='#FAF8F3';MUTED='#776A59';RIVER='#BDD0CB'
-MAPS='https://www.google.com/maps/search/?api=1&query=Vatsalya%20Bhawan%2C%20Q6P3%2B883%2C%20Kaniganj%2C%20Ayodhya%2C%20Uttar%20Pradesh%20224123'
-SITE='https://eye-52.github.io/vatsalya-bhawan/'
-
-def style(fill,stroke,width):
- c.setFillColor(HexColor(fill or PAPER));c.setStrokeColor(HexColor(stroke or PAPER));c.setLineWidth(width);c.setLineJoin(1);c.setLineCap(1)
- return f'fill="{fill or "none"}" stroke="{stroke or "none"}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"'
-
-def rect(x,y,w,h,fill=None,stroke=None,width=1,r=0):
- st=style(fill,stroke,width);c.roundRect(x,y,w,h,r,stroke=bool(stroke),fill=bool(fill));svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{r}" {st}/>')
-
-def circle(x,y,r,fill=None,stroke=None,width=1):
- st=style(fill,stroke,width);c.circle(x,y,r,stroke=bool(stroke),fill=bool(fill));svg.append(f'<circle cx="{x}" cy="{y}" r="{r}" {st}/>')
-
-def path(commands,fill=None,stroke=CLAY,width=2):
- st=style(fill,stroke,width);p=c.beginPath();d=[]
- for op,*v in commands:
-  d.append(op+' '.join(map(str,v)))
-  if op=='M':p.moveTo(*v)
-  elif op=='L':p.lineTo(*v)
-  elif op=='C':p.curveTo(*v)
-  elif op=='Z':p.close()
- c.drawPath(p,stroke=bool(stroke),fill=bool(fill));svg.append(f'<path d="{" ".join(d)}" {st}/>')
-
-def line(x1,y1,x2,y2,color=CLAY,width=2):path([('M',x1,y1),('L',x2,y2)],stroke=color,width=width)
-
-def text(x,y,t,size=20,font='Sans',color=INK,anchor='start'):
- c.saveState();c.translate(x,y);c.scale(1,-1);c.setFillColor(HexColor(color));c.setFont(font,size)
- if anchor=='middle':c.drawCentredString(0,0,t)
- elif anchor=='end':c.drawRightString(0,0,t)
- else:c.drawString(0,0,t)
- c.restoreState();svg.append(f'<text x="{x}" y="{y}" font-family="{font}" font-size="{size}" fill="{color}" text-anchor="{anchor}">{html.escape(t)}</text>')
-
+ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'public/assets';DATA=ROOT/'scripts/map-guide/data'
+G=json.loads((OUT/'ayodhya-streets.geojson').read_text());PLACES=json.loads((OUT/'ayodhya-places.json').read_text())
+W,H=1400,990; PAGE=landscape(A3)
+FONTDIR=Path('/Users/divyansh/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/libreoffice-headless/libreoffice/LibreOfficeDev.app/Contents/Resources/fonts/truetype')
+for name,file in [('Sans','LiberationSans-Regular.ttf'),('Bold','LiberationSans-Bold.ttf'),('Serif','LiberationSerif-Regular.ttf')]:pdfmetrics.registerFont(TTFont(name,str(FONTDIR/file)))
+INK='#24372C';GREEN='#315A40';PAPER='#FFFFFF';LAND='#F4F3EB';ROAD='#C7C7B9';GOLD='#AA741F';WATER='#BEDDE7';MUTED='#5F6962'
+PDF=OUT/'ayodhya-guide.pdf';c=canvas.Canvas(str(PDF),pagesize=PAGE);c.setTitle('Ayodhya street and walking guide | Vatsalya Bhawan');c.setAuthor('Vatsalya Bhawan');svgs=[]
+def start_page(title,desc):
+ global svg
+ c.saveState();c.scale(PAGE[0]/W,PAGE[1]/H);c.translate(0,H);c.scale(1,-1)
+ svg=[f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="990" viewBox="0 0 1400 990" role="img" aria-labelledby="title desc"><title id="title">{html.escape(title)}</title><desc id="desc">{html.escape(desc)}</desc><style>.halo{{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}}</style>']
+def rect(x,y,w,h,fill,stroke=None,width=1):
+ c.setFillColor(HexColor(fill));c.setStrokeColor(HexColor(stroke or fill));c.setLineWidth(width);c.rect(x,y,w,h,fill=1,stroke=bool(stroke));svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{fill}" stroke="{stroke or "none"}" stroke-width="{width}"/>')
+def poly(points,fill=None,stroke=None,width=1,dash=None,close=False):
+ if len(points)<2:return
+ p=c.beginPath();p.moveTo(*points[0]);d=f'M{points[0][0]:.2f},{points[0][1]:.2f}'
+ for x,y in points[1:]:p.lineTo(x,y);d+=f'L{x:.2f},{y:.2f}'
+ if close:p.close();d+='Z'
+ c.setFillColor(HexColor(fill or PAPER));c.setStrokeColor(HexColor(stroke or PAPER));c.setLineWidth(width);c.setLineJoin(1);c.setLineCap(1);c.setDash(dash or []);c.drawPath(p,fill=bool(fill),stroke=bool(stroke));c.setDash([])
+ svg.append(f'<path d="{d}" fill="{fill or "none"}" stroke="{stroke or "none"}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"'+(f' stroke-dasharray="{" ".join(map(str,dash))}"' if dash else '')+'/>')
+def line(x1,y1,x2,y2,color=INK,width=1,dash=None):poly([(x1,y1),(x2,y2)],stroke=color,width=width,dash=dash)
+def circle(x,y,r,fill,stroke=None,width=1):
+ c.setFillColor(HexColor(fill));c.setStrokeColor(HexColor(stroke or fill));c.setLineWidth(width);c.circle(x,y,r,fill=1,stroke=bool(stroke));svg.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{fill}" stroke="{stroke or "none"}" stroke-width="{width}"/>')
+def text(x,y,t,size=18,font='Sans',color=INK,anchor='start',halo=False,angle=0):
+ c.saveState();c.translate(x,y);c.rotate(angle);c.scale(1,-1);c.setFont(font,size)
+ tx=-pdfmetrics.stringWidth(t,font,size)/2 if anchor=='middle' else -pdfmetrics.stringWidth(t,font,size) if anchor=='end' else 0
+ if halo:
+  c.saveState();obj=c.beginText(tx,0);obj.setFont(font,size);obj.setTextRenderMode(2);c.setLineWidth(5);c.setStrokeColor(HexColor(PAPER));obj.textOut(t);c.drawText(obj);c.restoreState()
+ c.setFillColor(HexColor(color));obj=c.beginText(tx,0);obj.setFont(font,size);obj.setTextRenderMode(0);obj.textOut(t);c.drawText(obj);c.restoreState()
+ family='Georgia,serif' if font=='Serif' else 'Arial,Helvetica,sans-serif'
+ svg.append(f'<text x="{x}" y="{y}" font-family="{family}" font-size="{size}" font-weight="{700 if font=="Bold" else 400}" fill="{color}" text-anchor="{anchor}"'+(' class="halo"' if halo else '')+(f' transform="rotate({angle} {x} {y})"' if angle else '')+f'>{html.escape(t)}</text>')
 def link(x,y,w,h,url):
- c.linkURL(url,(x,y,x+w,y+h),relative=1,thickness=0)
+ # c is vertically flipped: explicit physical page coordinates keep annotations correct.
+ scale=PAGE[0]/W;c.linkURL(url,(x*scale,(H-y-h)*scale,(x+w)*scale,(H-y)*scale),relative=0,thickness=0)
  svg.append(f'<a href="{html.escape(url,quote=True)}"><rect x="{x}" y="{y}" width="{w}" height="{h}" fill="transparent"/></a>')
+def walking(query):return 'https://www.google.com/maps/dir/?'+urlencode({'api':1,'destination':query,'travelmode':'walking'})
+def qr(x,y,size,url):
+ q=QrCodeWidget(url);q.qr.make();n=q.qr.getModuleCount();unit=size/(n+8);rect(x,y,size,size,'#FFFFFF')
+ for row in range(n):
+  for col in range(n):
+   if q.qr.isDark(row,col):rect(x+(col+4)*unit,y+(row+4)*unit,unit,unit,INK)
+ link(x,y,size,size,url)
+def projection(bounds,frame):
+ west,south,east,north=bounds;x,y,w,h=frame;cos=math.cos(math.radians((north+south)/2));xm=111320*cos;ym=111320;scale=min(w/((east-west)*xm),h/((north-south)*ym));ox=x+(w-(east-west)*xm*scale)/2;oy=y+(h-(north-south)*ym*scale)/2
+ return lambda lon,lat:(ox+(lon-west)*xm*scale,oy+(north-lat)*ym*scale),scale
+# Read real building footprints for quiet landmark context.
+r=ET.parse(DATA/'osm-api-map.osm').getroot();nodes={n.attrib['id']:(float(n.attrib['lon']),float(n.attrib['lat'])) for n in r.findall('node')};ways={w.attrib['id']:w for w in r.findall('way')}
+def chunks(f):
+ g=f['geometry'];return [g['coordinates']] if g['type']=='LineString' else g['coordinates']
+def map_draw(bounds,detail=False):
+ frame=(35,133,1070,741);proj,scale=projection(bounds,frame);x,y,w,h=frame;rect(x,y,w,h,LAND)
+ c.saveState();clip=c.beginPath();clip.rect(x,y,w,h);c.clipPath(clip,fill=0,stroke=0);svg.append(f'<defs><clipPath id="mapclip"><rect x="{x}" y="{y}" width="{w}" height="{h}"/></clipPath></defs><g clip-path="url(#mapclip)">')
+ for f in G['features']:
+  if f['properties']['kind']=='water':
+   for i,ring in enumerate(f['geometry']['coordinates']):poly([proj(*p) for p in ring],fill=WATER if i==0 else LAND,stroke='#8EB7C8',width=.8,close=True)
+ for id in ['444883293','1241983860','736857581','843831315','843831292']:
+  points=[proj(*nodes[n.attrib['ref']]) for n in ways[id].findall('nd')];poly(points,fill='#E4E8D5',stroke='#A8B898',width=.8,close=True)
+ roads=[f for f in G['features'] if f['properties']['kind']=='road']
+ for f in roads:
+  p=f['properties'];cls=p['class'];restricted=p.get('access') in ('no','private') or p.get('foot')=='no';foot=cls in ('footway','path','pedestrian','steps');major=cls in ('primary','secondary','tertiary','trunk')
+  width=(7 if major else 3.5) if detail else (5 if major else 2.1)
+  for pts in chunks(f):
+   xy=[proj(*v) for v in pts]
+   if restricted:poly(xy,stroke='#B2A8AD',width=1.3,dash=[2.5,3])
+   elif foot:poly(xy,stroke=GOLD,width=1.3 if detail else 1,dash=[3,2])
+   else:poly(xy,stroke=ROAD,width=width+1);poly(xy,stroke='#FFFFFF',width=width)
+ for f in G['features']:
+  if f['properties']['kind']=='rail':
+   for pts in chunks(f):poly([proj(*v) for v in pts],stroke='#7B8582',width=1.3,dash=[7,4])
+ # Road labels anchor on actual mapped road segments. Deduplicate parallel ways.
+ occupied=[]
+ label_boxes=[]
+ box_offsets={'hotel':(18,26),'ram-mandir':(-18,-18),'hanuman-garhi':(18,24),'kanak-bhawan':(-18,-18),'ram-ki-paidi':(18,25),'ayodhya-dham':(-18,-17),'dashrath-mahal':(-18,22)}
+ if detail:box_offsets.update({'ram-mandir':(-18,-19),'hanuman-garhi':(18,21),'kanak-bhawan':(18,-14),'dashrath-mahal':(-18,24)})
+ for place in PLACES:
+  if not detail and place['id']=='dashrath-mahal':continue
+  px,py=proj(place['lon'],place['lat']);dx,dy=box_offsets[place['id']];sz=21 if detail else 18
+  name='Ram Mandir' if place['id']=='ram-mandir' else place['name'];tw=pdfmetrics.stringWidth(name,'Bold',sz)
+  left=px+dx-(tw if dx<0 else 0);right=left+tw
+  label_boxes.append((min(px-10,left-10),min(py-10,py+dy-sz-10),max(px+10,right+10),max(py+10,py+dy+12+(21 if place['id'] in ['ram-mandir','hotel'] else 0))))
+ def roadlabel(name,wayid,index=None):
+  f=next((f for f in roads if f['properties']['id']=='way/'+str(wayid)),None)
+  if not f:return
+  pts=max(chunks(f),key=len);pairs=list(zip(pts,pts[1:]));pairs.sort(key=lambda ab:math.dist(proj(*ab[0]),proj(*ab[1])),reverse=True)
+  for a,b in pairs:
+   ax,ay=proj(*a);bx,by=proj(*b);xx,yy=(ax+bx)/2,(ay+by)/2
+   if not x+95<xx<x+w-95 or not y+45<yy<y+h-45:continue
+   if any(math.dist((xx,yy),q)<95 for q in occupied):continue
+   if any(math.dist((xx,yy),proj(p['lon'],p['lat']))<130 for p in PLACES if p['kind']=='temple'):continue
+   angle=math.degrees(math.atan2(by-ay,bx-ax));angle=angle+180 if angle>90 or angle<-90 else angle
+   rad=math.radians(angle);tw=pdfmetrics.stringWidth(name,'Sans',14 if detail else 13);bw=abs(math.cos(rad))*tw/2+abs(math.sin(rad))*14;bh=abs(math.sin(rad))*tw/2+abs(math.cos(rad))*14
+   box=(xx-bw,yy-bh,xx+bw,yy+bh)
+   if any(box[0]<b[2] and box[2]>b[0] and box[1]<b[3] and box[3]>b[1] for b in label_boxes):continue
+   if box[0]<x+10 or box[2]>x+w-10 or box[1]<y+10 or box[3]>y+h-10:continue
+   text(xx,yy-4,name,14 if detail else 13,'Sans',MUTED,'middle',True,angle);occupied.append((xx,yy));return
+ if detail:
+  roadlabel('Ram Path',955300713);roadlabel('Janmabhoomi Path',1241253883);roadlabel('Kanak Bhawan Road',260795565)
+ else:
+  roadlabel('Ram Path',955300713);roadlabel('Ram Path',1023604179);roadlabel('Kosi Parikrama Road',356630647);roadlabel('Darsan Nagar Road',954809081);roadlabel('Jhunki Ghat road',846937673)
+ if not detail:
+  xx,yy=proj(82.1985,26.8116);text(xx,yy,'Sarayu river',18,'Sans','#427889','middle',True)
+ svg.append('</g>');c.restoreState()
+ # Point labels outside the street clipping so they remain easy to read.
+ offsets={'hotel':(18,26),'ram-mandir':(-18,-18),'hanuman-garhi':(18,24),'kanak-bhawan':(-18,-18),'ram-ki-paidi':(18,25),'ayodhya-dham':(-18,-17),'dashrath-mahal':(-18,22)}
+ if detail:offsets.update({'ram-mandir':(-18,-19),'hanuman-garhi':(18,21),'kanak-bhawan':(18,-14),'dashrath-mahal':(-18,24)})
+ for p in PLACES:
+  xx,yy=proj(p['lon'],p['lat'])
+  if not x+10<xx<x+w-10 or not y+10<yy<y+h-10:continue
+  if not detail and p['id']=='dashrath-mahal':continue
+  color=GREEN if p['kind']=='hotel' else '#33525D' if p['kind']=='station' else GOLD
+  circle(xx,yy,7 if detail else 6,color,PAPER,2)
+  dx,dy=offsets[p['id']];label='Ram Mandir' if p['id']=='ram-mandir' else p['name'];anchor='end' if dx<0 else 'start'
+  text(xx+dx,yy+dy,label,21 if detail else 18,'Bold',INK,anchor,True)
+  tw=pdfmetrics.stringWidth(label,'Bold',21 if detail else 18);link(xx+dx-(tw if dx<0 else 0),yy+dy-24,tw,30,walking(p['query']))
+  if p['id']=='ram-mandir':text(xx+dx,yy+dy+21,'Temple building',13,'Sans',MUTED,anchor,True)
+  if p['id']=='hotel':text(xx+dx,yy+dy+21,'Kaniganj',13,'Sans',MUTED,anchor,True)
+ # North arrow and honest metric scale (local equirectangular projection).
+ rect(53,151,54,83,PAPER);text(80,169,'N',14,'Bold',INK,'middle');line(80,181,80,220,INK,2);poly([(74,193),(80,180),(86,193)],fill=INK,close=True)
+ distance=200 if detail else 500;bar=distance*scale;rect(55,823,bar+28,37,PAPER);line(69,844,69+bar,844,INK,3);line(69,839,69,849,INK,1);line(69+bar,839,69+bar,849,INK,1);text(69+bar/2,835,f'{distance} m',12,'Sans',INK,'middle')
+ return proj
 
-def temple(x,y,s=1):
- # Abstract temple pictogram; no claim to a specific architectural plan.
- for dx,h in [(-32,22),(0,48),(32,22)]:
-  xx=x+dx*s
-  path([('M',xx-14*s,y),('L',xx-12*s,y-h*s*.6),('L',xx,y-h*s),('L',xx+12*s,y-h*s*.6),('L',xx+14*s,y)],fill='#F1DFC5',width=2*s)
-  line(xx,y-h*s,xx,y-h*s-12*s,width=1.5*s)
-  path([('M',xx,y-h*s-12*s),('L',xx+11*s,y-h*s-9*s),('L',xx,y-h*s-5*s)],fill=GOLD,stroke=GOLD,width=1)
- rect(x-48*s,y,96*s,19*s,PAPER,CLAY,2*s)
- for dx in [-30,-10,10,30]:line(x+dx*s,y+4*s,x+dx*s,y+16*s,width=1.5*s)
- line(x-53*s,y+23*s,x+53*s,y+23*s,width=2*s)
+def sidebar(detail):
+ rect(1130,133,235,741,'#EDF2E7');text(1150,166,'Vatsalya',32,'Serif');text(1150,201,'Bhawan',32,'Serif');text(1150,231,'Stay in Kaniganj',15,'Sans',GREEN)
+ line(1150,251,1345,251,'#B7C5AB');text(1150,284,'+91 94513 38729',20,'Bold');link(1150,263,200,30,'tel:+919451338729')
+ for yy,t in [(315,'Tarun Pura Road'),(337,'Kaniganj, Ayodhya'),(359,'Uttar Pradesh 224123')]:text(1150,yy,t,15)
+ text(1150,400,'Walk back to your stay',17,'Bold');home=walking(PLACES[0]['query']);qr(1150,417,140,home);text(1150,579,'Scan for Google Maps',14);text(1150,600,'walking directions.',14)
+ line(1150,623,1345,623,'#B7C5AB');text(1150,654,'Choose a landmark',16,'Bold')
+ for yy,id in [(683,'ram-mandir'),(711,'hanuman-garhi'),(739,'kanak-bhawan'),(767,'ram-ki-paidi'),(795,'ayodhya-dham')]:
+  p=next(p for p in PLACES if p['id']==id);label={'ram-mandir':'Ram Mandir','ayodhya-dham':'Ayodhya Dham station'}.get(id,p['name']);text(1150,yy,label,15,'Sans',GREEN);link(1145,yy-18,205,23,walking(p['query']))
+ text(1150,846,'Tap a name in this PDF.',13,'Sans',MUTED)
 
-def brandmark(x,y,size):
- # Reuse the exact outlined Devanagari initial from the current favicon.
- glyph=ET.parse(OUT.parent/'favicon.svg').getroot().find('{http://www.w3.org/2000/svg}path')
- tokens=re.findall(r'[A-Z]|[-+]?(?:\d*\.\d+|\d+)',glyph.attrib['d'])
- def xy(px,py):return x+(14.154+.061093*px)*size/64,y+(51-.061093*py)*size/64
- i=0;px=py=0;commands=[]
- while i<len(tokens):
-  op=tokens[i];i+=1
-  if op=='Z':commands.append(('Z',));continue
-  count={'M':2,'L':2,'H':1,'V':1,'Q':4}[op]
-  values=list(map(float,tokens[i:i+count]));i+=count
-  if op=='Q':
-   qx,qy,ex,ey=values
-   a=xy(px+(qx-px)*2/3,py+(qy-py)*2/3)
-   b=xy(ex+(qx-ex)*2/3,ey+(qy-ey)*2/3)
-   commands.append(('C',*a,*b,*xy(ex,ey)));px,py=ex,ey
-  else:
-   if op in ['M','L']:px,py=values
-   elif op=='H':px=values[0]
-   elif op=='V':py=values[0]
-   commands.append(('M' if op=='M' else 'L',*xy(px,py)))
- rect(x,y,size,size,INK)
- path(commands,fill=PAPER,stroke=None)
-
-rect(0,0,W,H,PAPER)
-text(48,68,'Ayodhya, at a glance.',49,'Serif')
-text(51,99,'A few familiar landmarks. A place to come home to.',17,'Sans',MUTED)
-# River is schematic only; no street, route or distance is drawn.
-river=[('M',-45,179),('C',98,110,220,212,350,176),('C',505,131,648,135,795,173),('C',857,190,883,184,928,171)]
-path(river,stroke=RIVER,width=64)
-path(river,stroke='#E2EEEA',width=2)
-text(267,152,'SARAYU',14,'Bold','#557B73','middle')
-# North arrow
-text(840,54,'N',13,'Bold',MUTED,'middle')
-line(840,66,840,106,MUTED,1.5)
-path([('M',833,78),('L',840,64),('L',847,78)],fill=MUTED,stroke=MUTED,width=1)
-# Ram Ki Paidi / riverfront, northeast of the historic temple core.
-for i in range(5):line(591-i*4,190+i*6,651+i*4,190+i*6,'#557B73',2)
-path([('M',593,194),('C',606,190,614,199,627,195),('C',635,192,644,198,653,194)],stroke='#557B73',width=1.5)
-text(609,232,'Ram Ki Paidi',23,'Serif')
-text(609,255,'Sarayu riverfront',16,'Sans',MUTED)
-# Ram Mandir west of the other temple core; Kanak Bhawan is northeast.
-temple(230,380,1.28);
-text(230,449,'Shri Ram Janmabhoomi',25,'Serif',anchor='middle')
-text(230,477,'Mandir',25,'Serif',anchor='middle')
-temple(435,290,.86);
-text(435,346,'Kanak Bhawan',25,'Serif',anchor='middle')
-# Hanuman Garhi abstract fort / steps pictogram.
-rect(480,413,65,37,'#F1DFC5',CLAY,2)
-for xx in [473,505,537]:rect(xx,401,14,49,PAPER,CLAY,2);rect(xx-1,396,16,7,'#F1DFC5',CLAY,1.5)
-for i in range(4):line(488-i*6,456+i*6,538+i*6,456+i*6,CLAY,1.5)
-text(514,519,'Hanuman Garhi',25,'Serif',anchor='middle')
-# Railway station lies south of the temple core.
-rect(407,597,56,46,'#F1DFC5',INK,2,r=8)
-rect(415,605,40,17,PAPER,INK,1.5,r=3)
-circle(418,634,3,INK);circle(452,634,3,INK)
-line(421,647,414,657,INK,2);line(449,647,456,657,INK,2)
-text(436,685,'Ayodhya Dham',24,'Serif',anchor='middle')
-text(436,710,'Railway station',16,'Sans',MUTED,'middle')
-# Property is southeast of the station, not at the temple.
-circle(683,677,47,'#EEE9DA')
-brandmark(647,641,72)
-text(684,742,'Vatsalya Bhawan',25,'Serif',INK,'middle')
-text(684,769,'Kaniganj',16,'Sans',MUTED,'middle')
-link(605,631,157,146,MAPS)
-# Decorative diya and minimal guide disclosure.
-path([('M',66,734),('C',73,754,102,754,109,734),('Z',)],fill='#F1DFC5',stroke=CLAY,width=2)
-path([('M',88,733),('C',73,719,83,708,88,700),('C',96,712,103,724,88,733)],fill=GOLD,stroke=GOLD,width=1)
-text(51,813,'SCHEMATIC / NOT TO SCALE',13,'Bold',MUTED)
-text(510,813,'District Ayodhya / © OpenStreetMap contributors',12,'Sans',MUTED)
-# Sidebar ad, painted over the river overshoot for a clean map/ad boundary.
-rect(908,0,292,H,'#EFE3D2')
-line(908,0,908,H,'#D4BFA5',1)
-brandmark(937,31,52)
-text(937,117,'Vatsalya',37,'Serif')
-text(937,153,'Bhawan',37,'Serif')
-text(937,185,'Your place in Kaniganj.',17,'Sans',CLAY)
-# Alpha image thumbnail is embedded, so the SVG is independently downloadable.
-im=Image.open(OUT/'exterior-cutout.png').convert('RGBA');im.thumbnail((420,500),Image.Resampling.LANCZOS)
-buf=io.BytesIO();im.save(buf,format='PNG',optimize=True);png=buf.getvalue()
-x,y,iw,ih=945,214,222,277
-c.saveState();c.translate(x,y+ih);c.scale(1,-1);c.drawImage(ImageReader(io.BytesIO(png)),0,0,width=iw,height=ih,mask='auto');c.restoreState()
-svg.append(f'<image x="{x}" y="{y}" width="{iw}" height="{ih}" href="data:image/png;base64,{base64.b64encode(png).decode()}"/>')
-text(947,509,'Building image: AI-reframed',10,'Sans',MUTED)
-line(937,529,1171,529,'#CBB89B',1)
-text(937,560,'+91 94513 38729',22,'Bold')
-link(936,541,235,29,'tel:+919451338729')
-text(937,590,'Tarun Pura Road',16)
-text(937,613,'Kaniganj, Ayodhya',16)
-text(937,636,'Uttar Pradesh 224123',16)
-# Native ReportLab QR matrix, rendered as shared vector rectangles.
-qr=QrCodeWidget(MAPS);qr.qr.make();n=qr.qr.getModuleCount();q=109/(n+8)
-rect(937,658,109,109,'#FFFFFF')
-for row in range(n):
- for col in range(n):
-  if qr.qr.isDark(row,col):rect(937+(col+4)*q,658+(row+4)*q,q,q,INK)
-text(1060,696,'Scan for',16)
-text(1060,719,'directions',16)
-link(936,657,111,111,MAPS)
-text(937,801,'eye-52.github.io/',14)
-text(937,822,'vatsalya-bhawan/',14)
-link(935,780,238,46,SITE)
-svg.append('</svg>');(OUT/'ayodhya-guide.svg').write_text('\n'.join(svg))
-c.showPage();c.save();shutil.copy2(CANON/'ayodhya-guide.pdf',OUT/'ayodhya-guide.pdf')
-print(OUT/'ayodhya-guide.svg');print(OUT/'ayodhya-guide.pdf')
+def footer(detail,page):
+ line(35,895,1365,895,'#BCC6BA')
+ line(40,920,72,920,ROAD,6);line(40,920,72,920,PAPER,4);text(80,925,'Streets / lanes',13)
+ line(232,920,264,920,GOLD,1.5,[3,2]);text(272,925,'Mapped footways / steps',13)
+ line(474,920,506,920,'#B2A8AD',1.5,[2.5,3]);text(514,925,'Restricted access in OSM',13)
+ text(35,951,'Follow current temple entry signs. Street data is a guide; access and Google walking routes may change.',14,'Sans',MUTED)
+ text(35,975,'Map data © OpenStreetMap contributors | https://www.openstreetmap.org/copyright | ODbL 1.0 | 7 Oct 2026',12,'Sans',MUTED)
+ link(125,960,380,23,'https://www.openstreetmap.org/copyright');text(1365,975,f'{page} / 2',13,'Sans',MUTED,'end')
+for detail,page in [(False,1),(True,2)]:
+ title='Ayodhya on foot' if not detail else 'The temple streets'
+ start_page(title,'Real OpenStreetMap street, lane, footpath and water geometry. Landmark pins are geographic locations, not a drawn itinerary.')
+ rect(0,0,W,H,PAPER);text(35,67,title,49,'Serif');text(37,101,'Your stay, the station and the Sarayu riverfront.' if not detail else 'A closer view of Ramkot, Hanuman Garhi and the Janmabhoomi approach.',19,'Sans',MUTED)
+ text(1365,63,'Street & walking guide',17,'Sans',GREEN,'end');text(1365,98,'Print at A3 for the clearest lanes',13,'Sans',MUTED,'end')
+ bounds=[82.184,26.782,82.218,26.813] if not detail else [82.188,26.7900,82.2056,26.801]
+ map_draw(bounds,detail);sidebar(detail);footer(detail,page);svg.append('</svg>');svgs.append('\n'.join(svg));c.restoreState();c.showPage()
+c.save();canonical=ROOT/'output/pdf';canonical.mkdir(parents=True,exist_ok=True);shutil.copy2(PDF,canonical/'ayodhya-guide.pdf');(OUT/'ayodhya-guide.svg').write_text(svgs[0]);print(PDF);print(OUT/'ayodhya-guide.svg')

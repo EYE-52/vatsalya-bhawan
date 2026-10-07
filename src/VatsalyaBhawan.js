@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import AyodhyaMap, { HOTEL_COORDINATES, walkingDirections } from './AyodhyaMap';
 import { ArrowUpRight, ArrowRight, MapPin, Phone, Mail, Menu, X, Wifi, Users, Bath, Snowflake, MessageCircle, Pause, Play, Download, ChevronLeft, ChevronRight, Instagram, Facebook, Star } from 'lucide-react';
 import { localDate, nextDay, validateStay, buildWhatsAppMessage, buildWhatsAppUrl, MAPS_URL } from './booking';
 import originalDeluxe from './assets/room-image-6.webp';
@@ -472,11 +473,7 @@ export default function VatsalyaBhawan() {
           <h2 id="ayodhya-guide-title">Places to visit in Ayodhya.</h2>
           <a className="text-link" href={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.pdf`} download="Ayodhya-guide-by-Vatsalya-Bhawan.pdf"><Download size={18} />Download the map</a>
         </div>
-        <p className="map-pan-hint" id="map-pan-hint">Swipe across the map <ArrowRight size={15} aria-hidden="true" /></p>
-        <div className="ayodhya-guide-map" tabIndex={0} role="region" aria-label="Ayodhya sightseeing map. Scroll sideways on smaller screens to explore." aria-describedby="map-pan-hint">
-          <img src={`${process.env.PUBLIC_URL}/assets/ayodhya-guide.svg`} alt="Illustrated Ayodhya guide showing Ram Mandir, Hanuman Garhi, Kanak Bhawan, Ram ki Paidi, Ayodhya Dham railway station and Vatsalya Bhawan in Kaniganj, with the bhawan’s contact details alongside." loading="lazy" />
-        </div>
-        <p className="map-disclaimer">Schematic guide · not to scale.</p>
+        <AyodhyaMap onEnquire={() => enquire()} />
         <div className="place-guides">
           {places.map(place => <details key={place.name}>
             <summary>
@@ -487,7 +484,7 @@ export default function VatsalyaBhawan() {
             <div className="place-guide-content">
               <p>{place.text}</p>
               <div className="place-guide-links">
-                <a className="text-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}`} target="_blank" rel="noreferrer">Open in Maps <ArrowUpRight size={16} /></a>
+                <a className="text-link" href={walkingDirections(place.query, HOTEL_COORDINATES)} target="_blank" rel="noreferrer">Walking directions <ArrowUpRight size={16} /></a>
                 <a className="text-link" href={place.info} target="_blank" rel="noreferrer">{place.name === 'Ram Mandir' ? 'Temple trust' : 'District guide'} <ArrowUpRight size={16} /></a>
               </div>
             </div>

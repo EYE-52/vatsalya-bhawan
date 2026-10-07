@@ -8,4 +8,4 @@ Run `npm ci` once, then `npm start` for development. Run `CI=true npm test -- --
 
 `npm run deploy` builds the site and publishes the output to the `gh-pages` branch of **EYE-52/vatsalya-bhawan**. GitHub Pages serves the root of that branch. The original property's repository is preserved as the `origin` remote; the redesign repository is the `eye52` remote. Push source changes with `git push eye52 HEAD:main`.
 
-The hero film is cinematic artwork, and the exterior/room photos are AI-reframed from property photographs. Original photo comparisons remain available. See `REDESIGN_NOTES.md` for asset provenance, and `scripts/map-guide/` for the downloadable schematic map.
+The hero film follows real satellite geography, and the exterior/room photos are AI-reframed from property photographs. Original photo comparisons remain available. The city guide uses real OpenStreetMap streets and footpaths, landmark pins, Google Maps walking directions, and a printable street map. See `REDESIGN_NOTES.md` for asset provenance and `scripts/map-guide/` for map sources and regeneration instructions.

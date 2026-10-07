@@ -1,37 +1,61 @@
-# Ayodhya visitor guide
+# Ayodhya street and walking guide
 
-A4 landscape, one-page schematic, with roughly 75% landmark map and 25% Vatsalya Bhawan contact panel. The PDF and standalone SVG are drawn from the same geometry in `generate.py`. The current outlined Devanagari initial व is read directly from `public/favicon.svg` and converted losslessly from quadratic to cubic vector curves for both formats. No Roman V, itinerary numbering, roads, travel distances or navigation routes are drawn.
+The old schematic has been replaced with a geographically accurate street guide. `public/assets/ayodhya-guide.pdf` is two A3 landscape pages: hotel/station/riverfront overview and a larger temple-centre street map. `public/assets/ayodhya-guide.svg` is the independently usable overview. Small roads and lanes remain visible, with mapped footways/steps and restricted access distinguished in the legend. Landmark labels, north arrows, metric scales, hotel contact panel and vector QR code are included. The hotel panel uses approximately 17% of the page width.
 
-## Verified context
+The shared vector drawing in `generate.py` produces the SVG and PDF. All road polylines, river/pond polygons and selected temple footprints are actual OpenStreetMap geometries. The local equirectangular projection uses the cosine of the map's centre latitude and equal horizontal/vertical metre scale; no landmark is moved to fit labels. Clipping changes only where a geometry crosses the map boundary. Rendering stroke widths express street hierarchy, not surveyed widths. There are no invented paths, straight-line itineraries, travel times, or access guarantees.
 
-Primary government sources inspected 7 October 2026:
+## Source snapshots and licensing
 
-- District Ayodhya, Kanak Bhawan: https://ayodhya.nic.in/tourist-place/kanak-bhawan/ — explicitly places Kanak Bhawan northeast of Ram Janam Bhumi / Ramkot.
-- District Ayodhya, Hanuman Garhi: https://ayodhya.nic.in/tourist-place/hanuman-garhi/ — landmark and railway-station context.
-- District Ayodhya, Ram Ki Paidi: https://ayodhya.nic.in/tourist-place/ram-ki-paidi/ — confirms the ghats on the Saryu/Sarayu riverfront.
-- Ministry of Tourism, Incredible India: https://www.incredibleindia.gov.in/en/uttar-pradesh/ayodhya/72-hours-in-ayodhya — identifies the pilgrimage landmarks and riverfront context.
+Retrieved **7 October 2026** using the public OpenStreetMap API (the Overpass endpoint rejected the original request, so it is not a source of this output):
 
-Supplemental cartographic orientation check: https://mapcarta.com/W736857581 — OpenStreetMap-based Hanuman Garhi position, Kanak Bhavan to its northwest, and Ayodhya Dham railway station to its south. Underlying feature: https://www.openstreetmap.org/way/736857581 . OpenStreetMap attribution: https://www.openstreetmap.org/copyright . No map tiles, street geometry or government photographs were copied.
+- `data/osm-api-map.osm`: https://www.openstreetmap.org/api/0.6/map?bbox=82.184,26.782,82.218,26.813
+- `data/osm-river.osm`: https://www.openstreetmap.org/api/0.6/relation/8921902/full
 
-Property location supplied and verified by the owner task: latitude 26.7857896, longitude 82.2032408, southeast of Ayodhya Dham railway station; Tarun Pura Road, Kaniganj, Ayodhya, Uttar Pradesh 224123. The guide never prints precise coordinates or a distance scale. Geographic relationships are deliberately spread apart for readable labels and the river curve is illustrative.
+The full river relation supplies all its outer and inner rings before geographic clipping. Its mapped name is Ghaghara, locally labelled Sarayu. The two raw snapshots are preserved so regeneration is deterministic and offline. `fetch_osm.py` is an explicit refresh command, separate from rendering.
 
-Property listing: https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9
+Map data **© OpenStreetMap contributors**. Attribution: https://www.openstreetmap.org/copyright . Data is provided under the **Open Database License 1.0**: https://opendatacommons.org/licenses/odbl/1.0/ . The clipped GeoJSON and OSM-derived landmark-position data are derivative databases supplied under ODbL 1.0; its `metadata` contains source URLs, retrieval date, attribution and licence. Keep the visible attribution in printed and online uses. No proprietary map tiles or imagery are copied.
 
-Directions, encoded in the QR and PDF map links: https://www.google.com/maps/search/?api=1&query=Vatsalya%20Bhawan%2C%20Q6P3%2B883%2C%20Kaniganj%2C%20Ayodhya%2C%20Uttar%20Pradesh%20224123
+## Landmark positions and current names
 
-Website, confirmed by parent after repository creation: https://eye-52.github.io/vatsalya-bhawan/
+The landmark identities and geographic context were checked against district administration sources:
 
-The sidebar image comes from the authorized existing `public/assets/exterior-cutout.png`; it is an AI-reframed actual building image, explicitly labelled. The original image is unchanged. A proportional alpha thumbnail is embedded for a self-contained SVG and PDF. The QR uses ReportLab's native QR implementation, rendered as vector squares.
+- Hanuman Garhi: https://ayodhya.nic.in/tourist-place/hanuman-garhi/
+- Kanak Bhawan: https://ayodhya.nic.in/tourist-place/kanak-bhawan/
+- Ram ki Paidi: https://ayodhya.nic.in/tourist-place/ram-ki-paidi/
+- Ayodhya Dham station naming: https://ayodhya.nic.in/how-to-reach/ and https://www.pmindia.gov.in/en/news_updates/pm-inaugurates-ayodhya-dham-junction-railway-station/
+- Ram Path and Janmabhoomi Path naming: Ayodhya Development Authority's 16 January 2024 Ram Path signage RFP, page 13, https://pmoay.com/ayodhyann/upload/news/2024/jan/1705492919DOC_compressed.pdf . The document identifies Ram Path from Lata Mangeshkar trijunction toward Sahadatganj, and its connections to Janmabhoomi Path and Bhakti Path. OSM still names the mapped main corridor Chowk Ayodhya Road; the raw `name` is preserved and `display_name` explicitly provides the newer name. Bhakti Path is not labelled because an exact named OSM way could not be verified.
 
-## Generate and inspect
+Specific map positions come from these pinned OSM objects:
 
-Bundled Python with ReportLab and Pillow is sufficient. No dependencies were installed. Generator uses existing Liberation fonts from the bundled runtime; these are embedded/subset for standalone consistency.
+| Place | Coordinate source |
+| --- | --- |
+| Shri Ram Janmabhoomi Mandir | Actual current temple-building footprint centroid, https://www.openstreetmap.org/way/1241983860 |
+| Hanuman Garhi | Temple footprint centroid, https://www.openstreetmap.org/way/736857581 |
+| Kanak Bhawan | Building footprint centroid, https://www.openstreetmap.org/way/843831315 |
+| Ram ki Paidi | Mapped water-complex centroid, https://www.openstreetmap.org/way/260795620 |
+| Ayodhya Dham Junction | Station node, https://www.openstreetmap.org/node/6951223212 |
+| Dashrath Mahal | Footprint centroid, https://www.openstreetmap.org/way/843831292 |
+
+Vatsalya Bhawan's property position, latitude **26.7857896**, longitude **82.2032408**, was verified from property listings in the earlier project work, including https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9 . Address: Tarun Pura Road, Kaniganj, Ayodhya, Uttar Pradesh 224123. Phone: +91 94513 38729.
+
+Temple pins locate buildings, **not verified public visitor gates**. A precise current visitor-entry coordinate was not available from the consulted primary sources, so none is invented. The guide displays the real Janmabhoomi Path approach but does not promise that every mapped temple path is open. PDF landmark links use named Google destinations with `travelmode=walking`, allowing Google to determine the arrival route. The hotel QR uses the verified hotel coordinates and `travelmode=walking`, with no fixed origin. Follow current entry signs. Google routes and local restrictions can change.
+
+## Web data contract
+
+`public/assets/ayodhya-streets.geojson` is a FeatureCollection with 804 features, including 774 road/path features. Extent is `[82.184, 26.782, 82.218, 26.813]`, in longitude/latitude order. Roads/rail use LineString or MultiLineString, water uses Polygon. Properties include `id` (OSM type/id), `kind` (`road`, `rail`, `water`), `class`, `name`, and mapped `access`, `foot`, `surface`, `oneway`, `bridge`, `tunnel`, `bicycle` where present. The river retains its real outline and any intersecting inner polygons. Roads are not a routing graph; absence of an access restriction is not evidence of public access.
+
+`public/assets/ayodhya-places.json` is an array of `{id, name, lat, lon, kind, query, info}`. IDs are `hotel`, `ram-mandir`, `hanuman-garhi`, `kanak-bhawan`, `ram-ki-paidi`, `ayodhya-dham`, `dashrath-mahal`. `query` is the Google walking destination string. Do not replace a temple query with its building-centroid coordinate for routing.
+
+## Reproduce and inspect
+
+Use the bundled Python runtime (ReportLab, Pillow and pypdf already available) and system Poppler. No new dependency is required.
 
 ```sh
-python3 scripts/map-guide/generate.py
-pdftoppm -scale-to 1600 -png -singlefile output/pdf/ayodhya-guide.pdf output/pdf/ayodhya-guide-preview
+/Users/divyansh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/map-guide/prepare_data.py
+/Users/divyansh/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/map-guide/generate.py
+pdftoppm -scale-to 1800 -png public/assets/ayodhya-guide.pdf /tmp/ayodhya-guide
 ```
 
-Canonical PDF: `output/pdf/ayodhya-guide.pdf`; website delivery copies: `public/assets/ayodhya-guide.pdf` and `public/assets/ayodhya-guide.svg`. Render proof: `output/pdf/ayodhya-guide-preview.png`. Checked all six labels, readable contact information, A4 landscape dimensions, one-page PDF, vector links within page bounds, and valid standalone SVG XML. All links are public Google Maps, the confirmed website or the owner's telephone.
+Inspect **both** rasterised pages after an edit. Fonts are embedded in the PDF; the SVG uses standard Arial/Georgia fallbacks. The QR and street network are vector content. All clickable PDF rectangles use physical page coordinates despite the drawing's vertically flipped coordinates.
 
-The PDF skill's artifact-operation-start command succeeded exactly once immediately before authoring began, using its bundled `container_tools/mark_artifact_operation_started.mjs` with create / one output / pdf.
+The PDF skill's artifact-operation marker succeeded once before authoring: edit / one output / pdf. The canonical copy is kept in `output/pdf/ayodhya-guide.pdf`, identical to the public copy; both current page render proofs are in `output/pdf/ayodhya-guide-preview-1.png` and `output/pdf/ayodhya-guide-preview-2.png`. Latest verification checks include PDF page count/dimensions, hyperlinks using walking mode, extractable labels, standalone SVG XML validity and visual inspection of both Poppler renders.

@@ -11,6 +11,8 @@
 # production
 /build
 /output
+/scripts/map-guide/data/preview-*.png
+/scripts/map-guide/data/detail-preview.svg
 
 # misc
 .DS_Store
