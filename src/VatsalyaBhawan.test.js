@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import VatsalyaBhawan, { ARRIVAL_TIME } from './VatsalyaBhawan';
 
 // Street-map interactions have their own tests; page tests do not request map assets.
@@ -52,7 +52,7 @@ test.each([['desktop', false], ['phone', true]])('reduced motion shows the %s te
   reducedMotion = true;
   mobileFilm = mobile;
   render(<VatsalyaBhawan />);
-  expect(hero().querySelector('video')).toBeNull();
+  expect(hero().querySelectorAll('video')).toHaveLength(0);
   expect(play).not.toHaveBeenCalled();
   expectPosterAndBooking();
 });
@@ -64,7 +64,7 @@ test('failed media falls back to the poster and keeps the booking flow available
   expectPosterAndBooking();
 });
 
-test('pause and resume call native playback, and replay restarts an ended film without looping', () => {
+test('pause and resume control the active film, ending starts a flag loop, and Watch restarts the journey', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
   expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2.mp4'));
@@ -81,9 +81,21 @@ test('pause and resume call native playback, and replay restarts an ended film w
   fireEvent.ended(video);
   expect(video).toHaveStyle({ visibility: 'hidden' });
   expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-arrival.jpg'));
+  const flag = hero().querySelector('.flag-loop');
+  expect(flag.loop).toBe(true);
+  expect(flag).not.toHaveAttribute('autoplay');
+  expect(flag).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-flag-loop.mp4'));
+  expect(flag).not.toHaveStyle({ visibility: 'hidden' });
+  expect(play.mock.instances).toContain(flag);
+  fireEvent.click(screen.getByRole('button', { name: 'Pause flag motion' }));
+  expect(pause.mock.instances).toContain(flag);
+  expect(video.currentTime).toBe(10);
+  fireEvent.click(screen.getByRole('button', { name: 'Resume flag motion' }));
+  expect(video.currentTime).toBe(10);
   const callsBeforeReplay = play.mock.calls.length;
-  fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Watch the journey film' }));
   expect(video.currentTime).toBe(0);
+  expect(flag).toHaveStyle({ visibility: 'hidden' });
   expect(play.mock.calls.length).toBeGreaterThan(callsBeforeReplay);
   expect(screen.getByRole('button', { name: 'Pause journey film' })).toBeInTheDocument();
 });
@@ -144,7 +156,7 @@ test('all four bilingual captions follow media time while navigation and booking
   expect(footer.getByRole('link', { name: 'GODL-India' })).toHaveAttribute('href', 'https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf');
   expect(footer.getByText(/Shri Ram artwork is an original AI-generated illustration/)).toBeInTheDocument();
   fireEvent.ended(video);
-  fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Watch the journey film' }));
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
   expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-globe.jpg'));
@@ -332,4 +344,72 @@ test('an initial guide fragment scrolls to the mounted section immediately', () 
     window.history.replaceState(null, '', initialUrl);
     Element.prototype.scrollIntoView = originalScrollIntoView;
   }
+});
+
+
+test('a failed flag loop keeps the arrival poster and allows a full journey restart', () => {
+  render(<VatsalyaBhawan />);
+  const journey = hero().querySelector('video');
+  fireEvent.ended(journey);
+  fireEvent.error(hero().querySelector('.flag-loop'));
+  expect(hero().querySelector('.flag-loop')).toBeNull();
+  expect(journey).toHaveStyle({ visibility: 'hidden' });
+  expect(screen.queryByRole('button', { name: 'Pause flag motion' })).toBeNull();
+  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Watch the journey film' }));
+  expect(journey.currentTime).toBe(0);
+  expect(screen.getByRole('button', { name: 'Pause journey film' })).toBeInTheDocument();
+});
+
+
+test('changing to phone format after arrival keeps the flag loop active without restarting the journey', () => {
+  render(<VatsalyaBhawan />);
+  fireEvent.ended(hero().querySelector('video'));
+  const media = window.matchMedia.mock.results.map(result => result.value).find(value => value.addEventListener.mock.calls.some(([event]) => event === 'change'));
+  media.matches = true;
+  act(() => media.addEventListener.mock.calls.find(([event]) => event === 'change')[1]());
+  expect(hero().querySelector('.flag-loop')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-flag-loop-mobile.mp4'));
+  expect(hero().querySelector('video')).toHaveStyle({ visibility: 'hidden' });
+  expect(screen.getByRole('button', { name: 'Pause flag motion' })).toBeInTheDocument();
+  expect(screen.queryByText('Jambudvīpe')).toBeNull();
+});
+
+test('flag motion pauses offscreen and resumes only when visible', () => {
+  let visibility;
+  window.IntersectionObserver = class {
+    constructor(callback) { visibility = callback; }
+    observe() {}
+    disconnect() {}
+  };
+  render(<VatsalyaBhawan />);
+  fireEvent.ended(hero().querySelector('video'));
+  const flag = hero().querySelector('.flag-loop');
+  pause.mockClear();
+  act(() => visibility([{ isIntersecting: false }]));
+  expect(pause.mock.instances).toContain(flag);
+  play.mockClear();
+  act(() => visibility([{ isIntersecting: true }]));
+  expect(play.mock.instances).toContain(flag);
+});
+
+
+test('arrival starts flag motion before the journey fallback hold without replaying the approach', () => {
+  render(<VatsalyaBhawan />);
+  const journey = hero().querySelector('video');
+  const flag = hero().querySelector('.flag-loop');
+  journey.currentTime = ARRIVAL_TIME - .01;
+  fireEvent.timeUpdate(journey);
+  expect(journey).not.toHaveStyle({ visibility: 'hidden' });
+  expect(flag).toHaveStyle({ visibility: 'hidden' });
+  expect(screen.getByRole('button', { name: 'Pause journey film' })).toBeInTheDocument();
+  play.mockClear();
+  pause.mockClear();
+  journey.currentTime = ARRIVAL_TIME;
+  fireEvent.timeUpdate(journey);
+  expect(journey).toHaveStyle({ visibility: 'hidden' });
+  expect(flag).not.toHaveStyle({ visibility: 'hidden' });
+  expect(play.mock.instances).toContain(flag);
+  expect(pause.mock.instances).toContain(journey);
+  expect(journey.currentTime).toBe(8.5);
+  expect(screen.getByRole('button', { name: 'Pause flag motion' })).toBeInTheDocument();
 });

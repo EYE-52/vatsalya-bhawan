@@ -60,14 +60,18 @@ def compose(args, mobile):
         easing = f'(({u})*({u})*(3-2*({u})))'
         final_zoom = math.tan(math.radians(23)) / math.tan(math.radians(16))
         z = f'1+{final_zoom-1:.10f}*{easing}'
-        opening_geometry = f"zoompan=z='{z}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=720x1280:fps=24,"
+        # The flag extends left of the tower. Match a 45% desktop crop centre
+        # while retaining the independently rendered portrait Earth opening.
+        shift = .05 * (16 / 9) ** 2 / final_zoom
+        opening_geometry = f"zoompan=z='{z}':x='iw/2-iw/zoom/2-iw*{shift:.10f}*{easing}':y='ih/2-ih/zoom/2':d=1:s=720x1280:fps=24,"
     else:
         opening_geometry = 'scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,'
     encode(source, opening, 'trim=end_frame=301,' + opening_geometry +
            'settb=AVTB,setpts=if(eq(N\\,0)\\,0\\,(0.5+N*82.5/300)/24/TB),tpad=stop_mode=clone:stop_duration=0.1,fps=24,setsar=1', 84)
     stream = next(s for s in probe(args.descent_clip)['streams'] if s['codec_type'] == 'video')
     assert stream['r_frame_rate'] == '24/1' and int(stream['nb_read_frames']) == 192, 'Descent must contain 192 native 24 fps frames'
-    geometry = f'scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}:x=(iw-ow)/2:y=(ih-oh)/2,'
+    crop_x = 'iw*0.45-ow/2' if mobile else '(iw-ow)/2'
+    geometry = f'scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}:x={crop_x}:y=(ih-oh)/2,'
     encode(args.descent_clip, descent, 'trim=end_frame=192,settb=AVTB,setpts=if(eq(N\\,0)\\,0\\,(0.5+N*118.5/191)/24/TB),tpad=stop_mode=clone:stop_duration=0.1,fps=24,' + geometry + 'setsar=1', 120)
     listing = work / 'concat.txt'
     listing.write_text(''.join(f"file '{p.name}'\n" for p in (opening, descent)))
@@ -117,7 +121,7 @@ def compose(args, mobile):
               'frames': 240, 'duration_seconds': 240 / FPS, 'arrival_seconds': 204 / FPS,
               'full_decode': 'passed', 'faststart': 'passed', 'metadata': metadata,
               'poster_pixel_errors': poster_errors, 'boundary_pixel_errors': errors,
-              'source_endpoint_frame': 191, 'portrait_center': [0.5, 0.5],
+              'source_endpoint_frame': 191, 'portrait_center': [0.45, 0.5],
               'note': 'Compare seam contact sheet; errors include real motion and compression. No automatic claim of matched source frames.'}
     (args.output / f'validation{suffix}.json').write_text(json.dumps(report, indent=2))
 

@@ -167,6 +167,8 @@ export default function VatsalyaBhawan() {
     catch { return false; }
   });
   const videoRef = useRef(null);
+  const loopRef = useRef(null);
+  const [loopFailed, setLoopFailed] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [videoFailed, setVideoFailed] = useState(false);
   const [mobileFilm, setMobileFilm] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches);
@@ -213,7 +215,7 @@ export default function VatsalyaBhawan() {
   }, [menu]);
   useEffect(() => {
     const screen = window.matchMedia('(max-width: 640px)');
-    const resize = () => { setMobileFilm(screen.matches); setFilmTime(0); setPaused(false); setAutoplayBlocked(false); };
+    const resize = () => setMobileFilm(screen.matches);
     screen.addEventListener('change', resize);
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReducedMotion(preference.matches);
@@ -221,11 +223,13 @@ export default function VatsalyaBhawan() {
     return () => { preference.removeEventListener('change', update); screen.removeEventListener('change', resize); };
   }, []);
   useEffect(() => {
-    const video = videoRef.current;
+    const video = motionEnded ? loopRef.current : videoRef.current;
+    const inactive = motionEnded ? videoRef.current : loopRef.current;
+    inactive?.pause();
     if (!video) return;
     let visible = true;
     const sync = () => {
-      if (paused || reducedMotion || motionEnded || videoFailed || document.hidden || !visible) video.pause();
+      if (paused || reducedMotion || videoFailed || autoplayBlocked || (motionEnded && loopFailed) || document.hidden || !visible) video.pause();
       else video.play().catch(error => {
         if (error.name !== 'AbortError') { setPaused(true); setAutoplayBlocked(true); }
       });
@@ -234,16 +238,14 @@ export default function VatsalyaBhawan() {
     observer.observe(video);
     document.addEventListener('visibilitychange', sync);
     sync();
-    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', sync); };
-  }, [paused, reducedMotion, motionEnded, videoFailed, mobileFilm]);
-  function toggleFilm() {
-    if (motionEnded) {
-      watchJourney();
-    } else setPaused(value => !value);
-  }
+    return () => { video.pause(); observer.disconnect(); document.removeEventListener('visibilitychange', sync); };
+  }, [paused, reducedMotion, motionEnded, videoFailed, mobileFilm, autoplayBlocked, loopFailed]);
+  function toggleFilm() { setPaused(value => !value); }
   function watchJourney() {
     window.scrollTo({ top: 0, behavior: 'instant' });
     setScrolled(false);
+    loopRef.current?.pause();
+    setLoopFailed(false);
     if (videoRef.current) videoRef.current.currentTime = 0;
     setFilmTime(0);
     setMotionEnded(false);
@@ -315,13 +317,31 @@ export default function VatsalyaBhawan() {
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
-          autoPlay
           preload="auto"
           poster={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-v2-globe${mobileFilm ? '-mobile' : ''}.jpg`}
           aria-label="Journey from Earth through India to an AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya"
-          onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
+          onTimeUpdate={event => {
+            const time = event.currentTarget.currentTime;
+            setFilmTime(time);
+            if (time >= ARRIVAL_TIME) setMotionEnded(true);
+          }}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
+        />}
+        {!reducedMotion && !videoFailed && !autoplayBlocked && !loopFailed && <video
+          key={`flag-${mobileFilm ? 'mobile' : 'desktop'}`}
+          ref={loopRef}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-flag-loop${mobileFilm ? '-mobile' : ''}.mp4`}
+          className="journey-film flag-loop"
+          style={!motionEnded ? { visibility: 'hidden' } : undefined}
+          aria-hidden={!motionEnded}
+          aria-label="Saffron flag moving above Ram Mandir’s shikhar"
+          muted
+          playsInline
+          loop
+          preload="auto"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-v2-arrival${mobileFilm ? '-mobile' : ''}.jpg`}
+          onError={() => setLoopFailed(true)}
         />}
         <div className="hero-shade" />
         <div className="festival-lights" aria-hidden="true">
@@ -343,7 +363,7 @@ export default function VatsalyaBhawan() {
         </div>
         <a className="hero-location" href="#location"><MapPin size={20} /><span>Vatsalya Bhawan<span>Kaniganj, Ayodhya</span></span><ArrowUpRight size={18} /></a>
         <div className="hero-bottom">
-          {!reducedMotion && !videoFailed && !autoplayBlocked && <button className="film-control" onClick={toggleFilm} aria-label={motionEnded ? 'Replay journey film' : paused ? 'Resume journey film' : 'Pause journey film'}>{motionEnded || paused ? <Play size={13} /> : <Pause size={13} />}<span>{motionEnded ? 'Replay film' : paused ? 'Resume film' : 'Pause film'}</span></button>}
+          {!reducedMotion && !videoFailed && !autoplayBlocked && !(motionEnded && loopFailed) && <button className="film-control" onClick={toggleFilm} aria-label={motionEnded ? (paused ? 'Resume flag motion' : 'Pause flag motion') : paused ? 'Resume journey film' : 'Pause journey film'}>{paused ? <Play size={13} /> : <Pause size={13} />}<span>{paused ? 'Resume film' : 'Pause film'}</span></button>}
         </div>
       </section>
       <div className="enquiry-strip">
