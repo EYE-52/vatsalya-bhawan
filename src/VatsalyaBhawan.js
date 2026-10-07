@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ArrowRight, MapPin, Phone, Mail, Menu, X, Wifi, Users, Bath, Snowflake, MessageCircle, Pause, Play, Download, ChevronLeft, ChevronRight, Instagram, Facebook, Star } from 'lucide-react';
-import { localDate, nextDay, validateStay, buildWhatsAppUrl, MAPS_URL } from './booking';
+import { localDate, nextDay, validateStay, buildWhatsAppMessage, buildWhatsAppUrl, MAPS_URL } from './booking';
 import originalDeluxe from './assets/room-image-6.webp';
 import deluxe from './assets/room-refined-deluxe.jpg';
 import originalFamily from './assets/room-image-5.webp';
@@ -35,30 +35,43 @@ const rooms = [{
 }];
 const photos = [{
   src: originalDeluxe,
-  label: 'A place to unwind',
+  label: 'Deluxe room',
+  category: 'Rooms',
   alt: 'Double bedroom with a padded headboard and seating'
 }, {
   src: corridor,
-  label: 'Around the bhawan',
+  label: 'Guest corridor',
+  category: 'Around the bhawan',
   alt: 'Interior corridor with doors leading to guest rooms'
 }, {
   src: reception,
-  label: 'A warm welcome',
+  label: 'Reception and sitting area',
+  category: 'Around the bhawan',
   alt: 'Reception and sitting area at Vatsalya Bhawan'
 }, {
   src: originalFamily,
-  label: 'Room for your family',
+  label: 'Family room',
+  category: 'Rooms',
   alt: 'Family bedroom with two beds'
 }, {
+  src: originalStandard,
+  label: 'Standard room',
+  category: 'Rooms',
+  alt: 'Original photograph of the Standard room at Vatsalya Bhawan'
+}, {
   src: bathroom,
-  label: 'Private bathrooms',
+  label: 'Private bathroom',
+  category: 'Bathrooms',
   alt: 'Private bathroom with tiled walls and shower fittings'
 }, {
   src: altar,
-  label: 'A quiet moment',
+  label: 'Prayer space',
+  category: 'Around the bhawan',
   alt: 'Small devotional altar inside Vatsalya Bhawan'
 }];
-photos.push({ src: `${process.env.PUBLIC_URL}/vatsalya-bhawan-front-view.webp`, label: 'The original facade', alt: 'Original photograph of the Vatsalya Bhawan building exterior and entrance' });
+photos.push({ src: `${process.env.PUBLIC_URL}/vatsalya-bhawan-front-view.webp`, label: 'Building exterior', category: 'Around the bhawan', alt: 'Original photograph of the Vatsalya Bhawan building exterior and entrance' });
+const photoCategories = ['All photos', 'Rooms', 'Around the bhawan', 'Bathrooms'];
+const featureIcons = { 'Air conditioning': Snowflake, 'Private bathroom': Bath, 'Wi-Fi': Wifi };
 // The city-arrival point in the selected film, in media seconds.
 export const ARRIVAL_TIME = 3.6;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
@@ -130,6 +143,10 @@ export default function VatsalyaBhawan() {
   const [room, setRoom] = useState(null);
   const [showOriginal, setShowOriginal] = useState(false);
   const [photo, setPhoto] = useState(0);
+  const [photoCategory, setPhotoCategory] = useState('All photos');
+  const filteredPhotos = photoCategory === 'All photos' ? photos : photos.filter(p => p.category === photoCategory);
+  const currentPhoto = filteredPhotos[photo];
+  const roomPreferenceRef = useRef(null);
   const [festival, setFestival] = useState(() => {
     try {
       const theme = new URLSearchParams(window.location.search).get('theme');
@@ -155,6 +172,10 @@ export default function VatsalyaBhawan() {
   });
   const [error, setError] = useState('');
   const [prepared, setPrepared] = useState(false);
+  const reviewHeadingRef = useRef(null);
+  useEffect(() => {
+    if (modal === 'booking' && prepared) reviewHeadingRef.current?.focus();
+  }, [modal, prepared]);
   useEffect(() => {
     try { window.localStorage.setItem('vatsalya-festival-mode', festival ? 'diwali' : 'everyday'); }
     catch { /* The theme still works when browser storage is unavailable. */ }
@@ -217,13 +238,20 @@ export default function VatsalyaBhawan() {
   function enquire(selected) {
     if (selected) setStay(s => ({
       ...s,
-      room: selected.name,
-      guests: String(selected.guests)
+      room: selected.name
     }));
     setPrepared(false);
     setError('');
     setMenu(false);
     setModal('booking');
+  }
+  function roomDetails(selected) {
+    setRoom(selected);
+    setShowOriginal(false);
+    setModal('room');
+  }
+  function changePhoto(direction) {
+    setPhoto(p => (p + direction + filteredPhotos.length) % filteredPhotos.length);
   }
   function field(e) {
     const {
@@ -232,11 +260,13 @@ export default function VatsalyaBhawan() {
     } = e.target;
     setStay(s => ({
       ...s,
-      [name]: value
+      [name]: value,
+      ...(name === 'checkIn' && nextDay(value) && s.checkOut <= value ? { checkOut: nextDay(value) } : {})
     }));
     setError('');
   }
-  const preview = `Hello, I would like to enquire about a stay at Vatsalya Bhawan.\nArrival: ${stay.checkIn}\nDeparture: ${stay.checkOut}\nGuests: ${stay.guests}\nRoom: ${stay.room}${stay.name ? `\nName: ${stay.name}` : ''}${stay.message ? `\n${stay.message}` : ''}`;
+  const preferredRoom = rooms.find(r => r.name === stay.room);
+  const preview = buildWhatsAppMessage(stay);
   return <div className={`bhawan-site ${festival ? 'festival-mode' : ''}`}>
     <a className="skip-link" href="#main">Skip to content</a>
     <header className={`site-header ${scrolled || menu ? 'solid' : ''} ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>
@@ -244,7 +274,7 @@ export default function VatsalyaBhawan() {
         <Logo />
       </a>
       <nav id="mobile-navigation" className={menu ? 'navigation open' : 'navigation'} aria-label="Main navigation">
-        {[['The stay', 'stay'], ['Rooms', 'rooms'], ['Ayodhya', 'ayodhya-guide'], ['Gallery', 'gallery'], ['Location', 'location']].map(([name, id]) => <a href={`#${id}`} key={id} onClick={() => setMenu(false)}>
+        {[['The stay', 'stay'], ['Rooms', 'rooms'], ['Gallery', 'gallery'], ['Ayodhya', 'ayodhya-guide'], ['Location', 'location']].map(([name, id]) => <a href={`#${id}`} key={id} onClick={() => setMenu(false)}>
           {name}
         </a>)}
         <button className="festival-toggle" aria-pressed={festival} aria-label="Diwali lights" onClick={() => setFestival(value => !value)}>
@@ -345,7 +375,7 @@ export default function VatsalyaBhawan() {
           <div className="exterior-frame">
             <img src={`${process.env.PUBLIC_URL}/assets/exterior-cutout.png`} alt="AI-reframed cutout of Vatsalya Bhawan’s full facade and ground-floor entrance, based on a photograph of the actual building" loading="lazy" />
           </div>
-          <div className="exterior-disclosure"><span>AI-reframed cutout of the actual building.</span><button className="text-link" onClick={() => { setPhoto(photos.length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
+          <div className="exterior-disclosure"><span>AI-reframed cutout of the actual building.</span><button className="text-link" onClick={() => { setPhotoCategory('Around the bhawan'); setPhoto(photos.filter(p => p.category === 'Around the bhawan').length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
         </div>
         <div className="welcome-copy">
           <p className="eyebrow">Vatsalya Bhawan · Kaniganj</p>
@@ -356,6 +386,76 @@ export default function VatsalyaBhawan() {
             Find your room
             <ArrowRight size={18} />
           </a>
+        </div>
+      </section>
+      <section className="rooms-section section" id="rooms">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <h2>Choose your room.</h2>
+            </div>
+            <p>Compare rooms, then share your dates.<br />Our team confirms rates and room arrangements.</p>
+          </div>
+          <div className="rooms-grid">
+            {rooms.map(r => <article className="room-card" key={r.name}>
+              <button className="room-image-button" aria-label={`Photos and details of ${r.name}`} onClick={() => roomDetails(r)}>
+                <img src={r.image} alt={`${r.name} at Vatsalya Bhawan`} loading="lazy" />
+                <span className="image-action">
+                  <ArrowUpRight size={22} />
+                </span>
+              </button>
+              <div className="room-card-content">
+                <div className="room-title">
+                  <h3>
+                    {r.name}
+                  </h3>
+                  <span>
+                    <Users size={15} />
+                    {`Up to ${r.guests} guests`}
+                  </span>
+                </div>
+                <p>
+                  {r.text}
+                </p>
+                <ul className="room-card-features" aria-label={`${r.name} amenities`}>
+                  {r.features.map(feature => {
+                    const Icon = featureIcons[feature];
+                    return <li key={feature}><Icon size={17} aria-hidden="true" />{feature}</li>;
+                  })}
+                </ul>
+                <div className="room-actions">
+                  <button className="button" onClick={() => enquire(r)} aria-label={`Enquire about ${r.name}`}>Enquire <Diya /></button>
+                  <button className="text-link" onClick={() => roomDetails(r)} aria-label={`Photos and details of ${r.name}`}>
+                    Photos &amp; details <ArrowUpRight size={17} aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </article>)}
+          </div>
+          <p className="photo-note">Room photos digitally reframed with AI; originals are in Photos & details. Confirm facilities and room arrangements with our team.</p>
+        </div>
+      </section>
+      <section className="gallery-section container section" id="gallery" aria-labelledby="gallery-title">
+        <div className="section-heading">
+          <h2 id="gallery-title">See the bhawan.</h2>
+          <p>Original photographs of our rooms and shared spaces.</p>
+        </div>
+        <div className="gallery-toolbar">
+          <div className="gallery-filters" role="group" aria-label="Filter photographs">
+            {photoCategories.map(category => <button key={category} className="gallery-filter" aria-pressed={photoCategory === category} aria-controls="gallery-photos" onClick={() => { setPhotoCategory(category); setPhoto(0); }}>
+              {category}
+            </button>)}
+          </div>
+          <p className="gallery-count" role="status">{`${photoCategory} · ${filteredPhotos.length} ${filteredPhotos.length === 1 ? 'photograph' : 'photographs'}`}</p>
+        </div>
+        <div className="gallery-grid" id="gallery-photos" style={{ '--gallery-columns': Math.min(filteredPhotos.length, 3), '--gallery-mobile-columns': Math.min(filteredPhotos.length, 2) }}>
+          {filteredPhotos.map((p, i) => <button key={p.src} className="gallery-photo" onClick={() => {
+            setPhoto(i);
+            setModal('gallery');
+          }} aria-label={`View original photograph: ${p.label}`}>
+            <img src={p.src} alt={p.alt} loading="lazy" />
+            <span>{p.label}<ArrowUpRight size={18} aria-hidden="true" /></span>
+          </button>)}
         </div>
       </section>
       <section className="ayodhya-guide container section" id="ayodhya-guide" aria-labelledby="ayodhya-guide-title">
@@ -383,101 +483,6 @@ export default function VatsalyaBhawan() {
               </div>
             </div>
           </details>)}
-        </div>
-      </section>
-      <section className="rooms-section section" id="rooms">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Rest comes naturally</p>
-              <h2>A room for your kind of stay.</h2>
-            </div>
-            <p>
-              Simple comforts. Your own space.
-              <br />
-              Choose a room, and enquire with us directly.
-            </p>
-          </div>
-          <div className="rooms-grid">
-            {rooms.map(r => <article className="room-card" key={r.name}>
-              <button className="room-image-button" aria-label={`Explore ${r.name}`} onClick={() => {
-                setRoom(r);
-                setShowOriginal(false);
-                setModal('room');
-              }}>
-                <img src={r.image} alt={`${r.name} at Vatsalya Bhawan`} loading="lazy" />
-                <span className="image-action">
-                  <ArrowUpRight size={22} />
-                </span>
-              </button>
-              <div className="room-card-content">
-                <div className="room-title">
-                  <h3>
-                    {r.name}
-                  </h3>
-                  <span>
-                    <Users size={15} />
-                    {`${r.guests} guests`}
-                  </span>
-                </div>
-                <p>
-                  {r.text}
-                </p>
-                <div className="room-rate">
-                  <span>Enquire for rates</span>
-                  <button className="text-link" onClick={() => {
-                    setRoom(r);
-                    setShowOriginal(false);
-                    setModal('room');
-                  }}>
-                    View room
-                    <ArrowUpRight size={17} />
-                  </button>
-                </div>
-              </div>
-            </article>)}
-          </div>
-          <p className="photo-note">Room photos digitally reframed with AI. View the original photographs in room details.</p>
-          <div className="amenities-row">
-            <span>Comfort in the details</span>
-            <span>
-              <Snowflake size={19} />
-              Air-conditioned options
-            </span>
-            <span>
-              <Bath size={19} />
-              Private bathrooms
-            </span>
-            <span>
-              <Wifi size={19} />
-              Wi-Fi
-            </span>
-            <span>
-              <Users size={19} />
-              Family rooms
-            </span>
-          </div>
-        </div>
-      </section>
-      <section className="gallery-section container section" id="gallery">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Take a look around</p>
-            <h2>Everyday spaces. A welcoming place.</h2>
-          </div>
-          <span className="gallery-hint">A glimpse of life at the bhawan</span>
-        </div>
-        <div className="gallery-grid">
-          {photos.map((p, i) => <button key={p.src} className={`gallery-photo photo-${i}`} onClick={() => {
-            setPhoto(i);
-            setModal('gallery');
-          }} aria-label={`View photograph: ${p.label}`}>
-            <img src={p.src} alt={p.alt} loading="lazy" />
-            <span>
-              {p.label}
-              <ArrowUpRight size={18} />
-            </span>
-          </button>)}
         </div>
       </section>
       <section className="location-section section" id="location">
@@ -605,8 +610,8 @@ export default function VatsalyaBhawan() {
           <h3>Explore</h3>
           <a href="#stay">The stay</a>
           <a href="#rooms">Our rooms</a>
-          <a href="#ayodhya-guide">Ayodhya guide</a>
           <a href="#gallery">Gallery</a>
+          <a href="#ayodhya-guide">Ayodhya guide</a>
           <a href="#location">Find us</a>
         </div>
         <div className="footer-contact">
@@ -657,10 +662,9 @@ export default function VatsalyaBhawan() {
     {modal === 'room' && room && <Modal label={room.name} onClose={() => setModal(null)} className="room-modal">
       <img src={showOriginal ? room.original : room.image} alt={`${room.name} — ${showOriginal ? 'original photograph' : 'AI-reframed view'}`} />
       <div className="room-modal-copy">
-        <button className="text-link original-toggle" onClick={() => setShowOriginal(!showOriginal)}>
+        <button className="text-link original-toggle" aria-pressed={showOriginal} onClick={() => setShowOriginal(!showOriginal)}>
           {showOriginal ? 'View reframed photo' : 'View original photo'}
         </button>
-        <p className="eyebrow">Your space to settle in</p>
         <h2>
           {room.name}
         </h2>
@@ -670,7 +674,7 @@ export default function VatsalyaBhawan() {
         <div className="room-features">
           <span>
             <Users size={18} />
-            {`${room.guests} guests`}
+            {`Up to ${room.guests} guests`}
           </span>
           {room.features.map(f => <span key={f}>
             {f}
@@ -683,29 +687,25 @@ export default function VatsalyaBhawan() {
         </button>
       </div>
     </Modal>}
-    {modal === 'gallery' && <Modal label={`Gallery: ${photos[photo].label}`} onClose={() => setModal(null)} className="gallery-modal" onKeyDown={e => {
-      if (e.key === 'ArrowRight') setPhoto(p => (p + 1) % photos.length);
-      if (e.key === 'ArrowLeft') setPhoto(p => (p + photos.length - 1) % photos.length);
+    {modal === 'gallery' && <Modal label={`Gallery: ${currentPhoto.label}`} onClose={() => setModal(null)} className="gallery-modal" onKeyDown={e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        changePhoto(e.key === 'ArrowRight' ? 1 : -1);
+      }
     }}>
-      <img src={photos[photo].src} alt={photos[photo].alt} />
+      <img src={currentPhoto.src} alt={currentPhoto.alt} />
       <div className="gallery-controls">
-        <button className="icon-button" aria-label="Previous photo" onClick={() => setPhoto(p => (p + photos.length - 1) % photos.length)}>
-          <ChevronLeft />
-        </button>
-        <p aria-live="polite">
-          {photos[photo].label}
-          <span>
-            {`${photo + 1} / ${photos.length}`}
-          </span>
+        {filteredPhotos.length > 1 && <button className="icon-button" aria-label={`Previous photograph in ${photoCategory}`} onClick={() => changePhoto(-1)}><ChevronLeft /></button>}
+        <p aria-live="polite" aria-atomic="true">
+          {currentPhoto.label}
+          <span>{`${photoCategory} · ${photo + 1} of ${filteredPhotos.length} ${filteredPhotos.length === 1 ? 'photograph' : 'photographs'}`}</span>
         </p>
-        <button className="icon-button" aria-label="Next photo" onClick={() => setPhoto(p => (p + 1) % photos.length)}>
-          <ChevronRight />
-        </button>
+        {filteredPhotos.length > 1 && <button className="icon-button" aria-label={`Next photograph in ${photoCategory}`} onClick={() => changePhoto(1)}><ChevronRight /></button>}
       </div>
     </Modal>}
     {modal === 'booking' && <Modal label="Plan your stay" onClose={() => setModal(null)} className="booking-modal">
-      <p className="eyebrow">A warm welcome awaits</p>
-      <h2>
+      <p className="eyebrow">{prepared ? 'Review your enquiry' : 'Stay details'}</p>
+      <h2 ref={reviewHeadingRef} tabIndex={-1}>
         {prepared ? 'Your enquiry is ready.' : 'Plan your stay.'}
       </h2>
       {prepared ? <><p>Review your details, then continue to WhatsApp to send them to our team.</p><pre className="message-preview">
@@ -713,7 +713,12 @@ export default function VatsalyaBhawan() {
         </pre><p className="booking-note">The team will confirm availability and price. Your enquiry has not been sent yet.</p><a className="button" href={buildWhatsAppUrl(stay)} target="_blank" rel="noreferrer">
           Continue to WhatsApp
           <ArrowUpRight size={17} />
-        </a><button className="text-link edit-details" onClick={() => setPrepared(false)}>Edit details</button></> : <><p>Share a few details. Our team will confirm availability and price directly.</p><form className="booking-form" onSubmit={e => {
+        </a><button className="text-link edit-details" onClick={() => setPrepared(false)}>Edit details</button></> : <><p>Share your dates and preferences. Our team confirms rates and availability directly.</p>
+        <div className="booking-preference">
+          <div><span>Room preference</span><strong>{preferredRoom ? preferredRoom.name : 'Help me choose a room'}</strong>{preferredRoom && <span>{`Up to ${preferredRoom.guests} guests per room`}</span>}</div>
+          <button className="text-link" onClick={() => roomPreferenceRef.current?.focus()}>Change</button>
+        </div>
+        <form className="booking-form" onSubmit={e => {
           e.preventDefault();
           const issue = validateStay(stay);
           setError(issue);
@@ -742,7 +747,7 @@ export default function VatsalyaBhawan() {
             </label>
             <label>
               Room preference
-              <select name="room" value={stay.room} onChange={field}>
+              <select ref={roomPreferenceRef} name="room" value={stay.room} onChange={field}>
                 <option>Any room</option>
                 {rooms.map(r => <option key={r.name}>
                   {r.name}
@@ -750,6 +755,7 @@ export default function VatsalyaBhawan() {
               </select>
             </label>
           </div>
+          {preferredRoom && Number(stay.guests) > preferredRoom.guests && <p className="group-note" role="status">Your group may need more than one room. Our team will help arrange rooms for all {stay.guests} guests.</p>}
           <label>
             Your name{' '}
             <span>(optional)</span>

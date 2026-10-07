@@ -140,3 +140,116 @@ test('Watch the journey recovers blocked autoplay and restarts the bilingual ope
   fireEvent.ended(hero().querySelector('video'));
   expect(hero().querySelector('video')).toHaveStyle({ visibility: 'hidden' });
 });
+
+test('choosing a family room preserves dates and the full group when reopening an enquiry', () => {
+  reducedMotion = true;
+  render(<VatsalyaBhawan />);
+  const arrival = `${new Date().getFullYear() + 1}-03-12`;
+  const departure = `${new Date().getFullYear() + 1}-03-15`;
+  const strip = within(document.querySelector('.enquiry-strip'));
+  fireEvent.change(strip.getByLabelText('Arrival'), { target: { value: arrival } });
+  expect(strip.getByLabelText('Departure')).toHaveValue(`${new Date().getFullYear() + 1}-03-13`);
+  fireEvent.change(strip.getByLabelText('Departure'), { target: { value: departure } });
+  fireEvent.change(strip.getByLabelText('Guests'), { target: { value: '6' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Enquire about Family room' }));
+
+  let dialog = screen.getByRole('dialog', { name: 'Plan your stay' });
+  expect(within(dialog).getByLabelText('Arrival')).toHaveValue(arrival);
+  expect(within(dialog).getByLabelText('Departure')).toHaveValue(departure);
+  expect(within(dialog).getByLabelText('Guests')).toHaveValue('6');
+  expect(within(dialog).getByLabelText('Room preference')).toHaveValue('Family room');
+  expect(within(dialog).getByRole('status')).toHaveTextContent('arrange rooms for all 6 guests');
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Change' }));
+  expect(within(dialog).getByLabelText('Room preference')).toHaveFocus();
+  fireEvent.change(within(dialog).getByLabelText(/Your name/), { target: { value: 'Asha' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Close dialog' }));
+  expect(screen.queryByRole('dialog')).toBeNull();
+
+  fireEvent.click(strip.getByRole('button', { name: 'Enquire' }));
+  dialog = screen.getByRole('dialog', { name: 'Plan your stay' });
+  expect(within(dialog).getByLabelText('Arrival')).toHaveValue(arrival);
+  expect(within(dialog).getByLabelText('Departure')).toHaveValue(departure);
+  expect(within(dialog).getByLabelText('Guests')).toHaveValue('6');
+  expect(within(dialog).getByLabelText('Room preference')).toHaveValue('Family room');
+  expect(within(dialog).getByLabelText(/Your name/)).toHaveValue('Asha');
+});
+
+test('the reviewed enquiry exactly matches WhatsApp and keeps details through edits', () => {
+  reducedMotion = true;
+  render(<VatsalyaBhawan />);
+  fireEvent.click(screen.getByRole('button', { name: 'Enquire about Family room' }));
+  const dialog = screen.getByRole('dialog', { name: 'Plan your stay' });
+  const booking = within(dialog);
+  const name = 'Asha + Ravi & family';
+  const message = 'Early arrival?\nBags & tea #1';
+  fireEvent.change(booking.getByLabelText(/Your name/), { target: { value: name } });
+  fireEvent.change(booking.getByLabelText(/Anything we should know/), { target: { value: message } });
+  fireEvent.click(booking.getByRole('button', { name: 'Prepare enquiry' }));
+  expect(booking.getByRole('heading', { name: 'Your enquiry is ready.' })).toHaveFocus();
+
+  const firstPreview = dialog.querySelector('pre').textContent;
+  expect(firstPreview).toBe(new URL(booking.getByRole('link', { name: 'Continue to WhatsApp' }).href).searchParams.get('text'));
+  expect(firstPreview).toContain(`Name: ${name}`);
+  expect(firstPreview).toContain(`Message: ${message}`);
+  expect(firstPreview).toContain('Room: Family room');
+  expect(booking.getByText(/Your enquiry has not been sent yet/)).toBeInTheDocument();
+
+  fireEvent.click(booking.getByRole('button', { name: 'Edit details' }));
+  expect(booking.getByLabelText('Arrival')).toHaveFocus();
+  expect(booking.getByLabelText(/Your name/)).toHaveValue(name);
+  expect(booking.getByLabelText(/Anything we should know/)).toHaveValue(message);
+  expect(booking.getByLabelText('Room preference')).toHaveValue('Family room');
+  const revisedMessage = `${message}\nWe are six guests.`;
+  fireEvent.change(booking.getByLabelText('Guests'), { target: { value: '6' } });
+  fireEvent.change(booking.getByLabelText(/Anything we should know/), { target: { value: revisedMessage } });
+  fireEvent.click(booking.getByRole('button', { name: 'Prepare enquiry' }));
+  const revisedPreview = dialog.querySelector('pre').textContent;
+  expect(revisedPreview).toBe(new URL(booking.getByRole('link', { name: 'Continue to WhatsApp' }).href).searchParams.get('text'));
+  expect(revisedPreview).toContain('Guests: 6');
+  expect(revisedPreview).toContain(`Name: ${name}`);
+  expect(revisedPreview).toContain(`Message: ${revisedMessage}`);
+  expect(revisedPreview).not.toBe(firstPreview);
+});
+
+test('gallery filters show original bathroom and exterior photos and contain navigation', () => {
+  reducedMotion = true;
+  render(<VatsalyaBhawan />);
+  const filters = within(screen.getByRole('group', { name: 'Filter photographs' }));
+  const gallery = within(document.getElementById('gallery-photos'));
+  fireEvent.click(filters.getByRole('button', { name: 'Bathrooms' }));
+  expect(filters.getByRole('button', { name: 'Bathrooms' })).toHaveAttribute('aria-pressed', 'true');
+  expect(gallery.getAllByRole('img')).toHaveLength(1);
+  expect(gallery.getByRole('img')).toHaveAttribute('src', expect.stringContaining('washroom-image-1.webp'));
+  fireEvent.click(gallery.getByRole('button', { name: 'View original photograph: Private bathroom' }));
+  let dialog = screen.getByRole('dialog', { name: 'Gallery: Private bathroom' });
+  expect(within(dialog).getByRole('img')).toHaveAttribute('src', expect.stringContaining('washroom-image-1.webp'));
+  expect(within(dialog).queryByRole('button', { name: /Next photograph/ })).toBeNull();
+  fireEvent.keyDown(dialog, { key: 'ArrowRight' });
+  fireEvent.keyDown(dialog, { key: 'ArrowLeft' });
+  expect(dialog).toHaveAccessibleName('Gallery: Private bathroom');
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Close dialog' }));
+
+  fireEvent.click(filters.getByRole('button', { name: 'Around the bhawan' }));
+  expect(gallery.getAllByRole('img')).toHaveLength(4);
+  fireEvent.click(gallery.getByRole('button', { name: 'View original photograph: Building exterior' }));
+  dialog = screen.getByRole('dialog', { name: 'Gallery: Building exterior' });
+  expect(within(dialog).getByRole('img')).toHaveAttribute('src', expect.stringContaining('vatsalya-bhawan-front-view.webp'));
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Previous photograph in Around the bhawan' }));
+  expect(dialog).toHaveAccessibleName('Gallery: Prayer space');
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Next photograph in Around the bhawan' }));
+  expect(dialog).toHaveAccessibleName('Gallery: Building exterior');
+  for (const label of ['Guest corridor', 'Reception and sitting area', 'Prayer space', 'Building exterior']) {
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Next photograph in Around the bhawan' }));
+    expect(dialog).toHaveAccessibleName(`Gallery: ${label}`);
+  }
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Close dialog' }));
+
+  fireEvent.click(filters.getByRole('button', { name: 'Rooms' }));
+  expect(gallery.getAllByRole('img')).toHaveLength(3);
+  expect(within(gallery.getByRole('button', { name: 'View original photograph: Standard room' })).getByRole('img')).toHaveAttribute('src', expect.stringContaining('room-image-8.webp'));
+  fireEvent.click(screen.getByRole('button', { name: 'View original photograph' }));
+  dialog = screen.getByRole('dialog', { name: 'Gallery: Building exterior' });
+  expect(filters.getByRole('button', { name: 'Around the bhawan' })).toHaveAttribute('aria-pressed', 'true');
+  expect(within(dialog).getByRole('img')).toHaveAttribute('src', expect.stringContaining('vatsalya-bhawan-front-view.webp'));
+  expect(within(dialog).getByText(/Around the bhawan · 4 of 4 photographs/)).toBeInTheDocument();
+});

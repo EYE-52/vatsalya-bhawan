@@ -31,8 +31,8 @@ export function validateStay({ checkIn, checkOut, guests }, today = localDate())
   return '';
 }
 
-export function buildWhatsAppUrl({ checkIn, checkOut, guests, room, name = '', message = '' }) {
-  const text = [
+export function buildWhatsAppMessage({ checkIn, checkOut, guests, room, name = '', message = '' }) {
+  return [
     'Hello Vatsalya Bhawan, I would like to enquire about a stay in Ayodhya.',
     `Arrival: ${checkIn}`,
     `Departure: ${checkOut}`,
@@ -41,5 +41,8 @@ export function buildWhatsAppUrl({ checkIn, checkOut, guests, room, name = '', m
     name && `Name: ${name}`,
     message && `Message: ${message}`,
   ].filter(Boolean).join('\n');
-  return `https://wa.me/919451338729?text=${encodeURIComponent(text)}`;
+}
+
+export function buildWhatsAppUrl(stay) {
+  return `https://wa.me/919451338729?text=${encodeURIComponent(buildWhatsAppMessage(stay))}`;
 }

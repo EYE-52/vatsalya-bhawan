@@ -1,4 +1,4 @@
-import { buildWhatsAppUrl, localDate, MAPS_URL, nextDay, validateStay } from './booking';
+import { buildWhatsAppMessage, buildWhatsAppUrl, localDate, MAPS_URL, nextDay, validateStay } from './booking';
 
 test('stay enquiry handles calendar dates, local time, guest limits and encoded contact details', () => {
   const stay = { checkIn: '2028-02-29', checkOut: '2028-03-01', guests: '2' };
@@ -19,11 +19,13 @@ test('stay enquiry handles calendar dates, local time, guest limits and encoded 
   const nearMidnight = new Date(2028, 1, 29, 0, 5);
   expect(localDate(nearMidnight)).toBe('2028-02-29');
   expect(localDate({ getFullYear: () => 2028, getMonth: () => 1, getDate: () => 29, toISOString: () => '2028-02-28T18:35:00.000Z' })).toBe('2028-02-29');
-  const url = new URL(buildWhatsAppUrl({ ...stay, room: 'Family & friends', name: 'Asha + Ravi', message: 'Can we bring bags?\nThanks & regards #1' }));
+  const enquiry = { ...stay, room: 'Family & friends', name: 'Asha + Ravi', message: 'Can we bring bags?\nThanks & regards #1' };
+  const url = new URL(buildWhatsAppUrl(enquiry));
   expect(url.origin + url.pathname).toBe('https://wa.me/919451338729');
   expect(url.searchParams.get('text')).toContain('Family & friends');
   expect(url.searchParams.get('text')).toContain('Asha + Ravi');
   expect(url.searchParams.get('text')).toContain('Can we bring bags?\nThanks & regards #1');
   expect(url.searchParams.get('text')).toContain('Arrival: 2028-02-29');
+  expect(url.searchParams.get('text')).toBe(buildWhatsAppMessage(enquiry));
   expect(new URL(MAPS_URL).searchParams.get('query')).toBe('Vatsalya Bhawan, Q6P3+883, Kaniganj, Ayodhya, Uttar Pradesh 224123');
 });

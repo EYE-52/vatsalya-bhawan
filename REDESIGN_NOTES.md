@@ -30,4 +30,8 @@ The Google/Booking listings identify the property as Q6P3+883, Kaniganj, Ayodhya
 
 The form prepares an encoded WhatsApp message. It neither sends a message nor claims a booking has been received. The guest reviews the text, opens WhatsApp, and sends it themselves; the hotel confirms availability and pricing. No payment or live inventory integration is implied.
 
+The homepage puts room choices and the gallery before the city guide. Each room displays its existing occupancy guidance and amenities, a direct enquiry action and separate photo details. Selecting a room preserves the guest's dates and group size; larger groups receive a multiple-room note. Moving arrival beyond the selected departure advances departure by one day, while later departures are preserved. The review and WhatsApp link share one message builder.
+
+The gallery exposes eight original photos in Rooms, Around the bhawan and Bathrooms, including all three room types. The viewer and arrow keys stay within the selected category. Room details retain the AI-reframed/original comparison. Native dialogs, 44px controls and explicit review-heading focus support touch and keyboard use.
+
 The redesign is published separately at https://eye-52.github.io/vatsalya-bhawan/ from EYE-52/vatsalya-bhawan. The original RT-1904129 repository and website are preserved. Public asset paths use a relative deployment base; `npm run deploy` targets the new repository explicitly.
