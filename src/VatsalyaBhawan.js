@@ -391,6 +391,7 @@ export default function VatsalyaBhawan() {
           <div className="exterior-disclosure"><span>AI-reframed cutout of the actual building.</span><button className="text-link" onClick={() => { setPhotoCategory('Around the bhawan'); setPhoto(photos.filter(p => p.category === 'Around the bhawan').length - 1); setModal('gallery'); }}>View original photograph <ArrowUpRight size={14} /></button></div>
         </div>
         <div className="welcome-copy">
+          <figure className="welcome-ram"><img src={`${process.env.PUBLIC_URL}/assets/shri-ram-angavastra.webp`} alt="Illustration of Shri Ram with a flowing saffron angavastra" width="1536" height="1024" loading="lazy" /></figure>
           <p className="eyebrow">Vatsalya Bhawan · Kaniganj</p>
           <h2>Your stay in Ayodhya.</h2>
           <p>Private rooms for couples and families, with Wi-Fi and private bathrooms. Air-conditioned options are available.</p>
@@ -583,7 +584,10 @@ export default function VatsalyaBhawan() {
             <button className="button" onClick={() => enquire()}>Plan your stay <Diya /></button>
             <a className="cta-phone" href="tel:+919451338729">Or call +91 94513 38729</a>
           </div>
-          <img className="booking-river-art" src={`${process.env.PUBLIC_URL}/assets/ayodhya-river-art.svg`} alt="" aria-hidden="true" loading="lazy" />
+          <div className="booking-river-scene">
+            <img className="saffron-drape" src={`${process.env.PUBLIC_URL}/assets/saffron-drape.svg`} alt="" aria-hidden="true" loading="lazy" />
+            <img className="booking-river-art" src={`${process.env.PUBLIC_URL}/assets/ayodhya-river-art.svg`} alt="" aria-hidden="true" loading="lazy" />
+          </div>
         </div>
       </section>
     </main>

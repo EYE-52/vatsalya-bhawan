@@ -411,6 +411,8 @@ button {
   font-family: 'Lora',Georgia,serif;
   font-size: 25px
 }
+.welcome-ram { margin: 0 0 22px; width: 100%; }
+.welcome-ram img { width: 100%; height: 250px; object-fit: contain; object-position: center; }
 .welcome-copy h2 {
   margin-bottom: 30px
 }
@@ -779,6 +781,8 @@ address {
 }
 .booking-cta h2 { font-size: clamp(40px, 4.4vw, 62px); line-height: 1.18; }
 .booking-cta p:not(.eyebrow) { margin: 20px 0 26px; color: var(--muted); }
+.booking-river-scene { position: relative; padding-top: 30px; }
+.saffron-drape { position: absolute; width: 165px; height: 44px; right: 3%; top: 0; object-fit: contain; pointer-events: none; }
 .booking-river-art { width: 100%; max-height: 310px; object-fit: contain; }
 .booking-cta .cta-phone { display: flex; width: max-content; max-width: 100%; margin-top: 19px; font-size: 12px; color: var(--muted); }
 footer {
@@ -1399,6 +1403,8 @@ footer :focus-visible { outline-color: var(--highlight); }
     right: 0;
     padding: 17px 20px
   }
+  .welcome-ram { margin-bottom: 20px; }
+  .welcome-ram img { height: 200px; }
   .welcome-copy h2 {
     font-size: 40px;
     margin-bottom: 24px
@@ -1506,6 +1512,7 @@ footer :focus-visible { outline-color: var(--highlight); }
   }
   .booking-cta-layout { grid-template-columns: 1fr; gap: 22px; }
   .booking-river-art { max-height: 210px; }
+  .saffron-drape { width: 130px; height: 35px; }
   .booking-cta h2 {
     font-size: 41px
   }

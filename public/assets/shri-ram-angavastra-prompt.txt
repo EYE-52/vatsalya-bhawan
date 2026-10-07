@@ -1,0 +1,16 @@
+Use case: illustration-story
+Asset type: original transparent illustration for Vatsalya Bhawan, an Ayodhya hospitality website.
+Primary request: Shri Ram with a long, beautifully flowing orange angavastra, integrated naturally into an elegant modern Ayodhya visual identity.
+Subject: a serene, dignified adult Shri Ram, recognizable through gentle muted blue skin, a small traditional tilak, simple fine crown, a graceful curved bow held at rest, a discreet quiver, and a saffron dhoti. Two arms with anatomically natural hands, composed standing posture, bare feet visible. No other figures.
+Style/medium: refined hand-painted Indian devotional editorial illustration, delicate ink contours and restrained gouache detail. Mature and graceful rather than cartoon, photorealistic, glossy 3D or a heavily ornamented calendar poster. The figure is finely drawn with readable calm facial features.
+Composition/framing: wide landscape 3:2 transparent asset, full figure from crown to feet entirely visible in the left half; orange angavastra wraps naturally over the shoulders and trails to the right in one long airy S-shaped sweep, with crisp layered fabric folds. The flowing fabric gives the picture its visual movement. The figure fills most of the image height, with a little clear margin all round. Avoid large empty canvas margins.
+Color palette: harmonious with Saryu blue #123C51, clean light #FFFCF5 and small marigold #F2B638 details; the angavastra is luminous saffron orange #E86624 with warm deeper orange folds, not dull brown. Keep the skin subtle blue rather than electric cyan. Fine crown accents subdued, not gold-heavy.
+Scene/backdrop: genuinely transparent background, no landscape, temple, sun disk, circular halo, frame, floor, glow or cast shadow.
+Constraints: respectful, peaceful devotional treatment; not a sales mascot or a warrior in combat. No text, logos, watermarks, additional gods, characters, extra limbs, cropped feet, clipped fabric, spear or sword. Preserve real transparency.
+Generated with the built-in image-generation tool.
+
+Follow-up edit, using the built-in image-generation tool:
+Use case: background-extraction. Edit the supplied Shri Ram illustration only to clean its transparent background. Preserve the same serene face, full body and feet, crown, bow, hands, saffron garments, and the exact long sweeping angavastra composition and fine painted texture. Remove every soft airbrushed brown/orange/blue glow or haze around the silhouette, including all luminous fringes outside the body, bow, quiver and fabric. Keep only the crisply drawn figure and flowing cloth on a genuinely transparent alpha background. No shadow, halo, backdrop, landscape, floor or new elements. Preserve natural antialiased edges without pale/grey/color halos; do not crop or cut off the cloth or feet. No other restyling.
+
+Selected source: /Users/divyansh/.codex/generated_images/01a1132c-5f7f-7153-aaa2-55f16d4b1d71/exec-0eaa1d1d-2f37-4ae2-8541-1a565768c137.png
+Website asset: shri-ram-angavastra.webp, 1536 x 1024 with transparency, encoded as WebP quality 88 without resizing.
