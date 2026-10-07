@@ -756,16 +756,19 @@ export default function VatsalyaBhawan() {
             </label>
           </div>
           {preferredRoom && Number(stay.guests) > preferredRoom.guests && <p className="group-note" role="status">Your group may need more than one room. Our team will help arrange rooms for all {stay.guests} guests.</p>}
-          <label>
-            Your name{' '}
-            <span>(optional)</span>
-            <input name="name" autoComplete="name" value={stay.name} onChange={field} maxLength={100} />
-          </label>
-          <label>
-            Anything we should know?{' '}
-            <span>(optional)</span>
-            <textarea name="message" placeholder="Arrival plans, room preferences, or a question…" value={stay.message} onChange={field} maxLength={1000} rows={3} />
-          </label>
+          <details className="booking-extras" open={Boolean(stay.name || stay.message)}>
+            <summary>Add your name or a request <span>(optional)</span></summary>
+            <label>
+              Your name{' '}
+              <span>(optional)</span>
+              <input name="name" autoComplete="name" value={stay.name} onChange={field} maxLength={100} />
+            </label>
+            <label>
+              Anything we should know?{' '}
+              <span>(optional)</span>
+              <textarea name="message" placeholder="Arrival plans, room preferences, or a question…" value={stay.message} onChange={field} maxLength={1000} rows={3} />
+            </label>
+          </details>
           {error && <p role="alert" className="form-error">
             {error}
           </p>}

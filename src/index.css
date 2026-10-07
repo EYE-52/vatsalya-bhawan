@@ -857,6 +857,7 @@ footer {
   right: 15px;
   top: 15px;
   background: var(--chalk);
+  color: var(--ink);
   z-index: 1;
   border-radius: 50%;
   width: 44px;
@@ -2484,6 +2485,25 @@ body {
 }
 .booking-note {
   font-size: 13px!important;
+}
+.booking-extras {
+  border-top: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+.booking-extras summary {
+  min-height: 44px;
+  padding-block: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.booking-extras summary span {
+  color: var(--muted);
+}
+.booking-extras[open] summary {
+  margin-bottom: 12px;
+}
+.booking-extras label:last-child {
+  margin-bottom: 0;
 }
 @media (min-width: 641px) and (max-width: 900px) {
   .rooms-grid {

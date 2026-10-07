@@ -161,6 +161,7 @@ test('choosing a family room preserves dates and the full group when reopening a
   expect(within(dialog).getByRole('status')).toHaveTextContent('arrange rooms for all 6 guests');
   fireEvent.click(within(dialog).getByRole('button', { name: 'Change' }));
   expect(within(dialog).getByLabelText('Room preference')).toHaveFocus();
+  fireEvent.click(within(dialog).getByText(/Add your name or a request/, { selector: 'summary' }));
   fireEvent.change(within(dialog).getByLabelText(/Your name/), { target: { value: 'Asha' } });
   fireEvent.click(within(dialog).getByRole('button', { name: 'Close dialog' }));
   expect(screen.queryByRole('dialog')).toBeNull();
@@ -182,6 +183,7 @@ test('the reviewed enquiry exactly matches WhatsApp and keeps details through ed
   const booking = within(dialog);
   const name = 'Asha + Ravi & family';
   const message = 'Early arrival?\nBags & tea #1';
+  fireEvent.click(booking.getByText(/Add your name or a request/, { selector: 'summary' }));
   fireEvent.change(booking.getByLabelText(/Your name/), { target: { value: name } });
   fireEvent.change(booking.getByLabelText(/Anything we should know/), { target: { value: message } });
   fireEvent.click(booking.getByRole('button', { name: 'Prepare enquiry' }));
@@ -196,6 +198,7 @@ test('the reviewed enquiry exactly matches WhatsApp and keeps details through ed
 
   fireEvent.click(booking.getByRole('button', { name: 'Edit details' }));
   expect(booking.getByLabelText('Arrival')).toHaveFocus();
+  expect(booking.getByText(/Add your name or a request/, { selector: 'summary' }).closest('details')).toHaveAttribute('open');
   expect(booking.getByLabelText(/Your name/)).toHaveValue(name);
   expect(booking.getByLabelText(/Anything we should know/)).toHaveValue(message);
   expect(booking.getByLabelText('Room preference')).toHaveValue('Family room');
