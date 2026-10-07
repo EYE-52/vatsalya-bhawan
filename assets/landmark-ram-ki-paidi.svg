@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+ <title>Ram ki Paidi</title><desc>Stylized pavilion above stepped ghats and rhythmic Saryu river water.</desc>
+ <circle cx="103" cy="42" r="29" fill="#F2B638"/>
+ <g stroke="#123C51" stroke-width="2.5" stroke-linejoin="round">
+  <path d="M27 80V44h51v36" fill="#FCE7C4"/>
+  <path d="M20 44h65l-9-10H29z" fill="#BB3D21"/>
+  <path d="M31 33c2-16 9-25 21-28 12 3 20 12 22 28z" fill="#FCE7C4"/>
+  <path d="M37 80V56m16 24V56m16 24V56"/>
+  <path d="M89 80V61h31v19" fill="#BB3D21"/>
+  <path d="M84 61h41l-21-15z" fill="#FCE7C4"/>
+  <path d="M12 80h136v12H12z" fill="#BB3D21"/>
+  <path d="M7 93h146v12H7z" fill="#FCE7C4"/>
+  <path d="M2 106h156v12H2z" fill="#F2B638"/>
+  <path d="M58 80h24v38H58" fill="#FFFCF5"/>
+  <path d="M58 87h24m-24 9h24m-24 10h24"/>
+ </g>
+ <path d="M2 120h156v37H2z" fill="#DFF0EF"/>
+ <path d="M8 129h25m13 0h41m20 0h45M2 142h50m22 0h25m12 0h39M11 153h19m16 0h57m19 0h34" stroke="#123C51" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

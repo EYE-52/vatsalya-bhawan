@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+ <title>Hanuman Garhi</title><desc>Stylized fortress gateway with rounded bastions and a long rising stairway.</desc>
+ <circle cx="48" cy="51" r="33" fill="#F2B638"/>
+ <g stroke="#123C51" stroke-width="2.5" stroke-linejoin="round">
+  <path d="M28 104V59h23V47h58v12h23v45z" fill="#BB3D21"/>
+  <path d="M49 48h62L80 28z" fill="#FCE7C4"/>
+  <path d="M80 29V9l23 6-23 6" stroke="#BB3D21"/>
+  <path d="M12 111V56c0-20 32-20 32 0v55zm104 0V56c0-20 32-20 32 0v55z" fill="#FCE7C4"/>
+  <path d="M9 57h38m66 0h38m-135 8h24m80 0h24"/>
+  <path d="M12 51h32L28 34zm104 0h32l-16-17z" fill="#BB3D21"/>
+  <path d="M66 105V78c0-18 28-18 28 0v27" fill="#123C51"/>
+  <path d="M61 105h38l22 44H39z" fill="#FCE7C4"/>
+  <path d="M59 110h42m-44 7h47m-51 8h55m-59 8h63m-67 8h71"/>
+  <path d="M12 107h42m52 0h42M4 151h152"/>
+ </g>
+ <path d="M26 79v10m106-10v10" stroke="#123C51" stroke-width="5"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+ <title>Kanak Bhawan</title><desc>Stylized palace courtyard with scalloped arches and rooftop pavilions.</desc>
+ <circle cx="109" cy="53" r="34" fill="#F2B638"/>
+ <g stroke="#123C51" stroke-width="2.5" stroke-linejoin="round">
+  <path d="M12 133V74h136v59z" fill="#FCE7C4"/>
+  <path d="M7 74h146V64H7z" fill="#BB3D21"/>
+  <path d="M21 64V41h28v23m61 0V41h29v23" fill="#FCE7C4"/>
+  <path d="M16 41h39L35 25zm89 0h39l-20-16z" fill="#BB3D21"/>
+  <path d="M60 63V37h40v26" fill="#BB3D21"/>
+  <path d="M54 37h52L80 18z" fill="#FCE7C4"/>
+  <path d="M80 18V11"/><path d="M76 5h8l-2 6h-4z" fill="#F2B638"/><circle cx="80" cy="2" r="1.5" fill="#123C51"/>
+  <path d="M71 64V49c0-12 18-12 18 0v15" fill="#FFFCF5"/>
+  <path d="M23 133v-31q0-10 8-10 0-9 8-9t8 9q8 0 8 10v31zm41 0v-31q0-10 8-10 0-9 8-9t8 9q8 0 8 10v31zm41 0v-31q0-10 8-10 0-9 8-9t8 9q8 0 8 10v31z" fill="#123C51"/>
+  <path d="M8 134h144v10H8z" fill="#BB3D21"/>
+  <path d="M2 151h156"/>
+ </g>
+ <path d="M28 48v9m14-9v9m76-9v9m13-9v9" stroke="#123C51" stroke-width="3"/>
+ <path d="M14 78h132" stroke="#F2B638" stroke-width="4"/>
+</svg>

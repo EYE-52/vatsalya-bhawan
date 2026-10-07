@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+ <title>Ram Mandir</title><desc>Stylized sandstone temple with tiered towers and pillared halls.</desc>
+ <circle cx="108" cy="55" r="35" fill="#F2B638"/>
+ <g stroke="#123C51" stroke-width="2.5" stroke-linejoin="round">
+  <path d="M19 125V95h29V79h64v16h29v30" fill="#FCE7C4"/>
+  <path d="M45 78h70l-9-14H54z" fill="#BB3D21"/>
+  <path d="M54 62h52L98 48H62z" fill="#FCE7C4"/>
+  <path d="M62 46h36L90 32H70z" fill="#BB3D21"/>
+  <path d="M71 30h18L80 11z" fill="#FCE7C4"/>
+  <path d="M80 12V3l19 5-19 5" stroke="#BB3D21"/>
+  <path d="M11 94h39l-8-10H19zm101 0h37l-9-10h-21z" fill="#BB3D21"/>
+  <path d="M23 82h16l-8-13zm98 0h15l-7-13z" fill="#F2B638"/>
+  <path d="M69 125v-26c0-14 22-14 22 0v26" fill="#123C51"/>
+  <path d="M28 101v24m12-24v24m17-38v38m46-38v38m17-24v24m12-24v24"/>
+  <path d="M12 126h136v9H12z" fill="#FCE7C4"/>
+  <path d="M5 136h150v9H5z" fill="#BB3D21"/>
+ </g>
+ <path d="M2 151h156" stroke="#123C51" stroke-width="3"/>
+</svg>
