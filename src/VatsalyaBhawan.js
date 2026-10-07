@@ -80,11 +80,11 @@ const featureIcons = { 'Air conditioning': Snowflake, 'Private bathroom': Bath, 
 // Media seconds shared by the desktop film and its portrait crop.
 export const JOURNEY_STAGES = [
   { start: 0, hindi: 'जम्बूद्वीपे', english: 'Jambudvīpe' },
-  { start: .65, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
-  { start: 1.15, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
-  { start: 1.7, hindi: 'अयोध्या नगरी', english: 'Ayodhya Nagari' },
+  { start: .9, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
+  { start: 1.8, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
+  { start: 2.8, hindi: 'अयोध्या नगरी', english: 'Ayodhya Nagari' },
 ];
-export const ARRIVAL_TIME = 139 / 24;
+export const ARRIVAL_TIME = 8.5;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
   { name: 'Ram Mandir', illustration: 'landmark-ram-mandir.svg', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
@@ -306,18 +306,18 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className="hero cinema-hero" id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-${captionActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={captionActive ? 'Earth with Asia and India visible' : 'AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya'} fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-v2-${captionActive ? 'globe' : 'arrival'}${mobileFilm ? '-mobile' : ''}.jpg`} alt={captionActive ? 'Earth with Asia and India visible' : 'AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya'} fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-v2${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-shikhar-journey-v2-globe${mobileFilm ? '-mobile' : ''}.jpg`}
           aria-label="Journey from Earth through India to an AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
@@ -327,14 +327,13 @@ export default function VatsalyaBhawan() {
         <div className="festival-lights" aria-hidden="true">
           {Array.from({ length: 12 }, (_, i) => <span className="festival-light" key={i} style={{ '--light-index': i }} />)}
         </div>
-        <div className={`intro-title ${captionActive ? 'present' : ''}`} aria-hidden={!captionActive}>
-          <div className="intro-caption" key={journeyStage.start}>
-            <p lang="hi">{journeyStage.hindi}</p>
-            <p lang="en">{journeyStage.english}</p>
-          </div>
-        </div>
         <div className="hero-content">
-          <p className="hero-intro">{festival ? 'Ayodhya, in the warmth of Diwali.' : 'In the city of Ram. A place of your own.'}</p>
+          <div className="hero-eyebrow-slot">
+            {captionActive ? <div className="intro-caption" key={journeyStage.start}>
+              <p lang="hi">{journeyStage.hindi}</p>
+              <p lang="en">{journeyStage.english}</p>
+            </div> : <p className="hero-intro">{festival ? 'Ayodhya, in the warmth of Diwali.' : 'In the city of Ram. A place of your own.'}</p>}
+          </div>
           <h1>Arrive in Ayodhya.<br />Feel at home.</h1>
           <p className="hero-description">A welcoming place to pause, come together, and begin your Ayodhya stay.</p>
           <div className="hero-actions">

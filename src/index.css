@@ -1864,31 +1864,16 @@ body {
   }
 }
 
-/* The journey plays behind usable page content; captions remain quiet. */
-.intro-title {
-  position: absolute;
-  top: 132px;
-  right: max(48px, calc((100% - 1240px) / 2));
-  text-align: right;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .3s ease;
-  color: var(--surface);
-  text-shadow: 0 2px 12px #00000070;
-}
-.intro-title.present { opacity: 1; }
-.intro-title p { max-width: none; }
-.intro-title p[lang="hi"] {
-  font-family: 'Noto Serif Devanagari', serif;
-  font-size: 32px;
-  line-height: 1.55;
-  font-weight: 400;
-}
-.intro-title p + p { font-size: 12px; letter-spacing: .08em; margin-top: 3px; }
+/* Captions share the headline's eyebrow position without shifting the copy. */
+.hero-eyebrow-slot { height: 66px; display: flex; align-items: center; margin-bottom: 18px; }
+.cinema-hero .hero-eyebrow-slot .hero-intro { margin: 0; }
+.intro-caption p { max-width: none; }
+.intro-caption p[lang="hi"] { font-family: 'Noto Serif Devanagari', serif; font-size: 22px; line-height: 1.5; font-weight: 400; }
+.intro-caption p[lang="en"] { font-size: 11px; line-height: 1.5; letter-spacing: .06em; margin-top: 3px; }
 @media (max-width: 640px) {
-  .intro-title { top: 120px; left: 24px; right: 24px; text-align: center; }
-  .intro-title p[lang="hi"] { font-size: 28px; }
-  .intro-title p + p { font-size: 11px; }
+  .cinema-hero { min-height: 740px; }
+  .hero-eyebrow-slot { height: 60px; margin-bottom: 16px; }
+  .intro-caption p[lang="hi"] { font-size: 20px; }
 }
 
 /* An aqua arch and marigold sun frame the actual facade. */

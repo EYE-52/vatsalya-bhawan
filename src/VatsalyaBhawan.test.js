@@ -42,7 +42,7 @@ function hero() {
 function expectPosterAndBooking() {
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
-  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining(`ayodhya-shikhar-journey-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
+  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining(`ayodhya-shikhar-journey-v2-arrival${mobileFilm ? '-mobile' : ''}.jpg`));
   fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
   expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Prepare enquiry/ })).toBeEnabled();
@@ -67,7 +67,7 @@ test('failed media falls back to the poster and keeps the booking flow available
 test('pause and resume call native playback, and replay restarts an ended film without looping', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
-  expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey.mp4'));
+  expect(video).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2.mp4'));
   expect(video).toHaveAttribute('aria-label', 'Journey from Earth through India to an AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya');
   expect(video.loop).toBe(false);
   expect(play).toHaveBeenCalled();
@@ -77,10 +77,10 @@ test('pause and resume call native playback, and replay restarts an ended film w
   const callsBeforeResume = play.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Resume journey film' }));
   expect(play.mock.calls.length).toBeGreaterThan(callsBeforeResume);
-  video.currentTime = 175 / 24;
+  video.currentTime = 10;
   fireEvent.ended(video);
   expect(video).toHaveStyle({ visibility: 'hidden' });
-  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-arrival.jpg'));
+  expect(within(hero()).getByAltText('AI interpretation of Ram Mandir’s shikhar and saffron flag in Ayodhya')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-arrival.jpg'));
   const callsBeforeReplay = play.mock.calls.length;
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(video.currentTime).toBe(0);
@@ -92,14 +92,14 @@ test('pause and resume call native playback, and replay restarts an ended film w
 test('all four bilingual captions follow media time while navigation and booking remain available throughout playback', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
-  expect(ARRIVAL_TIME).toBe(139 / 24);
+  expect(ARRIVAL_TIME).toBe(8.5);
   const stages = [
     [0, 'जम्बूद्वीपे', 'Jambudvīpe'],
-    [.65, 'भारतखण्डे', 'Bhāratakhaṇḍe'],
-    [1.15, 'आर्यावर्ते', 'Āryāvarte'],
-    [1.7, 'अयोध्या नगरी', 'Ayodhya Nagari'],
+    [.9, 'भारतखण्डे', 'Bhāratakhaṇḍe'],
+    [1.8, 'आर्यावर्ते', 'Āryāvarte'],
+    [2.8, 'अयोध्या नगरी', 'Ayodhya Nagari'],
   ];
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-globe.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-globe.jpg'));
   stages.forEach(([start, hindi, english], index) => {
     if (index > 0) {
       video.currentTime = start - 0.01;
@@ -109,6 +109,8 @@ test('all four bilingual captions follow media time while navigation and booking
     video.currentTime = start;
     fireEvent.timeUpdate(video);
     expect(screen.getByText(hindi)).toHaveAttribute('lang', 'hi');
+    expect(hero().querySelector('.hero-eyebrow-slot')).toContainElement(screen.getByText(hindi));
+    expect(screen.queryByText('In the city of Ram. A place of your own.')).toBeNull();
     expect(screen.getByText(english)).toHaveAttribute('lang', 'en');
     if (index > 0) expect(screen.queryByText(stages[index - 1][2])).toBeNull();
     expect(screen.getByRole('banner')).not.toHaveAttribute('aria-hidden');
@@ -128,7 +130,9 @@ test('all four bilingual captions follow media time while navigation and booking
   expect(screen.getByText('Ayodhya Nagari')).toBeInTheDocument();
   video.currentTime = ARRIVAL_TIME;
   fireEvent.timeUpdate(video);
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-arrival.jpg'));
+  expect(screen.getByText('In the city of Ram. A place of your own.')).toBeInTheDocument();
+  expect(screen.queryByText('Ayodhya Nagari')).toBeNull();
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-arrival.jpg'));
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
@@ -143,7 +147,7 @@ test('all four bilingual captions follow media time while navigation and booking
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
-  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-globe.jpg'));
+  expect(hero().querySelector('.cinema-poster')).toHaveAttribute('src', expect.stringContaining('ayodhya-shikhar-journey-v2-globe.jpg'));
   expect(screen.queryByText('Ayodhya Nagari')).toBeNull();
   fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
   expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();

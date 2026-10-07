@@ -1,15 +1,15 @@
 # Earth to the shikhara — 7 October 2026
 
-The current hero is a 7.292-second journey from Earth through real Ayodhya satellite geography into an AI interpretation of Ram Mandir's upper shikhara and saffron flag. The user requested a faster geographic section, a straight approach and a close architectural finish. The previous long, sideways temple approach is superseded.
+The current hero is a 10-second journey from Earth through real Ayodhya satellite geography into an AI interpretation of Ram Mandir's upper shikhara and saffron flag. The user requested a faster geographic section, a straight approach and a close architectural finish. The previous long, sideways temple approach is superseded. After approving the close shikhara take, the user requested a slightly slower pace; this revision extends the initial 7.292-second composition to 10 seconds without another generation.
 
 ## Selected frames and timing
 
-1. `render_temple_geographic.py` retains the registered NASA/Copernicus camera trajectory and targets the actual temple at 26.7957774°N, 82.1942075°E. Source attribution remains in `CONTINUOUS_NOTES.md` and `GEOGRAPHIC_NOTES.md`. The native render is 15 seconds; frames 0–300 (ending at 12.5 seconds) are retimed to 55 output frames, or 2.292 seconds. Its last desktop footprint is 2.53 × 1.42 km. The final overhead reference is `temple-centered-geographic/temple-centered-end.jpg`.
+1. `render_temple_geographic.py` retains the registered NASA/Copernicus camera trajectory and targets the actual temple at 26.7957774°N, 82.1942075°E. Source attribution remains in `CONTINUOUS_NOTES.md` and `GEOGRAPHIC_NOTES.md`. The native render is 15 seconds; frames 0–300 (ending at 12.5 seconds) are retimed to 84 output frames, or 3.5 seconds. Its last desktop footprint is 2.53 × 1.42 km. The final overhead reference is `temple-centered-geographic/temple-centered-end.jpg`.
 2. The close endpoint was generated from the completed-temple shikhara photograph credited to the Prime Minister's Office via PIB, GODL-India. It focuses on the ribbed sandstone summit, gold crown and saffron flag, with the lower temple outside the frame. Exact prompt and saved file are in `TEMPLE_IMAGE_PROMPTS.md`; reference details are in `TEMPLE_REFERENCE_SOURCES.txt`.
-3. Flow's native Video → Frames interface explicitly assigned the geographic endpoint to Start and `ayodhya-shikhar-flag-final.png` to End. Veo 3.1 Fast generated one 8-second, 192-frame clip: `ayodhya-shikhar-final-native-source.mp4`. All source frames are retimed into 84 output frames (3.5 seconds). Both exact source endpoints are retained.
-4. Another 36 frames (1.5 seconds) hold the actual decoded final frame. Arrival begins at frame 139 / 5.792 seconds. No additional optical zoom, crossfade, portal or overlay is applied.
+3. Flow's native Video → Frames interface explicitly assigned the geographic endpoint to Start and `ayodhya-shikhar-flag-final.png` to End. Veo 3.1 Fast generated one 8-second, 192-frame clip: `ayodhya-shikhar-final-native-source.mp4`. All source frames are retimed into 120 output frames (5 seconds). Both exact source endpoints are retained.
+4. Another 36 frames (1.5 seconds) hold the actual decoded final frame. Arrival begins at frame 204 / 8.5 seconds. No additional optical zoom, crossfade, portal or overlay is applied.
 
-Total: 175 frames, 24 fps, 7.292 seconds. Both desktop 1280×720 and portrait 720×1280 use the same timing. The portrait opening preserves its independent Earth composition, then narrows its field of view to match a central crop of the native video. It does not pan sideways to follow the temple. Posters are extracted from each encoded film. Media begins below the header and uses top alignment so the flag remains visible on phones and wide screens.
+Total: 240 frames, 24 fps, 10 seconds. Both desktop 1280×720 and portrait 720×1280 use the same timing. The portrait opening preserves its independent Earth composition, then narrows its field of view to match a central crop of the native video. It does not pan sideways to follow the temple. Posters are extracted from each encoded film. Media begins below the header and uses top alignment so the flag remains visible on phones and wide screens.
 
 ## Scope of realism and review
 
@@ -19,7 +19,7 @@ The source watermark remains in the desktop frame. Portrait framing uses a norma
 
 ## Interface
 
-Navigation, headline, enquiry buttons and other content remain visible and interactive during playback. The short background film is silent and plays once, with pause/replay and a direct restart. Media-time captions are: 0 seconds “जम्बूद्वीपे / Jambudvīpe”; 0.65 “भारतखण्डे / Bhāratakhaṇḍe”; 1.15 “आर्यावर्ते / Āryāvarte”; 1.7 “अयोध्या नगरी / Ayodhya Nagari”. Captions finish at 139/24 seconds. Reduced motion, blocked autoplay, media failure and scrolling retain immediate access to the page. The end poster matches the final encoded frame.
+Navigation, headline, enquiry buttons and other content remain visible and interactive during playback. Captions occupy a fixed-height eyebrow slot above the headline, replacing its ordinary introduction during playback without shifting the headline or covering the temple. Small phone screens can scroll through a minimum 740px hero to prevent caption/content overlap. The short background film is silent and plays once, with pause/replay and a direct restart. Media-time captions are: 0 seconds “जम्बूद्वीपे / Jambudvīpe”; 0.9 “भारतखण्डे / Bhāratakhaṇḍe”; 1.8 “आर्यावर्ते / Āryāvarte”; 2.8 “अयोध्या नगरी / Ayodhya Nagari”. Captions finish at 8.5 seconds. Reduced motion, blocked autoplay, media failure and scrolling retain immediate access to the page. The end poster matches the final encoded frame.
 
 ## Assembly and verification
 
@@ -32,7 +32,7 @@ python3 scripts/hero-film/assemble_temple_journey.py \
   --output /path/outside/repository/shikhar-composed
 ```
 
-Local sources are preserved under `/Users/divyansh/Projects/Rishabhs/hero-film/`. Six selected delivery assets are copied into `public/assets/` under `ayodhya-shikhar-journey*`. Older media and renderers remain available as historical assets but are not referenced by the homepage.
+Local sources are preserved under `/Users/divyansh/Projects/Rishabhs/hero-film/`. Six selected delivery assets are copied into `public/assets/` under `ayodhya-shikhar-journey-v2*`. Older media and renderers remain available as historical assets but are not referenced by the homepage.
 
 Verification covers complete decode, dimensions, frame rate/count, duration, silent single stream, codec, fast-start atom order, source hashes, encoded-poster match, boundary differences and stationary hold. Synthetic frame counters verify that both exact source endpoints survive fast retiming. Source motion and desktop/portrait seam sheets receive visual review; local and deployed pages are checked at desktop and phone sizes.
 
@@ -46,5 +46,5 @@ This revision used 40 existing subscription credits: 20 for the rejected `ayodhy
 
 ## Encoded results
 
-- Desktop: 4,292,329 bytes; SHA-256 `294460ead84970ebe30235328dfa99450ceda864aadb4a86da2adb38ef5846d6`. Geographic-to-AI seam mean RGB difference 1.030/255; stationary hold difference 0.067/255.
-- Phone: 3,091,025 bytes; SHA-256 `a1d422956292bb4869635859a7a522f8251c95576a67201e02147821ea959040`. Geographic-to-AI seam mean RGB difference 5.429/255; stationary hold difference 0.240/255.
+- Desktop: 5,435,303 bytes; SHA-256 `08c1471c6685cbf44cc1b639f581c28c05020ee43379fb8cd4e7b0f735c57c06`. Geographic-to-AI seam mean RGB difference 1.657/255; stationary hold difference 0.040/255.
+- Phone: 4,067,238 bytes; SHA-256 `c40d8578da703d47ec3d2f73cf5345e08fa9e9166c42a77e8f729170a15e109f`. Geographic-to-AI seam mean RGB difference 6.182/255; stationary hold difference 0.081/255.
