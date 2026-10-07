@@ -292,3 +292,21 @@ test('gallery filters show original bathroom and exterior photos and contain nav
   expect(within(dialog).getByRole('img')).toHaveAttribute('src', expect.stringContaining('vatsalya-bhawan-front-view.webp'));
   expect(within(dialog).getByText(/Around the bhawan · 4 of 4 photographs/)).toBeInTheDocument();
 });
+
+
+test('an initial guide fragment scrolls to the mounted section immediately', () => {
+  const initialUrl = window.location.href;
+  const originalScrollIntoView = Element.prototype.scrollIntoView;
+  const scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = scrollIntoView;
+  window.history.replaceState(null, '', '#ayodhya-guide');
+  try {
+    render(<VatsalyaBhawan />);
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'instant', block: 'start' });
+    expect(scrollIntoView.mock.instances[0]).toBe(document.getElementById('ayodhya-guide'));
+  } finally {
+    window.history.replaceState(null, '', initialUrl);
+    Element.prototype.scrollIntoView = originalScrollIntoView;
+  }
+});

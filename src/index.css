@@ -2556,7 +2556,7 @@ body {
   isolation: isolate;
   background: #eeece2;
 }
-.ayodhya-street-map {
+.ayodhya-street-map.leaflet-container {
   height: 100%;
   width: 100%;
   background: #eeece2;
@@ -2592,7 +2592,7 @@ body {
 .street-map-tools button:first-child, .street-map-tools button:nth-child(2) { font-size: 24px; }
 .street-map-tools button:hover, .street-map-tools button[aria-pressed="true"] { background: var(--ink); color: var(--chalk); border-color: var(--ink); }
 .map-north { position: absolute; top: 23px; right: 17px; z-index: 500; font-size: 12px; font-weight: 600; color: var(--ink); }
-.ayodhya-pin {
+.ayodhya-street-map .ayodhya-pin {
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -2600,7 +2600,7 @@ body {
   border: 1px solid #b76942;
   box-shadow: 0 1px 4px #28372d26;
 }
-.ayodhya-pin > span { width: 10px; height: 10px; border-radius: 50%; background: var(--saffron); }
+.ayodhya-street-map .ayodhya-pin > span { display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--saffron); }
 .ayodhya-pin.selected-pin { border: 2px solid var(--ink); }
 .ayodhya-pin.selected-pin > span { background: var(--ink); }
 .ayodhya-pin.hotel-pin { background: var(--ink); border: 2px solid var(--chalk); }
@@ -2614,6 +2614,7 @@ body {
   border: 0;
   border-radius: 3px;
   box-shadow: none;
+  width: max-content;
   max-width: 190px;
   white-space: normal;
   line-height: 1.35;

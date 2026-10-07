@@ -91,8 +91,9 @@ export default function AyodhyaMap({ onEnquire }) {
             if (!label) return;
             const pixel = map.latLngToContainerPoint(marker.getLatLng());
             const width = label.offsetWidth || 140;
-            const box = { x: pixel.x + (id === 'hotel' ? 0 : width / 2 + 20), y: pixel.y + (id === 'hotel' ? 35 : 0), width };
-            const overlaps = occupied.some(other => Math.abs(other.x - box.x) < (other.width + box.width) / 2 + 8 && Math.abs(other.y - box.y) < 28);
+            const height = label.offsetHeight || 24;
+            const box = { x: pixel.x + (id === 'hotel' ? 0 : width / 2 + 20), y: pixel.y + (id === 'hotel' ? height / 2 + 23 : 0), width, height };
+            const overlaps = occupied.some(other => Math.abs(other.x - box.x) < (other.width + box.width) / 2 + 8 && Math.abs(other.y - box.y) < (other.height + height) / 2 + 8);
             label.style.opacity = overlaps ? '0' : '1';
             if (!overlaps) occupied.push(box);
           });
@@ -104,8 +105,8 @@ export default function AyodhyaMap({ onEnquire }) {
             if (!map.getBounds().contains(position)) return;
             const pixel = map.latLngToContainerPoint(position);
             const width = Math.min(170, (feature.properties.display_name || feature.properties.name).length * 6.2);
-            if (occupied.some(box => Math.abs(box.x - pixel.x) < (box.width + width) / 2 + 15 && Math.abs(box.y - pixel.y) < 30)) return;
-            occupied.push({ x: pixel.x, y: pixel.y, width });
+            if (occupied.some(box => Math.abs(box.x - pixel.x) < (box.width + width) / 2 + 15 && Math.abs(box.y - pixel.y) < (box.height + 18) / 2 + 10)) return;
+            occupied.push({ x: pixel.x, y: pixel.y, width, height: 18 });
             L.marker(position, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'street-name', html: textLabel(feature.properties.display_name || feature.properties.name), iconSize: [width, 18], iconAnchor: [width / 2, 9] }) }).addTo(labels);
           });
         };

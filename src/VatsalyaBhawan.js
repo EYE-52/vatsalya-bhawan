@@ -189,6 +189,9 @@ export default function VatsalyaBhawan() {
     catch { /* The theme still works when browser storage is unavailable. */ }
   }, [festival]);
   useEffect(() => {
+    // React creates the section targets after the browser's initial fragment jump.
+    const initialSection = window.location.hash.slice(1);
+    if (initialSection && initialSection !== 'home') document.getElementById(initialSection)?.scrollIntoView({ behavior: 'instant', block: 'start' });
     const scroll = () => setScrolled(window.scrollY > 30);
     scroll();
     window.addEventListener('scroll', scroll, {
