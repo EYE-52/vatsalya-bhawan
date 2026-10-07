@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vatsalya Bhawan — share image artwork</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+    body { position: relative; background: #FFFCF5; color: #123C51; font-family: Manrope, Arial, sans-serif; }
+    .identity { position: absolute; top: 68px; left: 80px; display: flex; align-items: center; gap: 24px; }
+    .identity img { width: 68px; height: 68px; }
+    .identity span { font-size: 28px; font-weight: 500; letter-spacing: .5px; }
+    h1 { position: absolute; top: 211px; left: 76px; margin: 0; font: 400 91px/1.08 Lora, Georgia, serif; letter-spacing: -2px; }
+    .detail { position: absolute; top: 461px; left: 80px; }
+    .detail::before { content: ''; display: block; width: 52px; height: 4px; background: #BB3D21; margin-bottom: 25px; }
+    .detail p { margin: 0; font-size: 25px; font-weight: 500; }
+    .arch { position: absolute; top: 46px; left: 651px; width: 495px; height: 584px; background: #DFF0EF; border-radius: 250px 250px 0 0; }
+    .sun { position: absolute; top: 71px; right: 51px; width: 107px; height: 107px; border-radius: 50%; background: #F5BE50; }
+    .bhawan { position: absolute; right: 39px; bottom: 31px; width: 511px; height: 548px; object-fit: contain; filter: drop-shadow(0 13px 10px #123C5115); }
+    .baseline { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: #BB3D21; }
+  </style>
+</head>
+<body>
+  <div class="arch" aria-hidden="true"></div>
+  <div class="sun" aria-hidden="true"></div>
+  <div class="identity"><img src="../../public/favicon.svg" alt="Vatsalya Bhawan logo"><span>Ayodhya</span></div>
+  <h1>Vatsalya<br>Bhawan</h1>
+  <div class="detail"><p>Rooms &amp; family stays</p></div>
+  <img class="bhawan" src="../../public/assets/exterior-cutout.png" alt="Refined front view of Vatsalya Bhawan">
+  <div class="baseline" aria-hidden="true"></div>
+</body>
+</html>
