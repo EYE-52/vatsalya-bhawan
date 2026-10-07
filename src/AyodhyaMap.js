@@ -9,6 +9,7 @@ const overviewOptions = { padding: [30, 48], animate: false };
 const labelDirections = { 'ram-mandir': 'left', 'hanuman-garhi': 'right', 'kanak-bhawan': 'top', 'dashrath-mahal': 'left', 'ayodhya-dham': 'left', hotel: 'bottom' };
 const labelOffsets = { left: [-16, 0], right: [16, 0], top: [0, -18], bottom: [0, 18] };
 const assets = `${process.env.PUBLIC_URL}/assets`;
+const motionOptions = () => ({ animate: !window.matchMedia('(prefers-reduced-motion: reduce)').matches, duration: 0.65 });
 
 export function walkingDirections(destination, origin) {
   const params = new URLSearchParams({ api: '1', destination, travelmode: 'walking' });
@@ -32,6 +33,11 @@ export default function AyodhyaMap({ onEnquire }) {
   const [status, setStatus] = useState('loading');
   const [moving, setMoving] = useState(false);
   const selected = places.find(place => place.id === selectedId);
+  const zoomBy = delta => {
+    const map = mapRef.current;
+    const zoom = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), map.getZoom() + delta));
+    map.flyTo(map.getCenter(), zoom, motionOptions());
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -51,7 +57,7 @@ export default function AyodhyaMap({ onEnquire }) {
         const map = L.map(container.current, {
           zoomControl: false, attributionControl: false, scrollWheelZoom: false,
           dragging: false, touchZoom: false, doubleClickZoom: false,
-          minZoom: 14, maxZoom: 19, zoomSnap: 0.25,
+          minZoom: 14, maxZoom: 19, zoomSnap: 0, zoomDelta: 0.5, bounceAtZoomLimits: false,
           zoomAnimation: !reducedMotion, fadeAnimation: !reducedMotion,
           maxBounds: L.latLngBounds(coverage), maxBoundsViscosity: 1,
         }).fitBounds(bounds, overviewOptions);
@@ -69,13 +75,46 @@ export default function AyodhyaMap({ onEnquire }) {
           if (path(p)) return { color: 'var(--map-path)', weight: 1.3 * factor, dashArray: p.class === 'steps' ? '1 3' : '3 3', opacity: casing ? 0 : 0.9 };
           return { color: casing ? 'var(--map-road-edge)' : '#ffffff', weight: (main(p) ? 5.5 : 2.8) * factor + (casing ? 1.8 : 0), opacity: 1 };
         };
-        L.geoJSON(roads, { filter: feature => feature.properties.kind === 'water', style: feature => roadStyle(feature), interactive: false }).addTo(map);
         const streets = { type: 'FeatureCollection', features: roads.features.filter(feature => feature.properties.kind !== 'water') };
-        const casings = L.geoJSON(streets, { style: feature => roadStyle(feature, true), interactive: false }).addTo(map);
-        const lines = L.geoJSON(streets, { style: feature => roadStyle(feature), onEachFeature: (feature, layer) => {
+        // Project the complete geometry once so native flyTo can reveal roads outside the viewport.
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const overlayBounds = L.latLngBounds(coverage);
+        const origin = map.project(overlayBounds.getNorthWest(), 19);
+        const extent = map.project(overlayBounds.getSouthEast(), 19).subtract(origin);
+        svg.setAttribute('viewBox', `0 0 ${extent.x} ${extent.y}`);
+        svg.setAttribute('preserveAspectRatio', 'none');
+        const paintedPaths = [];
+        const drawFeatures = (features, casing = false) => features.forEach(feature => {
+          const { type, coordinates } = feature.geometry;
+          const polygon = type.includes('Polygon');
+          const rings = type === 'LineString' ? [coordinates] : type === 'MultiPolygon' ? coordinates.flat() : coordinates;
+          const element = document.createElementNS(svg.namespaceURI, 'path');
+          element.setAttribute('d', rings.map(ring => ring.map((point, index) => {
+            const pixel = map.project([point[1], point[0]], 19).subtract(origin);
+            return `${index ? 'L' : 'M'}${pixel.x} ${pixel.y}`;
+          }).join(' ') + (polygon ? ' Z' : '')).join(' '));
+          element.setAttribute('fill-rule', 'evenodd');
+          element.setAttribute('vector-effect', 'non-scaling-stroke');
+          element.setAttribute('stroke-linecap', 'round');
+          element.setAttribute('stroke-linejoin', 'round');
           const p = feature.properties;
-          if (p.name || restricted(p)) layer.bindTooltip(textLabel(`${p.name || 'Road'}${restricted(p) ? ' · limited access' : ''}`), { sticky: true, className: 'street-hover-label' });
-        } }).addTo(map);
+          if (!casing && (p.name || restricted(p))) {
+            const title = document.createElementNS(svg.namespaceURI, 'title');
+            title.textContent = `${p.name || 'Road'}${restricted(p) ? ' · limited access' : ''}`;
+            element.appendChild(title);
+          }
+          svg.appendChild(element);
+          paintedPaths.push({ element, feature, casing, polygon });
+        });
+        drawFeatures(roads.features.filter(feature => feature.properties.kind === 'water'));
+        drawFeatures(streets.features, true);
+        drawFeatures(streets.features);
+        const refreshRoadStyles = () => paintedPaths.forEach(({ element, feature, casing, polygon }) => {
+          const style = roadStyle(feature, casing);
+          Object.entries({ stroke: style.color, 'stroke-width': style.weight, 'stroke-opacity': style.opacity ?? 1, 'stroke-dasharray': style.dashArray || 'none', fill: polygon ? style.fillColor || style.color : 'none', 'fill-opacity': style.fillOpacity ?? 0.2 }).forEach(([name, value]) => element.setAttribute(name, value));
+        });
+        refreshRoadStyles();
+        L.svgOverlay(svg, overlayBounds, { interactive: true }).addTo(map);
         const labels = L.layerGroup().addTo(map);
         // One label per named road; the longest mapped segment carries its name.
         const namedRoads = new Map();
@@ -130,7 +169,7 @@ export default function AyodhyaMap({ onEnquire }) {
             L.marker(position, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'street-name', html: textLabel(feature.properties.display_name || feature.properties.name), iconSize: [width, 18], iconAnchor: [width / 2, 9] }) }).addTo(labels);
           });
         };
-        map.on('zoomend', () => { casings.setStyle(feature => roadStyle(feature, true)); lines.setStyle(feature => roadStyle(feature)); refreshLabels(); });
+        map.on('zoomend', refreshRoadStyles);
         map.on('moveend', refreshLabels);
         const addMarker = (place, hotel = false) => {
           const marker = L.marker([place.lat, place.lon], {
@@ -138,8 +177,8 @@ export default function AyodhyaMap({ onEnquire }) {
             icon: L.divIcon({ className: `ayodhya-pin${hotel ? ' hotel-pin' : ''}`, html: hotel ? '<span aria-hidden="true" lang="hi">व</span>' : '<span aria-hidden="true"></span>', iconSize: [44, 44], iconAnchor: [22, 22] }),
           }).addTo(map).bindTooltip(textLabel(place.id === 'ram-mandir' ? 'Ram Mandir' : place.name), { permanent: true, direction: labelDirections[hotel ? 'hotel' : place.id] || 'right', offset: [0, 0], className: `landmark-label${hotel ? ' hotel-label' : ''}` });
           marker.on('click', () => {
-            if (hotel) map.setView([place.lat, place.lon], 17, { animate: false });
-            else { setSelectedId(place.id); map.setView([place.lat, place.lon], 17, { animate: false }); }
+            if (!hotel) setSelectedId(place.id);
+            map.flyTo([place.lat, place.lon], 17, motionOptions());
           });
           markers.current.set(hotel ? 'hotel' : place.id, marker);
         };
@@ -182,9 +221,9 @@ export default function AyodhyaMap({ onEnquire }) {
     <div className="street-map-main">
       <div className={`street-map-frame${moving ? ' map-moving' : ''}`}>
         {status === 'ready' && <div className="street-map-tools" aria-label="Map controls">
-          <button type="button" onClick={() => mapRef.current.zoomIn()} aria-label="Zoom in">+</button>
-          <button type="button" onClick={() => mapRef.current.zoomOut()} aria-label="Zoom out">−</button>
-          <button type="button" onClick={() => { mapRef.current.fitBounds(bounds, overviewOptions); setMoving(false); }}>Show all</button>
+          <button type="button" onClick={() => zoomBy(0.5)} aria-label="Zoom in">+</button>
+          <button type="button" onClick={() => zoomBy(-0.5)} aria-label="Zoom out">−</button>
+          <button type="button" onClick={() => { mapRef.current.flyToBounds(bounds, { ...overviewOptions, ...motionOptions() }); setMoving(false); }}>Show all</button>
           <button type="button" aria-pressed={moving} onClick={() => setMoving(value => !value)}>{moving ? 'Done moving' : 'Move map'}</button>
         </div>}
         <div ref={container} className="ayodhya-street-map" role="region" aria-label="Ayodhya street map" aria-describedby="street-map-instructions" />
@@ -206,7 +245,7 @@ export default function AyodhyaMap({ onEnquire }) {
       <div className="map-destination">
         {places.length > 0 && <>
           <label htmlFor="ayodhya-destination">Choose a place</label>
-          <select id="ayodhya-destination" value={selectedId} onChange={event => { const place = places.find(item => item.id === event.target.value); setSelectedId(place.id); mapRef.current?.setView([place.lat, place.lon], 17, { animate: false }); }}>{places.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select>
+          <select id="ayodhya-destination" value={selectedId} onChange={event => { const place = places.find(item => item.id === event.target.value); setSelectedId(place.id); mapRef.current?.flyTo([place.lat, place.lon], 17, motionOptions()); }}>{places.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select>
           <p className="map-place-info">{selected.info}</p>
           <div className="walking-links">
             <a className="button button-primary" href={walkingDirections(selected.query, HOTEL_COORDINATES)} target="_blank" rel="noreferrer">Walk from the bhawan <ArrowUpRight size={16} /></a>
