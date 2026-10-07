@@ -1,0 +1,65 @@
+[
+  {
+    "id": "hotel",
+    "name": "Vatsalya Bhawan",
+    "lat": 26.7857896,
+    "lon": 82.2032408,
+    "kind": "hotel",
+    "query": "26.7857896,82.2032408",
+    "info": "Tarun Pura Road, Kaniganj. Verified property-listing location."
+  },
+  {
+    "id": "ram-mandir",
+    "name": "Shri Ram Janmabhoomi Mandir",
+    "lat": 26.7956335,
+    "lon": 82.1944664,
+    "kind": "temple",
+    "query": "Shri Ram Janmabhoomi Mandir Ayodhya",
+    "info": "Follow the current entry signs."
+  },
+  {
+    "id": "hanuman-garhi",
+    "name": "Hanuman Garhi",
+    "lat": 26.7950851,
+    "lon": 82.2016946,
+    "kind": "temple",
+    "query": "Hanuman Garhi entrance Ayodhya",
+    "info": "Temple in the historic centre. Entry includes stairs."
+  },
+  {
+    "id": "kanak-bhawan",
+    "name": "Kanak Bhawan",
+    "lat": 26.7980214,
+    "lon": 82.1991553,
+    "kind": "temple",
+    "query": "Kanak Bhawan Ayodhya",
+    "info": "Ramkot temple, northeast of Shri Ram Janmabhoomi."
+  },
+  {
+    "id": "ram-ki-paidi",
+    "name": "Ram ki Paidi",
+    "lat": 26.8092171,
+    "lon": 82.2058856,
+    "kind": "riverfront",
+    "query": "Ram ki Paidi Ayodhya",
+    "info": "Ghats beside the Sarayu river."
+  },
+  {
+    "id": "ayodhya-dham",
+    "name": "Ayodhya Dham Junction",
+    "lat": 26.7879374,
+    "lon": 82.2010025,
+    "kind": "station",
+    "query": "Ayodhya Dham Junction railway station",
+    "info": "Railway station south of the historic temple centre."
+  },
+  {
+    "id": "dashrath-mahal",
+    "name": "Dashrath Mahal",
+    "lat": 26.7966384,
+    "lon": 82.1989733,
+    "kind": "temple",
+    "query": "Dashrath Mahal Ayodhya",
+    "info": "Landmark between Hanuman Garhi and Kanak Bhawan."
+  }
+]
