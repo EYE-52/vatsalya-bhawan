@@ -72,8 +72,14 @@ const photos = [{
 photos.push({ src: `${process.env.PUBLIC_URL}/vatsalya-bhawan-front-view.webp`, label: 'Building exterior', category: 'Around the bhawan', alt: 'Original photograph of the Vatsalya Bhawan building exterior and entrance' });
 const photoCategories = ['All photos', 'Rooms', 'Around the bhawan', 'Bathrooms'];
 const featureIcons = { 'Air conditioning': Snowflake, 'Private bathroom': Bath, 'Wi-Fi': Wifi };
-// The city-arrival point in the selected film, in media seconds.
-export const ARRIVAL_TIME = 3.6;
+// Media seconds shared by the desktop film and its portrait crop.
+export const JOURNEY_STAGES = [
+  { start: 0, hindi: 'जम्बूद्वीपे', english: 'Jambudvīpe' },
+  { start: 3, hindi: 'भारतखण्डे', english: 'Bhāratakhaṇḍe' },
+  { start: 5.5, hindi: 'आर्यावर्ते', english: 'Āryāvarte' },
+  { start: 8, hindi: 'अयोध्या', english: 'Ayodhyā' },
+];
+export const ARRIVAL_TIME = 10.5;
 const googleListing = 'https://www.google.com/travel/hotels/s/VRKk9iQtHDwYtmhh9';
 const places = [
   { name: 'Ram Mandir', kind: 'Darshan', text: 'Visit Shri Ram Janmabhoomi Mandir for darshan of Ram Lalla. Check current visitor arrangements with the temple trust before travelling.', info: 'https://srjbtkshetra.org/', query: 'Shri Ram Janmabhoomi Mandir Ayodhya' },
@@ -162,6 +168,7 @@ export default function VatsalyaBhawan() {
   const [filmTime, setFilmTime] = useState(0);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const introActive = filmTime < ARRIVAL_TIME && !motionEnded && !reducedMotion && !videoFailed && !autoplayBlocked && !scrolled;
+  const journeyStage = JOURNEY_STAGES.reduce((stage, next) => filmTime >= next.start ? next : stage, JOURNEY_STAGES[0]);
   const [stay, setStay] = useState({
     checkIn: localDate(),
     checkOut: nextDay(localDate()),
@@ -291,19 +298,19 @@ export default function VatsalyaBhawan() {
     </header>
     <main id="main">
       <section className={`hero cinema-hero ${introActive ? 'intro-active' : 'intro-complete'}`} id="home">
-        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-arrival${mobileFilm ? '-mobile' : ''}.jpg`} alt="Cinematic impression of Ayodhya’s temples and river at sunrise" fetchPriority="high" />
+        <img className="cinema-poster" src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-arrival${mobileFilm ? '-mobile' : ''}.jpg`} alt="Satellite view of Ayodhya and the Saryu River" fetchPriority="high" />
         {!reducedMotion && !videoFailed && !autoplayBlocked && <video
           key={mobileFilm ? 'mobile' : 'desktop'}
           ref={videoRef}
-          src={`${process.env.PUBLIC_URL}/assets/ayodhya-journey${mobileFilm ? '-mobile' : ''}.mp4`}
+          src={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic${mobileFilm ? '-mobile' : ''}.mp4`}
           className="journey-film"
           style={motionEnded ? { visibility: 'hidden' } : undefined}
           muted
           playsInline
           autoPlay
           preload="auto"
-          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-globe${mobileFilm ? '-mobile' : ''}.jpg`}
-          aria-label="A cinematic journey from Earth into an artist’s impression of Ayodhya"
+          poster={`${process.env.PUBLIC_URL}/assets/ayodhya-geographic-globe${mobileFilm ? '-mobile' : ''}.jpg`}
+          aria-label="A geographical journey from Earth through India and the northern plains to a satellite view of Ayodhya"
           onTimeUpdate={event => setFilmTime(event.currentTarget.currentTime)}
           onEnded={() => setMotionEnded(true)}
           onError={() => setVideoFailed(true)}
@@ -313,8 +320,10 @@ export default function VatsalyaBhawan() {
           {Array.from({ length: 12 }, (_, i) => <span className="festival-light" key={i} style={{ '--light-index': i }} />)}
         </div>
         <div className={`intro-title ${introActive ? 'present' : ''}`} aria-hidden={!introActive}>
-          <p lang="hi">जम्बूद्वीपे</p>
-          <p>Jambu Dvepe</p>
+          <div className="intro-caption" key={journeyStage.start}>
+            <p lang="hi">{journeyStage.hindi}</p>
+            <p lang="en">{journeyStage.english}</p>
+          </div>
         </div>
         <div className={`hero-content hero-chrome ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>
           <p className="hero-intro">{festival ? 'Ayodhya, in the warmth of Diwali.' : 'In the city of Ram. A place of your own.'}</p>
@@ -327,7 +336,7 @@ export default function VatsalyaBhawan() {
         </div>
         <a className={`hero-location hero-chrome ${introActive ? 'intro-suppressed' : ''}`} href="#location" aria-hidden={introActive} inert={introActive}><MapPin size={20} /><span>Vatsalya Bhawan<span>Kaniganj, Ayodhya</span></span><ArrowUpRight size={18} /></a>
         <div className="hero-bottom">
-          <span className={`film-credits hero-chrome ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>Cinematic impression of Ayodhya</span>
+          <span className={`film-credits hero-chrome ${introActive ? 'intro-suppressed' : ''}`} aria-hidden={introActive} inert={introActive}>Earth imagery: <a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/" target="_blank" rel="noreferrer">NASA Blue Marble</a>. Contains modified <a href="https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice" target="_blank" rel="noreferrer">Copernicus Sentinel data 2026</a>.</span>
           {!reducedMotion && !videoFailed && !autoplayBlocked && <button className="film-control" onClick={toggleFilm} aria-label={motionEnded ? 'Replay journey film' : paused ? 'Resume journey film' : 'Pause journey film'}>{motionEnded || paused ? <Play size={13} /> : <Pause size={13} />}<span>{motionEnded ? 'Replay film' : paused ? 'Resume film' : 'Pause film'}</span></button>}
         </div>
       </section>

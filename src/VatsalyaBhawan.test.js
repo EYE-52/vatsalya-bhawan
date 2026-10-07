@@ -33,7 +33,7 @@ function hero() {
 function expectPosterAndBooking() {
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
-  expect(within(hero()).getByAltText(/Cinematic impression of Ayodhya/)).toBeInTheDocument();
+  expect(within(hero()).getByAltText('Satellite view of Ayodhya and the Saryu River')).toBeInTheDocument();
   fireEvent.click(within(hero()).getByRole('button', { name: /Plan your stay/ }));
   expect(screen.getByRole('dialog', { name: 'Plan your stay' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Prepare enquiry/ })).toBeEnabled();
@@ -75,15 +75,37 @@ test('pause and resume call native playback, and replay restarts an ended film w
 });
 
 
-test('the bilingual opening hides header and hero actions until the film reaches Ayodhya', () => {
+test('all four bilingual captions follow media time while header and hero actions wait for arrival', () => {
   render(<VatsalyaBhawan />);
   const video = hero().querySelector('video');
-  expect(screen.getByText('जम्बूद्वीपे')).toBeInTheDocument();
-  expect(screen.getByText('Jambu Dvepe')).toBeInTheDocument();
-  expect(document.querySelector('header')).toHaveAttribute('aria-hidden', 'true');
-  expect(document.querySelector('header')).toHaveAttribute('inert');
+  const stages = [
+    [0, 'जम्बूद्वीपे', 'Jambudvīpe'],
+    [3, 'भारतखण्डे', 'Bhāratakhaṇḍe'],
+    [5.5, 'आर्यावर्ते', 'Āryāvarte'],
+    [8, 'अयोध्या', 'Ayodhyā'],
+  ];
+  stages.forEach(([start, hindi, english], index) => {
+    if (index > 0) {
+      video.currentTime = start - 0.01;
+      fireEvent.timeUpdate(video);
+      expect(screen.getByText(stages[index - 1][2])).toBeInTheDocument();
+    }
+    video.currentTime = start;
+    fireEvent.timeUpdate(video);
+    expect(screen.getByText(hindi)).toHaveAttribute('lang', 'hi');
+    expect(screen.getByText(english)).toHaveAttribute('lang', 'en');
+    if (index > 0) expect(screen.queryByText(stages[index - 1][2])).toBeNull();
+    expect(document.querySelector('header')).toHaveAttribute('aria-hidden', 'true');
+    expect(document.querySelector('header')).toHaveAttribute('inert');
+    expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
+    expect(within(hero()).queryByRole('button', { name: /Plan your stay/ })).toBeNull();
+    expect(hero().querySelector('.hero-location')).toHaveAttribute('inert');
+    expect(hero().querySelector('.film-credits')).toHaveAttribute('inert');
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Pause journey film' }));
+  expect(screen.getByText('Ayodhyā')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
-  expect(within(hero()).queryByRole('button', { name: /Plan your stay/ })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Resume journey film' }));
   video.currentTime = ARRIVAL_TIME - 0.1;
   fireEvent.timeUpdate(video);
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
@@ -92,9 +114,13 @@ test('the bilingual opening hides header and hero actions until the film reaches
   expect(screen.getByRole('banner')).not.toHaveAttribute('inert');
   expect(screen.getByRole('heading', { name: /Arrive in Ayodhya/ })).toBeInTheDocument();
   expect(within(hero()).getByRole('button', { name: /Plan your stay/ })).toBeEnabled();
+  expect(within(hero()).getByRole('link', { name: 'NASA Blue Marble' })).toHaveAttribute('href', 'https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography/');
+  expect(within(hero()).getByRole('link', { name: 'Copernicus Sentinel data 2026' })).toBeInTheDocument();
   fireEvent.ended(video);
   fireEvent.click(screen.getByRole('button', { name: 'Replay journey film' }));
   expect(screen.queryByRole('heading', { name: /Arrive in Ayodhya/ })).toBeNull();
+  expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
+  expect(screen.queryByText('Ayodhyā')).toBeNull();
 });
 
 test('blocked autoplay reveals the normal page immediately', async () => {
@@ -136,7 +162,7 @@ test('Watch the journey recovers blocked autoplay and restarts the bilingual ope
   await waitFor(() => expect(hero().querySelector('video')).not.toBeNull());
   expect(hero().querySelector('video').currentTime).toBe(0);
   expect(document.querySelector('header')).toHaveAttribute('inert');
-  expect(screen.getByText('Jambu Dvepe')).toBeInTheDocument();
+  expect(screen.getByText('Jambudvīpe')).toBeInTheDocument();
   fireEvent.ended(hero().querySelector('video'));
   expect(hero().querySelector('video')).toHaveStyle({ visibility: 'hidden' });
 });

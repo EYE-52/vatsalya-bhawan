@@ -1,6 +1,6 @@
 # Vatsalya Bhawan
 
-Ayodhya hospitality website with a continuous Veo journey film, optional Diwali lights, room enquiries, a city guide PDF and a real Google Maps embed.
+Ayodhya hospitality website with a continuous satellite journey from Earth to Ayodhya, optional Diwali lights, room enquiries, a city guide PDF and a real Google Maps embed.
 
 Live site: https://eye-52.github.io/vatsalya-bhawan/
 
